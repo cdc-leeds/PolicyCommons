@@ -1,0 +1,20 @@
+<?php
+    include_once("../config.php");
+    include_once("../includes/header.php");
+?>
+
+    <h1>Help</h1>
+
+    <p>For help getting started with Cohere, then please have a look at <a href="<?php print($CFG->homeAddress)?>index.php#screencast">our screencasts</a>.</p>
+
+    <p>For details of how to use our RESTful API, please visit the <a href="code-doc/Cohere-API/_apilib.php.html">API documentation</a>. </p>
+    
+    <p>For help with using RDF with Cohere, please visit out <a href="rdf.php">RDF how-to</a>.</p>
+    
+    <p>If you would like to report a bug or have suggestions for improvements to Cohere, then please visit our <a href="http://cohere.open.ac.uk/support/">support site</a>.</p>
+    
+    <p>If your query isn't answered by any of the above, then please <a href="mailto:kmi-cohere@open.ac.uk">contact us</a>.</p>
+    
+<?php
+    include_once("../includes/footer.php");
+?>
