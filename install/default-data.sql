@@ -26,7 +26,7 @@
 INSERT INTO Users 
 (UserID, CreationDate, ModificationDate, Email, Name, Description, Password, LastLogin, IsAdministrator, CurrentStatus, Website, Photo, Private, AuthType, OpenIDURL) 
 VALUES 
-('defaultuser', 0, 0, 'kmi-systems@open.ac.uk', 'Default', NULL, '$1$M1hLPQ0p$W3oH.Lfq7twd2YqXtfmjk/', 0, 'N', 0, NULL, NULL, 'N', 'cohere', NULL);
+('defaultuser', 0, 0, 'kmi-systems@open.ac.uk', 'Default', NULL, '4stmrH6AKE27g', 0, 'N', 0, NULL, NULL, 'N', 'cohere', NULL);
 
 -- defaultuser nodetypegroup
 INSERT INTO NodeTypeGroup 
