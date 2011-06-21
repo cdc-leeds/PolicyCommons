@@ -457,4 +457,209 @@ function importCompendiumXML($xml,&$errors,&$results){
         }
     }
 }
+
+/*
+ * importLKIFXML()
+ * This function imports a set of argument graphs represented in the
+ * Legal Knowledge Interchange Format (LKIF). Specifically, the
+ * function expects the LKIF to be serialised in XML.
+ */
+function importLKIFXML($xml, &$errors, &$results) {
+
+  // TODO Should check at the beginning whether the file is a valid
+  // LKIF file
+
+  global $DB, $CFG, $USER;
+
+  // If the node-types 'Statement' and 'Argument' don't exist then we
+  // need to create them
+  $statementNodeTypeID = getRoleByName("Statement")->roleid;
+  if ($statementNodeTypeID == null) {
+    $statementNodeType = addRole("Statement");
+    $statementNodeTypeID = $statementNodeType->roleid;
+  }
+
+  $argumentNodeTypeID = getRoleByName("Argument")->roleid;
+  if ($argumentNodeTypeID == null) {
+    $argumentNodeType = addRole("Argument");
+    $argumentNodeTypeID = $argumentNodeType->roleid;
+  }
+
+  // If the link-types 'premise', 'conclusion', and 'exception' don't
+  // exist then we need to create them
+  $premiseLinkTypeID = getLinkTypeByLabel("premise")->linktypeid;
+  if ($premiseLinkTypeID == null) {
+    $premiseLinkType = addLinkType("premise", "Positive");
+    $premiseLinkTypeID = $premiseLinkType->linktypeid;
+  }
+
+  $conclusionLinkTypeID = getLinkTypeByLabel("conclusion")->linktypeid;
+  if ($conclusionLinkTypeID == null) {
+    $conclusionLinkType = addLinkType("conclusion", "Positive");
+    $conclusionLinkTypeID = $conclusionLinkType->linktypeid;
+  }
+
+  $exceptionLinkTypeID = getLinkTypeByLabel("exception")->linktypeid;
+  if ($exceptionLinkTypeID == null) {
+    $exceptionLinkType = addLinkType("exception", "Negative");
+    $exceptionLinkTypeID = $exceptionLinkType->linktypeid;
+  }
+
+  $negated_premiseLinkTypeID =
+    getLinkTypeByLabel("negated-premise")->linktypeid;
+  if ($negated_premiseLinkTypeID == null) {
+    $negated_premiseLinkType =
+      addLinkType("negated-premise", "Negative");
+    $negated_premiseLinkTypeID =
+      $negated_premiseLinkType->linktypeid;
+  }
+
+  $negated_conclusionLinkTypeID =
+    getLinkTypeByLabel("negated-conclusion")->linktypeid;
+  if ($negated_conclusionLinkTypeID == null) {
+    $negated_conclusionLinkType =
+      addLinkType("negated-conclusion", "Negative");
+    $negated_conclusionLinkTypeID =
+      $negated_conclusionLinkType->linktypeid;
+  }
+
+  // Parse the Statements
+
+  // Somewhere to store the LKIF ID to Cohere ID mappings for later
+  // reference
+  $lkifIDToCohereID = array();
+
+  $statements = $xml->getElementsByTagName("statement");
+
+  foreach ($statements as $statement) {
+    $lkif_id = $statement->getAttribute('id');
+
+    $sEl = $statement->getElementsByTagName("s")->item(0);
+    $text = $sEl->nodeValue;
+
+    $newCohereNode =
+      addNode($text, /*Node name*/
+	      $lkif_id, /*Node description*/
+	      $USER->privatedata, /*Set Private or Public*/
+	      $statementNodeTypeID);
+
+    $lkifIDToCohereID[$lkif_id] = $newCohereNode->nodeid;
+
+    array_push($results, "$lkif_id $text");
+  }
+
+  // Parse the Arguments
+  $arguments = $xml->getElementsByTagName("argument");
+
+  foreach ($arguments as $argument) {
+    $lkif_id = $argument->getAttribute('id');
+    $title = $argument->getAttribute('title');
+    $scheme = $argument->getAttribute('scheme');
+    $direction = $argument->getAttribute('direction');
+
+    // We don't want Cohere nodes with empty names
+    if ($title == "") {
+      $filename = basename($_FILES['lkifxmlfile']['name'],
+			   ".xml");
+      $title = $lkif_id . " (" . $filename . ")";
+    }
+
+    // Add new Argument node to Cohere DB
+    $newCohereNode =
+      addNode($title, /*Node name*/
+	      $lkif_id, /*Node description*/
+	      $USER->privatedata, /*Set Private or Public*/
+	      $argumentNodeTypeID);
+
+    // Deal with the Conclusion
+    $conclusionNode =
+      $argument->getElementsByTagName("conclusion")->item(0);
+
+    $conclusion = $conclusionNode->getAttribute('statement');
+
+    $fromNodeID = $newCohereNode->nodeid;
+    $fromRoleID = $argumentNodeTypeID;
+    $toNodeID = $lkifIDToCohereID[$conclusion];
+    $toRoleID = $statementNodeTypeID;
+
+    if ($direction == "con")
+      $arg_conclusion_link = $negated_conclusionLinkTypeID;
+    else
+      // Else assume direction is "pro"
+      $arg_conclusion_link = $conclusionLinkTypeID;
+
+    // Connect Argument node to its Conclusion
+    $newCohereConnection =
+      addConnection($fromNodeID,
+    		    $fromRoleID,
+    		    $arg_conclusion_link,
+    		    $toNodeID,
+    		    $toRoleID);
+
+    // Deal with the Premises ('ordinary', 'assumption' and
+    // 'exception' premises.
+    $premiseNodes =
+      $argument->getElementsByTagName("premise");
+
+    $premises = array();
+    $exceptions = array();
+
+    // Collect all the 'ordinary' and 'assumption' premises in a
+    // single array and all the 'exception' premises in another array
+    for ($i = 0; $i < $premiseNodes->length; $i++) {
+      $statement = $premiseNodes->item($i)->getAttribute('statement');
+      $type = $premiseNodes->item($i)->getAttribute('type');
+      $polarity = $premiseNodes->item($i)->getAttribute('polarity');
+
+      if ($type == "exception") {
+	$exceptions[$i] = $statement;
+      }
+      else {
+	$premises[$i] = array('statement'=>$statement,
+			      'polarity'=>$polarity);
+      }
+    }
+
+    // Connect the Argument node to each of the Premise (Statement)
+    // nodes
+    foreach ($premises as $premise) {
+      $toNodeID = $lkifIDToCohereID[$premise['statement']];
+
+      if ($premise['polarity'] == "negative")
+	$arg_premise_link = $negated_premiseLinkTypeID;
+      else
+	// Else assume polarity is "positive"
+	$arg_premise_link = $premiseLinkTypeID;
+
+      $newCohereConnection =
+	addConnection($fromNodeID,
+		      $fromRoleID,
+		      $arg_premise_link,
+		      $toNodeID,
+		      $toRoleID);
+    }
+
+    // Connect the Argument node to each of the exception premises
+    foreach ($exceptions as $exception) {
+      $toNodeID = $lkifIDToCohereID[$exception];
+
+      $newCohereConnection =
+	addConnection($fromNodeID,
+		      $fromRoleID,
+		      $exceptionLinkTypeID,
+		      $toNodeID,
+		      $toRoleID);
+    }
+
+    array_push($results, "$lkif_id: {" .
+	       implode(', ',
+		  array_merge(
+		     array_map(
+		       create_function('$arr',
+				       'return $arr["statement"];'),
+		       $premises),
+		     $exceptions)) .
+	       "}->$conclusion");
+  }
+}
 ?>

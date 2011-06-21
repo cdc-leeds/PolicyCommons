@@ -35,6 +35,8 @@
         <li>Import an RSS feed (see below)</li>
         <li><a href="<?php print($CFG->homeAddress);?>import/compendium.php">Import from Compendium</a></li>
         <li><a href="<?php print($CFG->homeAddress);?>import/rdf.php">Import from RDF</a></li>
+        <li><a href="<?php
+    print($CFG->homeAddress);?>import/lkif.php">Import from LKIF XML</a></li>
         <li>using the <a href="<?php print($CFG->homeAddress);?>/help/code-doc/Cohere-API/_apilib.php.html">Cohere API</a></li>
     </ul>
     
