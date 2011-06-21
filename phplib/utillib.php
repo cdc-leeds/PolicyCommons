@@ -2338,7 +2338,12 @@ function getAllHGRForms($orderby="UserID", $dir="ASC") {
     return $ss->load($sql);
 }
 
-function json_encode($a=false) {
+/**
+ * On versions of PHP older than PHP 5 we need to define this function
+ * that returns the JSON representation of a value
+ */
+if (!function_exists('json_encode')) {
+  function json_encode($a=false) {
 	if (is_null($a)) return 'null';
 	if ($a === false) return 'false';
 	if ($a === true) return 'true';
@@ -2378,6 +2383,7 @@ function json_encode($a=false) {
 	  foreach ($a as $k => $v) $result[] = json_encode($k).':'.json_encode($v);
 	  return '{' . join(',', $result) . '}';
 	}
+  }
 }
 
 /**
