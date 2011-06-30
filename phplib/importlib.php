@@ -545,7 +545,8 @@ function importLKIFXML($xml, &$errors, &$results) {
 
     $lkifIDToCohereID[$lkif_id] = $newCohereNode->nodeid;
 
-    array_push($results, "$lkif_id $text");
+    array_push($results,
+	       "Imported LKIF Statement $lkif_id: $text");
   }
 
   // Parse the Arguments
@@ -651,7 +652,8 @@ function importLKIFXML($xml, &$errors, &$results) {
 		      $toRoleID);
     }
 
-    array_push($results, "$lkif_id: {" .
+    array_push($results,
+	       "Imported LKIF Argument $lkif_id: (Premises) {" .
 	       implode(', ',
 		  array_merge(
 		     array_map(
@@ -659,7 +661,7 @@ function importLKIFXML($xml, &$errors, &$results) {
 				       'return $arr["statement"];'),
 		       $premises),
 		     $exceptions)) .
-	       "}->$conclusion");
+	       "} --> (Conclusion) $conclusion");
   }
 }
 ?>
