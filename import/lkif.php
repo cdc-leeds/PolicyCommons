@@ -1,15 +1,15 @@
 <?php
 
 include_once("../config.php");
-include_once("../includes/header.php");
-    
-include_once("../phplib/importlib.php");
 
-// check that user not already logged in
+// Redirect to login page if user not logged in
 if(!isset($USER->userid)){
-  header('Location: index.php');  
-  return; 
+  header('Location: ../login.php');
 }
+
+include_once("../includes/header.php");
+
+include_once("../phplib/importlib.php");
 
 global $CFG, $USER;
     
