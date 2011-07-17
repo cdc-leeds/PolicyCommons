@@ -560,7 +560,14 @@ function importLKIFXML($xml, &$errors, &$results) {
 
     // We don't want Cohere nodes with empty names
     if ($title == "") {
-      $filename = basename($_FILES['lkifxmlfile']['name'],
+			if (isset($_FILES['lkifxmlfile'])) {
+				$filename = $_FILES['lkifxmlfile']['name'];
+			}
+			else if (isset($_POST['lkifxmlurl'])) {
+				$filename = $_POST['lkifxmlurl'];
+			}
+
+      $filename = basename($filename,
 			   ".xml");
       $title = $lkif_id . " (" . $filename . ")";
     }
