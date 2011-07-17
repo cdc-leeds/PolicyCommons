@@ -43,6 +43,10 @@ Cohere >>> make the connection
 <script src="<?php echo $CFG->homeAddress; ?>includes/dateformat.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/jsr_class.js" type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/scriptaculous/scriptaculous.js' type="text/javascript"></script>
+<script src='<?php echo $CFG->homeAddress; ?>includes/jquery.js'
+type="text/javascript"></script>
+<!-- Prevent jQuery conflicting with Prototype-->
+<script type="text/javascript">jQuery.noConflict();</script>
 <script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $CFG->GOOGLE_MAPS_KEY; ?>' type="text/javascript"></script>
 <script>
 Timeline_ajax_url="<?php echo $CFG->homeAddress; ?>visualize/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
