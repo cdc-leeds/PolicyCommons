@@ -113,6 +113,20 @@ if(isset($_POST["import"])) {
 
 </form>
 
+
+
 <?php
-  include_once("../includes/footer.php");
+if(isset($_POST["import"])) {
+	// If form data has been submitted then hide form when we reload
+	// page next time
+	echo "<script type='text/javascript'>" .
+		"jQuery(document).ready(function() {" .
+		"jQuery('form').hide();" .
+		"});" .
+		"</script>";
+
+	echo "<a href='lkif.php'>Import another LKIF file</a>";
+}
+
+include_once("../includes/footer.php");
 ?>
