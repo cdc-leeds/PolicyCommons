@@ -123,8 +123,8 @@ function updateuserstatus() {
 <div id="header">
 
     <div id="logo">
-        <a href="<?php echo $CFG->homeAddress; ?>index.php" title="Cohere home page"><img border="0" alt="Cohere home page" src="<?php echo $CFG->homeAddress; ?>images/cohere_logo2.png" /></a>
-        <img class="hourglass" alt="Please wait" src="<?php echo $CFG->homeAddress; ?>images/hourglass.png" />
+        <a href="<?php echo $CFG->homeAddress; ?>index.php"
+        title="PolicyCommons.co.uk"><img style="border:0px;" alt="PolicyCommons.co.uk" src="<?php echo $CFG->homeAddress; ?>images/policycommons-logo.png" /></a>
         <div style="clear: both;"><a href="#content" class="accesslink">Skip to content</a></div>
     </div>
 
