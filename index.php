@@ -81,14 +81,6 @@ li.option {
 browsable debate maps. It is designed to help users make sense of the
 range of publicly expressed opinions about public policies.</p>
 
-					<div style="float: left; padding-bottom: 10px;">
-
-						<div style="clear: both; float: left; margin-top: 10px; margin-right: 30px; ">
-							<div style="margin-bottom:10px; height: 20px; background:#F8EAF3; padding-left: 5px; padding-top: 4px; "><strong>Top Connection Builders</strong></div>
-							<div id="tab-content-home-users" style="border: 1px solid #d3e8e8; width: 320px; overflow: auto;"></div>
-							<!-- div id="tab-content-home-idea" style="width: 240px; margin-top: 10px; margin-bottom: 15px;"><strong>Most Connected Idea:</strong><br></div -->
-						</div>
-
 <p>Users can browse debate maps about public policies and follow links
 from the visual summaries of the arguments back to the original policy
 documents. Ultimately, the aim of PolicyCommons is to support greater
@@ -97,7 +89,6 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
 
 				</div>
 
-				</div>
 
 				<div id="tab-content-home-conn" style="overflow: hidden; clear:both; float:left; width: 740px; padding-right: 5px: 0px; padding: 0px; margin-top:10px; margin-left: 5px;">
 					<div style="margin-bottom:10px; height: 20px; background:#F8EAF3; padding-left: 5px; padding-top: 4px; "><strong>Most Recent Connection</strong></div>
