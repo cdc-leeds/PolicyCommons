@@ -47,32 +47,32 @@
 
 #tabber a.tab:hover {
 	background-position:0% 0px;
-	color: #e80074;	
+	color: #7F0000;
 }
 
 #tabber a.tab:hover span {
 	background-position:100% 0px;
-	color: #e80074;	
+	color: #7F0000;
 }
 
 #tabber a.current {
 	background-position:0% 0px;
-	color: #e80074;	
+	color: #7F0000;
 }
 
 #tabber a.current span {
 	background-position:100% 0px;
-	color: #e80074;
+	color: #7F0000;
 }
 
 #tabber a.unselected {
 	background-position:0% -25px;
-	color: #308D88;
+	color: #85C042;
 }
 
 #tabber a.unselected span {
 	background-position:100% -25px;
-	color: #308D88;
+	color: #85C042;
 }
 
 #tabber .tabcontent{

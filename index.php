@@ -50,13 +50,13 @@ li.home-node-head-item {
 }
 
 li.current {
-   color: #40B5B2;
+   color: #85C042;
    padding: 3px;
-   border: 1px solid #FACEE3;
+   border: 1px solid #7F0000;
 }
 
 li.option {
-    color: #e80074;
+    color: #7F0000;
     cursor:pointer;
     padding: 3px;
 }
