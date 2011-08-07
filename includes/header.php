@@ -145,7 +145,6 @@ function updateuserstatus() {
 					echo "<a title='Sign In' href='".$CFG->homeAddress."login.php'>Sign In</a> | <a title='Sign Up' href='".$CFG->homeAddress."register.php'>Sign Up</a> ";
 				}
 			?>
-			| <a href='<?php print($CFG->blogAddress);?>'>Blog</a>
 			| <a href='<?php echo $CFG->homeAddress; ?>about.php'>About</a>
 			| <a href='<?php echo $CFG->homeAddress; ?>help/'>Help</a>
 
