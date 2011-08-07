@@ -26,21 +26,6 @@
     include_once("includes/header.php");
 ?>
 <style type="text/css">
-#home1 {
-    width: 250px;
-    float: left;
-    margin: 10px;
-}
-#home2 {
-     width: 250px;
-    float: left;
-    margin: 10px;
-}
-#home3 {
-     width: 250px;
-    float: left;
-    margin: 10px;
-}
 .hi-light {
     color: #e80074;
 }
@@ -70,25 +55,33 @@ li.option {
 }
 </style>
 
-    <h1>About Cohere</h1>
+    <h1>About PolicyCommons</h1>
+<p>PolicyCommons is a tool that displays arguments about policies as
+browsable debate maps. It is designed to help users make sense of the
+range of publicly expressed opinions about public policies. Users can
+browse debate maps about public policies and follow links
+from the visual summaries of the arguments back to the original policy
+documents. Ultimately, the aim of PolicyCommons is to support greater
+	participation in the democrative process, as well as to improve the
+	openness and accountability of the democratic process.</p>
 
-	 <p>The Web is about IDEAS+PEOPLE.</p>
-	 <p>Cohere is a visual tool to create, connect and share Ideas.</p>
-	 <p>Back them up with websites. Support or challenge them. Embed them to spread virally.<br/>
-	 Discover who - literally - connects with your thinking.</p>
-	 <div id="steps">
-		 <div id="home1"><img alt="" src="images/home/idea-blob-step1.png"/><br/>Publish <a href="index.php#node" onclick="setTabPushed('node')">ideas</a> and optionally add relevant websites</div>
-		 <div id="home2"><img alt="" src="images/home/idea-blob-step2.png"/><br/>Weave webs of <a href="index.php#conn" onclick="setTabPushed('conn')">meaningful connections</a> between ideas: your own and the world's</div>
-		 <div id="home3"><img alt="" src="images/home/idea-blob-step3.png"/><br/>Discover new <a href="index.php#node" onclick="setTabPushed('node')">ideas</a> and <a href="index.php#user" onclick="setTabPushed('user')">people</a></div>
-		 <div style="clear:both;"></div>
-	 </div>
+<p>PolicyCommons is being developed within the
+<a href="http://www.policy-impact.eu/">EU-funded IMPACT
+project</a>. The IMPACT project is researching and developing a set of
+	tools for facilitating online, public deliberation of policies being
+	proposed by governmental or non-governmental organisations. Within
+	the IMPACT project, PolicyCommons plays the role of the Argument
+	Analysis, Tracking and Visualisation Tool (AVT).</p>
 
-    <p>We experience the information ocean as streams of media fragments, flowing past us in every modality.</p>
-    <p>To make sense of these, learners, researchers and analysts must organise them into coherent patterns.</p>
-    <p>Cohere is an idea management tool for you to annotate URLs with ideas, and weave meaningful connections between ideas for personal, team or social use.</p>
+<p>PolicyCommons is powered by the
+<a href="http://cohere.open.ac.uk/">Cohere</a> tool developed at the
+ Open University. Cohere is a general information management tool that
+	allows users to visually create, connect and share ideas, as well as
+	annotate URLs with these ideas.</p>
 
     <h2>Key Features</h2>
-
+	<p>Currently, PolicyCommons provides most of the main features of
+	Cohere. These features allow users to:</p>
     <ul>
         <li>Annotate a URL with any number of Ideas, or vice-versa.</li>
         <li>Visualize your network as it grows</li>
@@ -98,49 +91,27 @@ li.option {
         <li>Use the <a href="<?php echo $CFG->homeAddress; ?>help/code-doc/Cohere-API/apilib.html">RESTful API services</a> to query, edit and mashup data from other tools</li>
     </ul>
 
-    <h2>Learn More</h2>
-
-    <p>Subscribe to <a href="http://kmi.open.ac.uk/technologies/cohere/">our Blog</a> to track developments as they happen.</p>
-    <p><a href="http://kmi.open.ac.uk/projects/hyperdiscourse/docs/Cohere.COMMA2008.pdf">Read this article</a> to learn more about the design of Cohere to support dialogue and debate.</p>
-
-    <h2>User Groups</h2>
-    <p>To discuss how Cohere can be used and make contact with other Cohere practitioners and research, please join our <a href="http://groups.google.com/group/coheregroup">Cohere group</a>.
-    <ul><li>To subscribe to the Cohere group send an e-mail to: coheregroup@googlegroups.com</li>
-    <li>To unsubscribe from the Cohere group send an e-mail to: coheregroup+unsubscribe@googlegroups.com</li></ul></p>
-
-    <p>We also have a separate <a href="http://groups.google.com/group/coheredev">Cohere developer group</a> for people wishing to discuss the Cohere API.
-    <ul><li>To subscribe to the Cohere developers group send an e-mail to: coheredev@googlegroups.com</li>
-    <li>To unsubscribe from the Cohere developers group send an e-mail to: coheredev+unsubscribe@googlegroups.com</li></ul></p>
-
-    <h2>Version</h2>
-
-    <p>This is version 1.0 of the Cohere website. Please use 1.0 when entering support queries, bugs or feature requests on our <a href="<?php echo $CFG->supportAddress; ?>" target="_blank">reporting system</a>.</p>
-
-
 	<h2>Open Source</h2>
 
-	<p>Cohere code is available for annonymous download from our subversion server under LGPL license.<br>
-	By downloading this code you are agreeing to this <a href="license.html" target="_blank">LGPL license</a>:<br>
-	<a href="http://cohere.open.ac.uk/subversion/public/">http://cohere.open.ac.uk/subversion/public/</a>
+	<p>PolicyCommons is an open source tool. The code, which is
+	distributed under the LGPL licence, can be downloaded
+	from the
+  <a href="https://github.com/cdc-leeds/PolicyCommons">
+  GitHub PolicyCommons page</a>.</p>
+
 
 
     <h2>Acknowledgements</h2>
 
-    Cohere is a tool developed in the UK <a target="CohereAbout" href="http://www.open.ac.uk">Open University</a>'s
-    <a target="CohereAbout" href="http://kmi.open.ac.uk">Knowledge Media Institute</a>, funded by the
-    <a target="CohereAbout" href="http://www.hewlett.org/Programs/Education/OER/openEdResources.htm">William and Flora Hewlett Foundation</a>,
-    as part of the  <a target="CohereAbout" href="http://www.open.ac.uk/openlearn">OpenLearn</a> initiative to make high quality learning resources and sensemaking tools freely accessible via the Web.
-    It builds on the UK EPSRC-funded <a target="CohereAbout" href="http://kmi.open.ac.uk/projects/scholonto">Scholarly&nbsp;Ontologies</a> project, and the international
-    <a target="CohereAbout" href="http://compendium.open.ac.uk/institute">Compendium&nbsp;Institute</a>.
-    Cohere design team is
-        <a target="CohereAbout" href="http://kmi.open.ac.uk/people/sbs">Simon Buckingham Shum</a>,
-        <a target="CohereAbout" href="http://kmi.open.ac.uk/people/bachler">Michelle Bachler</a>,
-        <a target="CohereAbout" href="http://alexlittle.net/">Alex Little</a> and
-        <a target="CohereAbout" href="http://kmi.open.ac.uk/people/mikele/">Michele Pasin</a>.
-    We are indebted to <a target="CohereAbout" href="http://kmi.open.ac.uk/people/harry/">Harriett Cornish</a> for graphic design.
-    We gratefully acknowledge use of PARC's <a target="CohereAbout" href="http://prefuse.org/">prefuse</a> visualization toolkit for the Connection Net view.
+	<p>PolicyCommons is developed at the Centre for Digital Citizenship,
+	Institute of Communications Studies, University of Leeds, UK. It is
+	funded as part of the <a href="http://www.policy-impact.eu/">EU FP7
+  IMPACT project</a>. PolicyCommons is powered by the
+  <a href="http://cohere.open.ac.uk">Cohere</a> tool developed at the
+  Knowledge Media Institute, The Open University.</p>
 
-
+	<p>We gratefully acknowledge use of the <a href="#">D3 visualisation
+  library</a> for generating network views of debates.</p>
 
 <?php
     include_once("includes/footer.php");
