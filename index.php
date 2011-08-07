@@ -97,9 +97,6 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
 
 				</div>
 
-				<div style="clear: both; float:left; margin-left: 5px; margin-top: 10px; padding-bottom: 10px; ">
-					<div style="clear:both; float:left; margin-bottom: 10px; height: 20px; background:#F8EAF3; width: 735px; padding-left: 5px; padding-top: 4px;"><strong>Example Network View. Click image to see live version!</strong></div>
-					<a style="clear:both; float:left;" href="http://cohere.open.ac.uk/group.php?connid=&userid=&nodeid=&url=&groupid=137108251480800349001234365781&q=&scope=all&focalnode=&start=0&max=-1&orderby=date&sort=DESC&netq=&netscope=&netnodeid=&direction=right#conn-net" target="_blank"><img src="images/home/homepage-network3.png" style="border:2px solid gray;" /></a>
 				</div>
 
 				<div id="tab-content-home-conn" style="overflow: hidden; clear:both; float:left; width: 740px; padding-right: 5px: 0px; padding: 0px; margin-top:10px; margin-left: 5px;">
