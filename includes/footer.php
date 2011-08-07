@@ -36,9 +36,18 @@
 </div>
 
 </div> <!-- end main -->
+<div style="float:left; clear:left;">
+		Powered by
+  <a href="http://cohere.open.ac.uk">
+  <img src="<?php echo $CFG->homeAddress; ?>images/cohere_logo2small.png"
+       style="border:0px;"/>
+  </a>
+</div>
 <div id="footer">
-    A <a href="http://projects.kmi.open.ac.uk/hyperdiscourse/">KMi</a> Tool from the <a href="http://www.olnet.org/">OLnet</a> Project
-    | <a href="<?php print($CFG->homeAddress);?>contact.php">Contact</a>
+    A <a href="http://digitalcitizenship.co.uk/">CdC</a> Tool from the
+   <a href="http://www.policy-impact.eu/">IMPACT</a> Project
+    | <a href="<?php
+		print($CFG->homeAddress);?>contact.php">Contact</a>
 </div>
 
 <!-- Google analytics -->
