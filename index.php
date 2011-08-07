@@ -89,44 +89,6 @@ range of publicly expressed opinions about public policies.</p>
 							<!-- div id="tab-content-home-idea" style="width: 240px; margin-top: 10px; margin-bottom: 15px;"><strong>Most Connected Idea:</strong><br></div -->
 						</div>
 
-						<div style="float:left; margin: 0px; margin-top: 10px; margin-left: 5px; margin=right: 0px;">
-							<div style="margin-bottom:10px; height: 20px; background:#F8EAF3; padding-left: 5px; padding-top: 4px; "><strong>News</strong></div>
-														
-							<script src="http://widgets.twimg.com/j/2/widget.js"></script>
-							<script>
-							new TWTR.Widget({
-							  version: 2,
-							  type: 'profile',
-							  rpp: 20,
-							  interval: 6000,
-							  width: 380,
-							  height: 290,
-							  theme: {
-								shell: {
-								  background: '#d3e8e8',
-								  color: '#308d88'
-								},
-								tweets: {
-								  background: '#ffffff',
-								  color: '#308d88',
-								  links: '#e80074'
-								}
-							  },
-							  features: {
-								scrollbar: true,
-								loop: false,
-								live: false,
-								hashtags: true,
-								timestamp: true,
-								avatars: false,
-								behavior: 'all'
-							  }
-							}).render().setUser('cohereweb').start();
-							</script>
-						</div>
-
-
-					</div>
 <p>Users can browse debate maps about public policies and follow links
 from the visual summaries of the arguments back to the original policy
 documents. Ultimately, the aim of PolicyCommons is to support greater
