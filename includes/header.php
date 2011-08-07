@@ -159,39 +159,6 @@ function updateuserstatus() {
 
 			<form name="search" action="<?php print($CFG->homeAddress);?>results.php" method="get" id="searchform" onsubmit="return setSearchResultTab()">
 
-				<div style="clear: both; float: left;">
-					<a style="float: left; margin-right: 20px; margin-top: 3px; color: #e80074;" title="Click to view some example searches" href="#" onclick="toggleDiv('searchExamplesPanel')" onkeypress="enterKeyPressed(event)">Search Examples...</a>
-
-					<div id="searchExamplesPanel" style="clear: both; background: #d3e8e8; position: absolute; display: none; border: 1px solid #308D88" onkeypress="enterKeyPressed(event)">
-						<p style="margin-left: 2px;">
-
-						<ul style="padding: 2px; margin:2px; list-style: none; margin-bottom:5px; font-weight: bold;">
-						<!--li style="margin-bottom:6px;"><a href="http://cohere.open.ac.uk/node.php?nodeid=137108252141195571923&amp;start=0&amp;max=20&amp;orderby=date&amp;sort=DESC&amp;direction=left&amp;filtergroup=&amp;filterlist=&amp;netnodeid=&amp;netq=&amp;netscope=&amp;focalnode=137108252141195571923#conn-neighbour">Black IQ Scores Debate</a>
-						 (<a href="http://cohere.open.ac.uk/node.php?nodeid=137108252141195571923&start=0&max=20&orderby=date&sort=DESC&direction=left&filtergroup=&filterlist=&netnodeid=137108252141195571923&netq=supports%2Cresponds%20to%2Cchallenges&netscope=all&nodelabel=On%20every%20measure%20of%20intellectual%20ability%20and%20educational%20attainment%20Blacks%20perform%20significantly%20worse%2C%20on%20average%2C%20than%20Whites.#conn-net">Network View</a>)<br-->
-
-						 <li style="margin-bottom:6px;">COP15 Climate Change Conference - Main Issues
-						 (<a href="http://cohere.open.ac.uk/group.php?groupid=137108251180957957001258741020&start=0&max=20&orderby=date&sort=DESC&direction=right&filtergroup=&filterlist=&netnodeid=&netq=&netscope=&nodelabel=%23COP15#conn-net">Network View</a>)<br>
-
-						 <li style="margin-bottom:6px;"><a href="http://cohere.open.ac.uk/node.php?nodeid=1371081741340283942001260805078#conn-neighbour">Humans are the main influence on climate change</a></li>
-
-						 <li style="margin-bottom:6px;"><a href="http://cohere.open.ac.uk/node.php?nodeid=9396932240241950001231360289#conn-neighbour">What are the top ten claims of climate sceptics?</a>
-						 (<a href="http://cohere.open.ac.uk/group.php?groupid=137108251480800349001234365781&focalnode=9396932240241950001231360289#conn-net">Network View</a>)</li>
-
-						<li style="margin-bottom:6px;"><a href="http://cohere.open.ac.uk/node.php?nodeid=8653491981196929343&start=0&max=20&orderby=date&sort=DESC&direction=right&filtergroup=&filterlist=&netnodeid=&netq=&netscope=&focalnode=8653491981196929343#conn-neighbour">CETIS 2007 Workshop on Semantic Structures for Teaching and Learning</a>
-						 <br>(<a href="http://cohere.open.ac.uk/results.php?q=T%3Acetis&scope=all&start=0&max=20&orderby=date&sort=DESC&direction=right&filtergroup=&filterlist=&netnodeid=&netq=&netscope=#conn-net">Network View</a>)<br>
-
-						<li style="margin-bottom:6px;><a href="http://cohere.open.ac.uk/node.php?nodeid=19276146511200983756&start=0&max=20&orderby=date&sort=DESC&direction=left&filtergroup=&filterlist=&netnodeid=&netq=&netscope=&focalnode=19276146511200983756#conn-neighbour">Argumentation and Social Networks</a>
-						 (<a href="http://cohere.open.ac.uk/results.php?q=T%3Adagstuhl&scope=all&start=0&max=20&orderby=date&sort=DESC&direction=right&filtergroup=&filterlist=&netnodeid=&netq=&netscope=#conn-net">Network View</a>)<br>
-
-						<li style="margin-bottom:6px;"><a href="http://cohere.open.ac.uk/user.php?userid=137108242490292899001209567757174240793#node-gmap">Blog feed</a>
-						 (<a href="http://cohere.open.ac.uk/user.php?userid=137108242490292899001209567757174240793#node-gmap">Google Maps view</a>)</li>
-						</ul>
-
-						</p>
-						<a style="float: right; margin: 3px;" href="javascript:toggleDiv('searchExamplesPanel')">Close</a>
-					</div>
-				</div>
-
 				<label for="q" style="float: left; margin-right: 3px; margin-top: 3px;">Search</label>
 
 				<?php
