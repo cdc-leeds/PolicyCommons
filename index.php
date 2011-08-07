@@ -33,25 +33,6 @@
     font-weight:bold;
 }
 
-#home1 {
-    width: 225px;
-    float: left;
-    margin: 10px;
-    margin-left: 5px;
-}
-#home2 {
-    width: 235px;
-    float: left;
-    margin: 10px;
-    margin-left: 0px;
-    margin-right: 5px;
-}
-#home3 {
-     width: 225px;
-    float: left;
-    margin: 10px;
-    margin-right: 0px;
-}
 .hi-light {
     color: #e80074;
 }
@@ -96,16 +77,9 @@ li.option {
 			  <div style="float:left;">
 
 				<div style="float:left; padding-left: 5px;">
-					 <strong><p>The Web is about IDEAS+PEOPLE.</p>
-					 <p>Cohere is a visual tool to create, connect and share Ideas.</p>
-					 Back them up with websites. Support or challenge them. Embed them to spread virally.<br/>
-					 Discover who - literally - connects with your thinking.</strong>
-					 <div id="steps">
-						 <div id="home1"><img alt="" src="images/home/idea-blob-step1b.png"/><br/>Publish <a href="index.php#node" onclick="setTabPushed('node')">ideas</a> and optionally add relevant websites</div>
-						 <div id="home2"><img alt="" src="images/home/idea-blob-step2b.png"/><br/>Weave webs of <a href="index.php#conn" onclick="setTabPushed('conn')">meaningful connections</a> between ideas: your own and the world's</div>
-						 <div id="home3"><img alt="" src="images/home/idea-blob-step3.png"/><br/>Discover new <a href="index.php#node" onclick="setTabPushed('node')">ideas</a> and <a href="index.php#user" onclick="setTabPushed('user')">people</a></div>
-						 <div style="clear:both;"></div>
-					 </div>
+<p>PolicyCommons is a tool that displays arguments about policies as
+browsable debate maps. It is designed to help users make sense of the
+range of publicly expressed opinions about public policies.</p>
 
 					<div style="float: left; padding-bottom: 10px;">
 
@@ -153,6 +127,11 @@ li.option {
 
 
 					</div>
+<p>Users can browse debate maps about public policies and follow links
+from the visual summaries of the arguments back to the original policy
+documents. Ultimately, the aim of PolicyCommons is to support greater
+	participation in the democrative process, as well as to improve the
+	openness and accountability of the democratic process.</p>
 
 				</div>
 
