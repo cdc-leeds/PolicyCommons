@@ -1,6 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
+ *  (c) Copyright 2011 University of Leeds, UK                                  *
  *  (c) Copyright 2010 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
@@ -281,27 +282,7 @@
     		}
     	?>
     	</ul>
-		<hr class="hrline" />
 
-    </div>
-
-    <div id="firefoxplugin" style="clear:both; float:left; margin: 3px; margin-top: 0px;">
-	    <?php
-	    //detect if firefox browser being used and show link to FF
-	    if ( strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox')){
-	        ?>
-		<a href="<?php print($CFG->homeAddress);?>plugin/download/cohere.xpi"
-	  		iconURL="<?php print($CFG->homeAddress);?>images/firefox.png""
-	  		hash="MD5:9C0B53FE3AAEE7D0EEFCDD50BE1720F1"
-	  		onclick="return install(event);"><img id="fflogo" src="<?php print($CFG->homeAddress);?>images/firefox.png"/>Install Cohere FireFox plugin 0.6.9</a>
-	     <br><br>
-	        <?php
-	    } else {
-	    ?>
-	       <img id="fflogo" src="<?php print($CFG->homeAddress);?>images/firefox.png"/>
-	       If you were using <a href="http://www.mozilla.com/firefox/">Firefox</a>, you could use the Cohere Firefox plugin!
-
-	    <?php } ?>
     </div>
 
 </div>
