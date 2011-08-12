@@ -147,6 +147,8 @@ function updateuserstatus() {
 				}
 			?>
 			| <a href='<?php echo $CFG->homeAddress; ?>about.php'>About</a>
+      | <a href="<?php
+		print($CFG->homeAddress);?>contact.php">Contact</a>
 			| <a href='<?php echo $CFG->homeAddress; ?>help/'>Help</a>
 
 			<?php

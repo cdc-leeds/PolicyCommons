@@ -46,8 +46,6 @@
 <div id="footer">
     A <a href="http://digitalcitizenship.co.uk/">CdC</a> Tool from the
    <a href="http://www.policy-impact.eu/">IMPACT</a> Project
-    | <a href="<?php
-		print($CFG->homeAddress);?>contact.php">Contact</a>
 </div>
 
 <!-- Google analytics -->
