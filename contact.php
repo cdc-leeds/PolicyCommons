@@ -1,6 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
+ *  (c) Copyright 2011 University of Leeds, UK                                  *
  *  (c) Copyright 2010 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
@@ -21,7 +22,7 @@
  *  arising in any way out of the use of this software, even if advised of the  *
  *  possibility of such damage.                                                 *
  *                                                                              *
-		 ********************************************************************************/
+ ********************************************************************************/
     include_once("config.php");
     include_once("includes/header.php");
     global $CFG;
@@ -29,18 +30,20 @@
 
 <h1>Contact</h1>
 
-<p>If you would like to report a bug or have a suggestion for improvement to Cohere,
-then please visit our <a href="<?php print($CFG->supportAddress);?>">support site</a></p>
-<p>Otherwise, to contact the Cohere team please email: <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $CFG->EMAIL_REPLY_TO; ?></a></p>
+<p>If you would like to report a bug or have a feature request,
+then please visit the
+<a href="https://github.com/cdc-leeds/PolicyCommons/issues">'Issues'
+			page on our GitHub code repository.</a></p>
 
-<h2>User Groups</h2>
-    <p>To discuss how Cohere can be used and make contact with other Cohere practitioners and research, please join our <a href="http://groups.google.com/group/coheregroup">Cohere group</a>.
-    <ul><li>To subscribe to the Cohere group send an e-mail to: <a href="mailto:coheregroup@googlegroups.com">coheregroup@googlegroups.com</a></li>
-    <li>To unsubscribe from the Cohere group send an e-mail to: <a href="mailto:coheregroup+unsubscribe@googlegroups.com">coheregroup+unsubscribe@googlegroups.com</a></li></ul></p> 
+<p>For other general comments and feedback about PolicyCommons, please
+			email
+			<a href="mailto:n.j.l.benn@leeds.ac.uk">
+			  Dr. Neil Benn
+			</a> or
+			<a href="mailto:a.macintosh@leeds.ac.uk">
+			  Prof. Ann Macintosh
+			</a>.</p>
 
-    <p>We also have a separate <a href="http://groups.google.com/group/coheredev">Cohere developer group</a> for people wishing to discuss the Cohere API.
-    <ul><li>To subscribe to the Cohere developers group send an e-mail to: <a href="mailto:coheredev@googlegroups.com">coheredev@googlegroups.com</a></li>
-    <li>To unsubscribe from the Cohere developers group send an e-mail to: <a href="mailto:coheredev+unsubscribe@googlegroups.com">coheredev+unsubscribe@googlegroups.com</a></li></ul></p> 
 <?php
     include_once("includes/footer.php");
 ?>
