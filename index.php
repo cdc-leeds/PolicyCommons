@@ -66,7 +66,6 @@ li.option {
         <ul id="tabs" class="tab">
             <li class="tab"><a class="tab" id="tab-home" href="#home"><span class="tab">Home</span></a></li>
             <!-- li class="tab"><a class="tab" id="tab-welcome" href="#welcome"><span class="tab">Welcome</span></a></li -->
-           <li class="tab"><a class="tab" id="tab-twitter" href="#twitter"><span class="tab">Twitter</span></a></li>
             <li class="tab"><a class="tab" id="tab-tags" href="#tags"><span class="tab">Tag Cloud</span></a></li>
             <li class="tab"><a class="tab" id="tab-node" href="#node"><span class="tab">Ideas</span></a></li>
             <li class="tab"><a class="tab" id="tab-conn" href="#conn"><span class="tab">Connections</span></a></li>
@@ -96,119 +95,6 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
 			 </div>
            </div>
 
-           <div id='tab-content-twitter' class='tabcontent'>
-
-				<!-- div id="twitter">
-				<ul id="twitter_update_list"></ul>
-				<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
-				<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/coheretesting.json
-				?callback=twitterCallback2&count=10"></script></div -->
-
-				<div style="float:left; margin: 5px;">
-					<script src="http://widgets.twimg.com/j/2/widget.js"></script>
-					<script>
-					new TWTR.Widget({
-					  version: 2,
-					  type: 'profile',
-					  rpp: 40,
-					  interval: 6000,
-					  width: 250,
-					  height: 300,
-					  theme: {
-						shell: {
-						  background: '#AFD8D7',
-						  color: '#308d88'
-						},
-						tweets: {
-						  background: '#ffffff',
-						  color: '#308d88',
-						  links: '#e80074'
-						}
-					  },
-					  features: {
-						scrollbar: true,
-						loop: false,
-						live: false,
-						hashtags: true,
-						timestamp: true,
-						avatars: false,
-						behavior: 'all'
-					  }
-					}).render().setUser('cohereweb').start();
-					</script>
-				</div>
-
-				<div style="float:left; margin: 5px;">
-					<script src="http://widgets.twimg.com/j/2/widget.js"></script>
-					<script>
-					new TWTR.Widget({
-					  version: 2,
-					  type: 'profile',
-					  rpp: 40,
-					  interval: 6000,
-					  width: 250,
-					  height: 300,
-					  theme: {
-						shell: {
-						  background: '#AFD8D7',
-						  color: '#308d88'
-						},
-						tweets: {
-						  background: '#ffffff',
-						  color: '#308d88',
-						  links: '#e80074'
-						}
-					  },
-					  features: {
-						scrollbar: true,
-						loop: false,
-						live: false,
-						hashtags: true,
-						timestamp: true,
-						avatars: false,
-						behavior: 'all'
-					  }
-					}).render().setUser('coherestream').start();
-					</script>
-				</div>
-
-				<div style="float:left; margin: 5px;">
-					<script src="http://widgets.twimg.com/j/2/widget.js"></script>
-					<script>
-					new TWTR.Widget({
-					  version: 2,
-					  type: 'search',
-					  search: '#cohereweb OR @cohereweb',
-					  interval: 6000,
-					  title: 'Searching for #cohereweb / @cohereweb',
-					  subject: 'Cohere Twitter Search',
-					  width: 250,
-					  height: 300,
-					  theme: {
-						shell: {
-						  background: '#AFD8D7',
-						  color: '#308d88'
-						},
-						tweets: {
-						  background: '#ffffff',
-						  color: '#308d88',
-						  links: '#e80074'
-						}
-					  },
-					  features: {
-						scrollbar: true,
-						loop: false,
-						live: true,
-						hashtags: true,
-						timestamp: true,
-						avatars: true,
-						behavior: 'all'
-					  }
-					}).render().start();
-					</script>
-				</div>
-
-           </div>
 
         <div id="tab-content-tags" class="tabcontent">
         <div id="tagcloud" style="width:98%">
