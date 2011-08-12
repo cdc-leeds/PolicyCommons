@@ -1,5 +1,6 @@
 /********************************************************************************
  *                                                                              *
+ *  (c) Copyright 2011 University of Leeds, UK                                  *
  *  (c) Copyright 2010 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
@@ -21,7 +22,7 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-var HOMETABS = {"home":false ,"twitter":true,"tags":true,"screencast":true,"node":false,"conn":false,"user":false};
+var HOMETABS = {"home":false ,"twitter":true,"tags":true,"node":false,"conn":false,"user":false};
 var DEFAULTTAB = 'home';
 var CURRENT_IDEA_CALL = '';
 var CURRENT_CONN_CALL = '';
@@ -31,7 +32,6 @@ Event.observe(window, 'load', function() {
 	Event.observe('tab-home','click', function (){setTabPushed('home');});
 	Event.observe('tab-twitter','click', function (){setTabPushed('twitter');});
 	Event.observe('tab-tags','click', function (){setTabPushed('tags');});
-	Event.observe('tab-screencast','click',function (){setTabPushed('screencast');});
 	Event.observe('tab-node','click', function (){setTabPushed('node');});
 	Event.observe('tab-conn','click', function (){setTabPushed('conn');});
 	Event.observe('tab-user','click', function (){setTabPushed('user');});
@@ -67,8 +67,6 @@ function setTabPushed(tab) {
 		case 'welcome':
 			break;
 		case 'tags':
-			break;
-		case 'screencast':
 			break;
 		case 'node':
 			if(!HOMETABS.node){
@@ -610,36 +608,6 @@ function loadActiveUsers(){
       			}
       		}
       	});   
-}
-
-ytCIOER = showYouTube.bindAsEventListener($('ci-oer-sc'),'ci-oer-sc','http://www.youtube.com//v/N4HcDy-0Z9Y');
-ytCIOERC = closeYouTube.bindAsEventListener($('ci-oer-sc'),'ci-oer-sc','http://www.youtube.com/v/N4HcDy-0Z9Y');
-
-ytAddIdea = showYouTube.bindAsEventListener($('add-idea-sc'),'add-idea-sc','http://www.youtube.com/v/xx4qBVewrr4');
-ytAddIdeaC = closeYouTube.bindAsEventListener($('add-idea-sc'),'add-idea-sc','http://www.youtube.com/v/xx4qBVewrr4');
-
-ytAddConn = showYouTube.bindAsEventListener($('add-conn-sc'),'add-conn-sc','http://www.youtube.com/v/nxsUD-egDKQ');
-ytAddConnC = closeYouTube.bindAsEventListener($('add-conn-sc'),'add-conn-sc','http://www.youtube.com/v/nxsUD-egDKQ');
-
-ytAddURL = showYouTube.bindAsEventListener($('add-url-sc'),'add-url-sc','http://www.youtube.com/v/0Dv_EnFY_8g');
-ytAddURLC = closeYouTube.bindAsEventListener($('add-url-sc'),'add-url-sc','http://www.youtube.com/v/0Dv_EnFY_8g');
-
-function showYouTube(e){
-	var data = $A(arguments);
-	obj = data[1];
-	vid = data[2];
-	var yt = '<object width="425" height="350"> <param name="movie" value="'+vid+'"> </param> <embed src="'+vid+'" type="application/x-shockwave-flash" width="425" height="350"> </embed> </object>';
-	$(obj).update(yt);
-	$(obj+'-open').hide();
-	$(obj+'-close').show();
-}
-
-function closeYouTube(e){
-	var data = $A(arguments);
-	obj = data[1];
-	$(obj).update("");
-	$(obj+'-open').show();
-	$(obj+'-close').hide();
 }
 
 /**
