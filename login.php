@@ -46,7 +46,7 @@
     include_once("includes/header.php");
 ?>
 
-<h1>Login to Cohere</h1>
+<h1>Login to PolicyCommons</h1>
 
 
 <p>Not yet registered? <a href="register.php">Sign Up!</a>
