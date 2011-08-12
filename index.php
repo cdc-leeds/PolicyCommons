@@ -66,7 +66,6 @@ li.option {
         <ul id="tabs" class="tab">
             <li class="tab"><a class="tab" id="tab-home" href="#home"><span class="tab">Home</span></a></li>
             <!-- li class="tab"><a class="tab" id="tab-welcome" href="#welcome"><span class="tab">Welcome</span></a></li -->
-            <li class="tab"><a class="tab" id="tab-tags" href="#tags"><span class="tab">Tag Cloud</span></a></li>
             <li class="tab"><a class="tab" id="tab-node" href="#node"><span class="tab">Ideas</span></a></li>
             <li class="tab"><a class="tab" id="tab-conn" href="#conn"><span class="tab">Connections</span></a></li>
             <li class="tab"><a class="tab" id="tab-user" href="#user"><span class="tab">People &amp; Groups</span></a></li>
@@ -94,105 +93,6 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
 				</div>
 			 </div>
            </div>
-
-
-        <div id="tab-content-tags" class="tabcontent">
-        <div id="tagcloud" style="width:98%">
-   		<ul>
-       	<?php
-           		$tags = getTagsForCloud(0);
-
-           		if ($tags != null) {
-
-       	    		// get the count range first
-       	    		$minCount = -1;
-       	    		$maxCount = -1;
-       	    		foreach($tags as $tag) {
-       	    			$count = $tag['UseCount'];
-       	    			if ($count > $maxCount) {
-       	    				$maxCount = $count;
-       	    			}
-       	    			if ($minCount == -1) {
-       	    				$minCount = $count;
-       	    			} else if ($count < $minCount) {
-       	    				$minCount = $count;
-       	    			}
-       	    		}
-           			//echo $maxCount."<br>";
-           			//echo $minCount."<br>";
-
-
-           			if ($maxCount < 10) {
-           				$range = 1;
-           			} else {
-           				$range = round(($maxCount - $minCount) / 10);
-           			}
-           			//echo $range."<br>";
-
-       	    		$i = 0;
-       	    		foreach($tags as $tag) {
-
-       	    			$cloudlistcolour = "";
-       	    			if ($i % 2) {
-       	    				$cloudlistcolour = "#40b5b2";
-       	    			} else {
-       	    				$cloudlistcolour = "#e80074";
-       	    			}
-       	    			$i++;
-
-       	    			$count = $tag['UseCount'];
-
-    					if ($count < 2) {
-       	    				echo '<li class="tag1" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 2 && $count < 4) {
-       	    				echo '<li class="tag2" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 4 && $count < 6) {
-       	    				echo '<li class="tag3" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 6 && $count < 8) {
-       	    				echo '<li class="tag4" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 8 && $count < 10) {
-       	    				echo '<li class="tag5" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 10 && $count < 12) {
-       	    				echo '<li class="tag6" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 12 && $count < 14) {
-       	    				echo '<li class="tag7" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 14 && $count < 16) {
-       	    				echo '<li class="tag8" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 16 && $count < 18) {
-       	    				echo '<li class="tag9" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					} else if ($count >= 18) {
-       	    				echo '<li class="tag10" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-    					}
-
-
-       	    			/*if ($count >= $minCount && $count < $minCount+$range) {
-       	    				echo '<li class="tag1" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*1) && $count < $minCount+($range*2)) {
-       	    				echo '<li class="tag2" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*2) && $count < $minCount+($range*3)) {
-       	    				echo '<li class="tag3" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*3) && $count < $minCount+($range*4)) {
-       	    				echo '<li class="tag4" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*4) && $count < $minCount+($range*5)) {
-       	    				echo '<li class="tag5" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*5) && $count < $minCount+($range*6)) {
-       	    				echo '<li class="tag6" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*6) && $count < $minCount+($range*7)) {
-       	    				echo '<li class="tag7" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*7) && $count < $minCount+($range*8)) {
-       	    				echo '<li class="tag8" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*8) && $count < $minCount+($range*9)) {
-       	    				echo '<li class="tag9" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			} else if ($count >= $minCount+($range*9))  {
-       	    				echo '<li class="tag10" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
-       	    			}*/
-       	    		}
-           		}
-           	?>
-
-       	</ul>
-       </div>
-       </div>
 
 
             <div id='tab-content-node' class='tabcontent'>(Loading ideas...)</div>

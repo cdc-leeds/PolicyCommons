@@ -22,7 +22,7 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-var HOMETABS = {"home":false ,"tags":true,"node":false,"conn":false,"user":false};
+var HOMETABS = {"home":false ,"node":false,"conn":false,"user":false};
 var DEFAULTTAB = 'home';
 var CURRENT_IDEA_CALL = '';
 var CURRENT_CONN_CALL = '';
@@ -30,7 +30,6 @@ var CURRENT_CONN_CALL = '';
 Event.observe(window, 'load', function() {
 	// add events for clicking on the tabs
 	Event.observe('tab-home','click', function (){setTabPushed('home');});
-	Event.observe('tab-tags','click', function (){setTabPushed('tags');});
 	Event.observe('tab-node','click', function (){setTabPushed('node');});
 	Event.observe('tab-conn','click', function (){setTabPushed('conn');});
 	Event.observe('tab-user','click', function (){setTabPushed('user');});
@@ -62,8 +61,6 @@ function setTabPushed(tab) {
 			}
 			break;
 		case 'welcome':
-			break;
-		case 'tags':
 			break;
 		case 'node':
 			if(!HOMETABS.node){
