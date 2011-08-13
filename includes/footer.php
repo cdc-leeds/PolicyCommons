@@ -36,7 +36,8 @@
 </div>
 
 </div> <!-- end main -->
-<div style="float:left; clear:left;">
+<div style="float:left; clear:left; margin-top:20px;
+            margin-bottom:10px; margin-left:10px;">
 		Powered by
   <a href="http://cohere.open.ac.uk">
   <img src="<?php echo $CFG->homeAddress; ?>images/cohere_logo2small.png"
@@ -45,7 +46,9 @@
 </div>
 <div id="footer">
     A <a href="http://digitalcitizenship.co.uk/">CdC</a> Tool from the
-   <a href="http://www.policy-impact.eu/">IMPACT</a> Project
+   <a href="http://www.policy-impact.eu/">
+		<img src="<?php echo $CFG->homeAddress; ?>images/impact-logo.png"
+       style="border:0px;"/></a> Project
 </div>
 
 <!-- Google analytics -->
