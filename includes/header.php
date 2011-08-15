@@ -29,7 +29,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>
-Cohere >>> make the connection
+PolicyCommons -- navigate the pros and cons in policy debates
 </title>
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/node.css" type="text/css" media="screen" />
