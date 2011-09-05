@@ -82,7 +82,7 @@ range of publicly expressed opinions about public policies.</p>
 <p>Users can browse debate maps about public policies and follow links
 from the visual summaries of the arguments back to the original policy
 documents. Ultimately, the aim of PolicyCommons is to support greater
-	participation in the democrative process, as well as to improve the
+	participation in the democratic process, as well as to improve the
 	openness and accountability of the democratic process.</p>
 
 				</div>

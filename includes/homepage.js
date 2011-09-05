@@ -583,7 +583,7 @@ function loadActiveUsers(){
       				alert(json.error[0].message);
       				return;
       			} 
-      			content.update("<p><b>Most publically Active Connection Builders:</b></p>");
+      			content.update("<p><b>Most publicly Active Connection Builders:</b></p>");
       			var users = json.userset[0].users;
       			if(users.length > 0){
 	      			content.insert('<div style="clear:both;"></div>');
