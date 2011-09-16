@@ -1284,7 +1284,7 @@ function loadConnectionNeighbourhood(){
  * load JS file for creating the connection network (applet)
  */
 function loadConnectionNet(){
-	var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net.js");
+	var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net-svg.js");
     bObj.buildScriptTag();
     bObj.addScriptTag();
 }
