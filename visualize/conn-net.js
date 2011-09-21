@@ -230,6 +230,14 @@ function loadAppletData() {
 	      				$('Cohere-ConnectionNet').addEdge(c.connid, fN.nodeid, tN.nodeid, c.linktype[0].linktype.grouplabel, c.linktype[0].linktype.label, c.creationdate, c.userid, c.users[0].user.name, c.fromrole[0].role.name,c.torole[0].role.name);
 	      			}	
       				$('connmessage').innerHTML="";	
+
+						// let the user know that system is falling back to Java
+						// visualisation
+						$("connmessage").innerHTML = "Your browser doesn't appear to"+
+			" support SVG, so, instead you are viewing a Java-applet-based"+
+			" visualisation. Alternatively, you can try to reload the URL "+
+			"in	Firefox, Safari, Opera, or Chrome.";
+
 					//$('expandconnlink').style.visibility = 'visible';    
 					//$('viewdetailconnlink').style.visibility = 'visible';					
 					//$('viewconnlink').style.visibility = 'visible';					

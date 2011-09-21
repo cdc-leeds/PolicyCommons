@@ -1284,9 +1284,21 @@ function loadConnectionNeighbourhood(){
  * load JS file for creating the connection network (applet)
  */
 function loadConnectionNet(){
-	var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net-svg.js");
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+		if (document.createElementNS) {
+				// JavaScript method needed for the D3 SVG library (it is used
+				// to create elements in SVG namespace on the fly)
+				var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net-svg.js");
+				bObj.buildScriptTag();
+				bObj.addScriptTag();
+		}
+		else {
+				// Then we are probably dealing with Internet Explorer, which
+				// doesn't understand namespaces. So fallback to original
+				// Cohere Java ConnectionNet visualisation
+				var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net.js");
+				bObj.buildScriptTag();
+				bObj.addScriptTag();
+		}
 }
 
 /**
