@@ -444,6 +444,15 @@ function loadMyConnectedIdeas(){
 
 function nodeTabHeader(objDiv,current){
 	var head = new Element("div",{'id':'nodehead'});
+
+	var tb = new Element("div", {'class':'toolbarrow'});
+	head.update(tb);
+	tb.insert(displayNodeAdd());
+
+	if (USER != null && USER != "") {
+			head.insert("...or <a href='"+URL_ROOT+"import/index.php'>Import data</a>");
+	}
+
 	var allUL = new Element("ul",{'class':'home-node-head-list'});
 	allUL.insert(new Element("li",{'class':'home-node-head-item'}).insert("<span style='width:30px;'>All:</span>"));
 
@@ -538,6 +547,15 @@ function loadAllRecentConnections(){
       			} 
       			
       			var header = new Element("p");
+
+	var tb = new Element("div", {'class':'toolbarrow'});
+	header.update(tb);
+	tb.insert(displayConnectionAdd());
+
+	if (USER != null && USER != "") {
+			header.insert("...or <a href='"+URL_ROOT+"import/index.php'>Import data</a><br/>");
+	}
+
       			header.insert("<b>Recent connections:</b>");
       			var feed = new Element("img", 
 					{'src': URL_ROOT+'images/toolbars/feed-icon-20x20.png',
@@ -575,6 +593,11 @@ function loadAllRecentConnections(){
 function loadActiveUsers(){
 	var content = $('tab-content-user');
 	content.update(getLoading("(Loading people &amp; groups...)"));
+
+	var tb = new Element("div", {'class':'toolbarrow'});
+	content.update(tb);
+	tb.insert(displayGroupAdd());
+
 	var reqUrl = SERVICE_ROOT + "&method=getactiveconnectionusers";
 	new Ajax.Request(reqUrl, { method:'get',
   			onSuccess: function(transport){
@@ -583,7 +606,7 @@ function loadActiveUsers(){
       				alert(json.error[0].message);
       				return;
       			} 
-      			content.update("<p><b>Most publicly Active Connection Builders:</b></p>");
+      			content.insert("<p><b>Most publicly Active Connection Builders:</b></p>");
       			var users = json.userset[0].users;
       			if(users.length > 0){
 	      			content.insert('<div style="clear:both;"></div>');
@@ -620,4 +643,51 @@ function getHomepageConnFeed(){
 	var url = SERVICE_ROOT.replace('format=json','format=rss');
 	var reqUrl = url + CURRENT_CONN_CALL;
 	window.location.href = reqUrl;
+}
+
+/** Following copied from tabber.js. Really should just be in one
+	*	place but for will take the easy road
+	*/
+/**
+ * Add the button to open the add an idea dialog
+ */
+function displayNodeAdd(){
+	var a = new Element("span",{'id':'add-node','class':'add'});
+	if (USER != null && USER != "") {
+		a.insert("<a href=\"javascript:loadDialog('createidea','"+URL_ROOT+"plugin/ui/idea.php');\"title='Add Idea'><img alt='Add Idea' src='"+URL_ROOT+"images/toolbars/plus.png' class='toolbar'/>Add Idea</a>");
+	}
+	return a;
+}
+
+/**
+ * Add the button to open the add a website dialog
+ */
+function displayWebsiteAdd(){
+	var a = new Element("span",{'id':'add-conn','class':'add'});
+	if (USER != null && USER != "") {
+		a.insert("<a href=\"javascript:loadDialog('createurl','"+URL_ROOT+"plugin/ui/url.php');\" title='Add Website'><img alt='Add Website' src='"+URL_ROOT+"images/toolbars/plus.png' class='toolbar'/></a>");
+	}
+	return a;
+}
+
+/**
+ * Add the button to open the add a connection dialog
+ */
+function displayConnectionAdd(){
+	var a = new Element("span",{'id':'add-conn','class':'add'});
+	if (USER != null && USER != "") {
+		a.insert("<a href=\"javascript:loadDialog('createconn','"+URL_ROOT+"plugin/ui/connection.php',790,650);\" title='Add Connection'><img alt='Add Connection' src='"+URL_ROOT+"images/toolbars/plus.png' class='toolbar'/>Add Connection</a>");
+	}
+	return a;
+}
+
+/**
+ * Add the button to open the add a group dialog
+ */
+function displayGroupAdd(){
+	var a = new Element("span",{'id':'add-conn','class':'add'});
+	if (USER != null && USER != "") {
+		a.insert("<a href=\"javascript:loadDialog('creategroup','"+URL_ROOT+"plugin/ui/addgroup.php');\" title='Add Group'><img alt='Add Group' src='"+URL_ROOT+"images/toolbars/plus.png' class='toolbar'/>Add Group</a>");
+	}
+	return a;
 }
