@@ -63,6 +63,37 @@
         <div id="contextimage"><img src="<?php print $user->photo;?>"/></div>
         <div id="contextinfo">
             <h1><?php print $user->name; ?></h1>
+<?php if (isset($USER->userid)) {?>
+<div>
+New: <a href="javascript:loadDialog('createidea','<?php print($CFG->homeAddress);?>plugin/ui/idea.php');">Idea</a> |
+     <a href="javascript:loadDialog('createconn','<?php print($CFG->homeAddress);?>plugin/ui/connection.php', 840, 760);">
+        Connection</a> |
+     <a href="javascript:loadDialog('createurl','<?php print($CFG->homeAddress);?>plugin/ui/url.php');">Website</a> |
+     <a href="javascript:loadDialog('creategroup','<?php print($CFG->homeAddress);?>plugin/ui/addgroup.php');">Group</a> |
+     <a href="<?php print($CFG->homeAddress);?>import/index.php">Import / Feed</a>
+</div>
+<div>
+Edit: <a href="<?php
+        print($CFG->homeAddress);?>profile.php">Profile</a> | <a
+        href="<?php print($CFG->homeAddress);?>editgroup.php">
+        Groups</a> | <a
+        href="javascript:loadDialog('managetags','<?php
+        print($CFG->homeAddress);?>plugin/ui/tag.php');">
+        Tags</a> | <a
+        href="javascript:loadDialog('managebookmarks','<?php
+        print($CFG->homeAddress);?>plugin/ui/bookmarks.php');">
+        Bookmarks</a> | <a
+        href="javascript:loadDialog('managesearches','<?php
+        print($CFG->homeAddress);?>plugin/ui/managesearches.php', 790,
+        650);">Searches</a> | <a
+        href="javascript:loadDialog('manageroles','<?php
+        print($CFG->homeAddress);?>plugin/ui/role.php');">
+        Idea Types</a> | <a
+        href="javascript:loadDialog('managelinktypes','<?php
+        print($CFG->homeAddress);?>plugin/ui/linktype.php');">
+        Link Types</a>
+</div>
+			<?php } ?>
             <?php
 				if($USER->getIsAdmin() == "Y"){
 					echo "<a title='stats' href='".$CFG->homeAddress."admin/userContextStats.php?userid=".$userid."'> (stats) </a>";

@@ -74,7 +74,7 @@ li.option {
            <div id='tab-content-home' class='tabcontenthome'>
 			  <div style="float:left;">
 
-				<div style="float:left; padding-left: 5px;">
+				<div style="float:left; padding-left: 5px; width: 740px;">
 <p>PolicyCommons is a tool that displays arguments about policies as
 browsable debate maps. It is designed to help users make sense of the
 range of publicly expressed opinions about public policies.</p>

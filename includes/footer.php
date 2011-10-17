@@ -26,14 +26,14 @@
 </div> <!-- end innertube -->
 </div> <!-- end content -->
 </div> <!-- end contentwrapper -->
-
+<!--
 <div id="sidebar">
     <div class="s_innertube">
     <?php
         include("sidebar.php");
     ?>
     </div>
-</div>
+</div> -->
 
 </div> <!-- end main -->
 <div style="float:left; clear:left; margin-top:20px;

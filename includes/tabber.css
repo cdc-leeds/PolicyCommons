@@ -87,7 +87,7 @@
 #tabber .tabcontenthome{
 	clear: both;
 	border: 2px solid #d3e8e8;
-	width: 745px;
+	width: 100%;
 	padding: 5px;
 	padding-top: 8px;
 	padding-right: 10px;

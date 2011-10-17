@@ -3,6 +3,8 @@ body {
 	margin: 0px;
 	font-size: 80%;
 	color: DimGrey; /*#308D88;*/
+	margin: auto;
+	width: 1020px;
 }
 
 pre {
@@ -65,11 +67,12 @@ h2 {
 #header {
 	width:98%;
 	height: 100px;
+	margin: auto;
 }
 
 #logo {
 	float: left;
-	padding: 10px;
+	padding: 0px;
 	margin-bottom:10px;
 }
 
@@ -100,6 +103,7 @@ h2 {
 #main {
 	clear: both;
   	width: 98%;
+	margin: auto;
 }
 
 #sidebar {
@@ -115,7 +119,7 @@ h2 {
 	padding:0px;
 }
 #content {
-	margin-left: 230px; /*Set left margin to LeftColumnWidth*/
+	margin-left: 0px; /*Set left margin to LeftColumnWidth*/
 	
 }
 
