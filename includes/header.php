@@ -147,7 +147,7 @@ function updateuserstatus() {
 					} else {
 						$name = $USER->name;
 					}
-					echo "Signed in as: <a title='edit profile' href='".$CFG->homeAddress."profile.php'>". $name ."</a> | <a title='Sign Out' href='".$CFG->homeAddress."logout.php'>Sign Out</a> ";
+					echo "Signed in as: <a title='edit profile' href='".$CFG->homeAddress."user.php?userid=".$USER->userid."'>". $name ."</a> | <a title='Sign Out' href='".$CFG->homeAddress."logout.php'>Sign Out</a> ";
 
 				} else {
 					echo "<a title='Sign In' href='".$CFG->homeAddress."login.php'>Sign In</a> | <a title='Sign Up' href='".$CFG->homeAddress."register.php'>Sign Up</a> ";
