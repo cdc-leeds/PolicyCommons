@@ -132,7 +132,7 @@ function updateuserstatus() {
 
     <div id="logo">
         <a href="<?php echo $CFG->homeAddress; ?>index.php"
-        title="PolicyCommons.co.uk"><img style="border:0px;" alt="PolicyCommons.co.uk" src="<?php echo $CFG->homeAddress; ?>images/policycommons-logo.png" /></a>
+        title="PolicyCommons.co.uk"><img style="border:0px;" alt="PolicyCommons.co.uk" src="<?php echo $CFG->homeAddress; ?>images/policycommons-alpha-logo.png" /></a>
         <div style="clear: both;"><a href="#content" class="accesslink">Skip to content</a></div>
     </div>
 
