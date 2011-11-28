@@ -66,9 +66,10 @@ li.option {
         <ul id="tabs" class="tab">
             <li class="tab"><a class="tab" id="tab-home" href="#home"><span class="tab">Home</span></a></li>
             <!-- li class="tab"><a class="tab" id="tab-welcome" href="#welcome"><span class="tab">Welcome</span></a></li -->
-            <li class="tab"><a class="tab" id="tab-node" href="#node"><span class="tab">Ideas</span></a></li>
-            <li class="tab"><a class="tab" id="tab-conn" href="#conn"><span class="tab">Connections</span></a></li>
-            <li class="tab"><a class="tab" id="tab-user" href="#user"><span class="tab">People &amp; Groups</span></a></li>
+            <li class="tab"><a class="tab" id="tab-debates" href="#debates"><span class="tab">Debates</span></a></li>
+            <li class="tab" style="display:none"><a class="tab" id="tab-node" href="#node"><span class="tab">Ideas</span></a></li>
+            <li class="tab" style="display:none"><a class="tab" id="tab-conn" href="#conn"><span class="tab">Connections</span></a></li>
+            <li class="tab" style="display:none"><a class="tab" id="tab-user" href="#user"><span class="tab">People &amp; Groups</span></a></li>
         </ul>
         <div id="tabs-content">
            <div id='tab-content-home' class='tabcontenthome'>
@@ -95,6 +96,7 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
            </div>
 
 
+            <div id='tab-content-debates' class='tabcontent'>(Loading debates...)</div>
             <div id='tab-content-node' class='tabcontent'>(Loading ideas...)</div>
             <div id='tab-content-conn' class='tabcontent'>(Loading connections...)</div>
             <div id='tab-content-user' class='tabcontent'>(Loading people and groups...)</div>

@@ -795,6 +795,11 @@ switch($method){
         $connectionids = required_param('connectionids',PARAM_TEXT);
         $response = getMultiConnections($connectionids,$start,$max,$o,$s,$style);
     	break;
+    case "getdebates":
+        $scope = optional_param('scope','my',PARAM_TEXT);
+        $groupid = optional_param('groupid','',PARAM_TEXT);
+        $response = getDebates($scope,$groupid,$start,$max,$style);
+        break;
     default:
         //error as method not defined.
         global $ERROR;

@@ -5412,6 +5412,44 @@ function addToLog($action,$type,$id){
     return $l->add($action,$type,$id);
 }
 
+////////////////////////////////////////////////////////////////////
+// Functions for PolicyCommons debate mapping tool
+////////////////////////////////////////////////////////////////////
 
+/**
+ * Get debates
+ *
+ * @param string $scope (optional, either 'all' or 'my' - default 'all' )
+ * @param integer $groupid (optional - default: '') id of the group to filter on.
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
+ * @return NodeSet or Error
+ */
+function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
+    global $CFG,$USER;
+
+		// SQL for retrieving the debates in the system (i.e. all the
+    // nodes that are of type 'Debate'
+    $sql = "SELECT t.NodeID,
+                (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
+                (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.NodeID) AS connectedness
+            FROM Node t
+            INNER JOIN NodeType nt ON t.NodeTypeID=nt.NodeTypeID
+            WHERE
+              t.Private = 'N' AND
+              nt.Name='Debate'";
+
+    if($scope == 'my'){
+        $sql .= " AND t.UserID = '".$USER->userid."'";
+    }
+
+    if ($groupid != "") {
+    	$sql .= " AND t.NodeID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
+    }
+
+    $ns = new NodeSet();
+    return $ns->load($sql,$start,$max,'connectedness','DESC',$style);
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>

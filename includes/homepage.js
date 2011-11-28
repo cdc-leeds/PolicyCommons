@@ -22,7 +22,7 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-var HOMETABS = {"home":false ,"node":false,"conn":false,"user":false};
+var HOMETABS = {"home":false,"debates":false, "node":false,"conn":false,"user":false};
 var DEFAULTTAB = 'home';
 var CURRENT_IDEA_CALL = '';
 var CURRENT_CONN_CALL = '';
@@ -30,6 +30,7 @@ var CURRENT_CONN_CALL = '';
 Event.observe(window, 'load', function() {
 	// add events for clicking on the tabs
 	Event.observe('tab-home','click', function (){setTabPushed('home');});
+	Event.observe('tab-debates','click', function (){setTabPushed('debates');});
 	Event.observe('tab-node','click', function (){setTabPushed('node');});
 	Event.observe('tab-conn','click', function (){setTabPushed('conn');});
 	Event.observe('tab-user','click', function (){setTabPushed('user');});
@@ -61,6 +62,12 @@ function setTabPushed(tab) {
 			}
 			break;
 		case 'welcome':
+			break;
+		case 'debates':
+			if(!HOMETABS.debates){
+				loadAllDebates();
+				HOMETABS.debates = true;
+			}
 			break;
 		case 'node':
 			if(!HOMETABS.node){
@@ -643,6 +650,45 @@ function getHomepageConnFeed(){
 	var url = SERVICE_ROOT.replace('format=json','format=rss');
 	var reqUrl = url + CURRENT_CONN_CALL;
 	window.location.href = reqUrl;
+}
+
+/**
+	* Load all the Debates in the system
+	*/
+function loadAllDebates(){
+	var content = $('tab-content-debates');
+	content.update(getLoading("(Loading debates...)"));
+	CURRENT_IDEA_CALL = "&method=getdebates&scope=all";
+	var reqUrl = SERVICE_ROOT + CURRENT_IDEA_CALL;
+	new Ajax.Request(reqUrl, { method:'get',
+  			onSuccess: function(transport){
+  				var json = transport.responseText.evalJSON();
+      			if(json.error){
+      				alert(json.error[0].message);
+      				return;
+      			}
+      			content.update("");
+      			nodeTabHeader(content,"allC");
+      			var nodes = json.nodeset[0].nodes;
+      			if(nodes.length > 0){
+	      			content.insert('<div style="clear:both;"></div>');
+					var lOL = new Element("ol", {'class':'idea-list-ol'});
+					for(var i=0; i< nodes.length; i++){
+						if(nodes[i].cnode){
+							var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+							lOL.insert(iUL);
+							var nWrap = new Element("div", {'class':'idea-li-wrapper'});
+							var blobDiv = new Element("div", {'class':'idea-blob'});
+							var blobNode = renderNode(nodes[i].cnode,'idea-list'+i);
+							blobDiv.insert(blobNode);
+							nWrap.insert(blobDiv);
+							iUL.insert(nWrap);
+						}
+					}
+					content.insert(lOL);
+      			}
+      		}
+      	});
 }
 
 /** Following copied from tabber.js. Really should just be in one
