@@ -24,6 +24,7 @@
 //this list the tabs 
 var TABS = {"node":true, "web":true,"conn":true,"user":true};
 var GROUP_TABS = {"node":true, "web":true,"conn":true,"user":true, /*"svn":true, "stats":true,*/ "tags":true};
+var DEBATE_TABS = {"debatemap":true, "documents":true, "contributors":true};
 
 var DEFAULT_TAB = 'node';
 var DEFAULT_VIZ = 'list';
@@ -54,17 +55,26 @@ var stpNodeSimile = setTabPushed.bindAsEventListener($('tab-node-list'),'node-si
 var stpNodeGMap = setTabPushed.bindAsEventListener($('tab-node-list'),'node-gmap');
 var stpUserGMap = setTabPushed.bindAsEventListener($('tab-user-list'),'user-usergmap');
 
+var stpDebateMap =
+		setTabPushed.bindAsEventListener($('tab-debatemap'),'debatemap');
+var stpDocuments =
+		setTabPushed.bindAsEventListener($('tab-documents'),'documents');
+var stpContributors =
+		setTabPushed.bindAsEventListener($('tab-contributors'),'contributors');
+
 /**
  *	set which tab to show and load first
  */
 Event.observe(window, 'load', function() {
 
 	// add events for clicking on the tabs
+if ($('tab-node')) {
 	Event.observe('tab-node','click', stpNodeList);
 	Event.observe('tab-web','click', stpWebList);
 	Event.observe('tab-conn','click', stpConnList);
 	Event.observe('tab-user','click', stpUserList);
-	
+}
+
 	if ($('tab-stats')) {
 		Event.observe('tab-stats','click', stpStatsList);
 		Event.observe('tab-stats-list','click', stpStatsList);
@@ -77,14 +87,24 @@ Event.observe(window, 'load', function() {
 		Event.observe('tab-tags','click', stpTagsList);	
 	}
 
+	if ($('tab-debatemap')) {
+		Event.observe('tab-debatemap','click', stpDebateMap);
+		Event.observe('tab-documents','click', stpDocuments);
+		Event.observe('tab-contributors','click', stpContributors);
+	}
 	//load data counts
+if ($('tab-node')) {
 	loadNodeCount();
 	loadConnectionCount();
 	loadUrlCount();
 	loadUserCount();
+}
 
-	setTabPushed($('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
-		
+		if ($('tab-debatemap')) {
+				setTabPushed($('tab-debatemap'), 'debatemap');
+		} else {
+				setTabPushed($('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
+		}
 });
 
 /**
@@ -97,7 +117,7 @@ function setTabPushed(e) {
 	// get tab and the visualisation from the #
 	var parts = tabID.split("-");
 	var tab = parts[0];
-	var viz = parts[1];
+  var viz = parts[1] ? parts[1] : DEFAULT_VIZ;
 	
 	if ($('Cohere-ConnectionNet')){
 		$('Cohere-ConnectionNet').stop();
@@ -109,6 +129,10 @@ function setTabPushed(e) {
 	if (CONTEXT == 'group')	{
 		checktabs = GROUP_TABS;
 	} 
+	if (CONTEXT == 'debate')	{
+		checktabs = DEBATE_TABS;
+	}
+
 	for (i in checktabs){
 		if(tab == i){
 			$("tab-"+i).removeClassName("unselected");
@@ -255,6 +279,28 @@ function setTabPushed(e) {
 					Event.observe('tab-tags','click', stpTagsList);
 				}
 				break;
+			case 'debatemap':
+				if(!DATA_LOADED.node){
+					$('tab-debatemap').setAttribute("href","#debatemap");
+						Event.observe('tab-debatemap','click', stpDebateMap);
+						loadDebateMap(CONTEXT,NODE_ARGS);
+				}
+				break;
+			case 'documents':
+				if(!DATA_LOADED.url){
+					$('tab-documents').setAttribute("href","#documents");
+					Event.observe('tab-documents','click', stpDocuments);
+					//loadDocuments(CONTEXT,URL_ARGS);
+				}
+				break;
+			case 'contributors':
+				if(!DATA_LOADED.user){
+					$('tab-contributors').setAttribute("href","#contributors");
+					Event.observe('tab-contributors','click', stpContributors);
+					//loadContributors(CONTEXT,USER_ARGS);
+				}
+				break;
+		default:
 		}
 	}
 }
@@ -587,6 +633,119 @@ function loadusers(context,args){
     		}
   		});
   	//DATA_LOADED.user = true;
+}
+
+/**
+ *	Load the Debate Map View
+ */
+function loadDebateMap(context,args){
+	$("tab-content-debatemap").update(getLoading("(Loading debate map...)"));
+
+	//set method
+	var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&" + Object.toQueryString(args);
+
+	new Ajax.Request(reqUrl, { method:'get',
+  			onSuccess: function(transport){
+
+  				try {
+  					var json = transport.responseText.evalJSON();
+  				} catch(err) {
+  					console.log(err);
+  				}
+
+      			if(json.error){
+      				alert(json.error[0].message);
+      				return;
+      			}
+
+      			//set the count in tab header
+      			$('map-elements-count').innerHTML = "";
+      			$('map-elements-count').insert(json.nodeset[0].totalno);
+
+				var tb1 = new Element("div", {'class':'toolbarrow'});
+				$("tab-content-debatemap").update(tb1);
+				tb1.insert(displayNodeAdd());
+
+				if(json.nodeset[0].count != 0){
+					tb1.insert(displayNodeVisualisations('list'));
+					var sortOpts = {date: 'Create Date', name: 'Idea', moddate: 'Modification Date',connectedness:'Connectedness'};
+					tb1.insert(displaySortForm(sortOpts,args,'node'));
+					Event.observe($('sort-node-options-go'),'click',reorderNodes);
+					var feed = new Element("img",
+						{'src': URL_ROOT+'images/toolbars/feed-icon-20x20.png',
+						'alt': 'Get an RSS feed for these ideas',
+						'title': 'Get an RSS feed for these ideas',
+						'class': 'active',
+						'style': 'padding-top:5px;'});
+					tb1.insert(feed);
+					Event.observe(feed,'click',getNodesFeed);
+
+					var print = new Element("img",
+						{'src': URL_ROOT+'images/toolbars/printer.png',
+						'alt': 'Print all ideas',
+						'title': 'Print all ideas',
+						'class': 'active',
+						'style': 'padding-top:5px;padding-left:10px;'});
+					tb1.insert(print);
+					print.onclick = function() {printNodes()};
+				}
+
+				if(json.nodeset[0].nodes.length > 0){
+					var tb2 = new Element("div", {'class':'toolbarrow'});
+					tb2.insert(displayNodesGroupAction());
+
+					tb2.insert(displayIdeaFilters(args,'node', filterIdeas, context));
+					$("tab-content-debatemap").insert(tb2);
+
+					new Ajax.Autocompleter("node-addtagaction", "node-addtagaction_choices", SERVICE_ROOT +"&method=gettagsbyfirstcharacters&format=list&scope=all", {paramName: "q", minChars: 1, tokens: ","});    
+				}
+
+				//display nav
+				var total = json.nodeset[0].totalno;
+				$("tab-content-debatemap").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"nodes"));
+				//display nodes
+				if(json.nodeset[0].nodes.length > 0){
+					displayNodes($("tab-content-debatemap"),json.nodeset[0].nodes,parseInt(args['start'])+1);
+				}
+
+				//display nav
+				if (total > parseInt( args["max"] )) {
+					$("tab-content-debatemap").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"nodes"));
+				}
+
+				//load up the users groups
+				var reqUrl = SERVICE_ROOT + "&method=getmygroups";
+				new Ajax.Request(reqUrl, { method:'get',
+		  			onSuccess: function(transport){
+		  					var json = transport.responseText.evalJSON();
+			      			if(json.error){
+			      				alert(json.error[0].message);
+			      				return;
+			      			}
+		  					// if there are any group add 'add to group' in group action drop down
+		  					// and poulate group selection box.
+							var groups = json.groupset[0].groups;
+							if(groups.length == 0){
+								return;
+							}
+							var opt4 = new Element("option",{'value':'addselectednodestogroup'}).insert("Add to group");
+							var opt5 = new Element("option",{'value':'removeselectednodesfromgroup'}).insert("Remove from group");
+							$('node-groupaction-select').insert(opt4);
+							$('node-groupaction-select').insert(opt5);
+
+							var gopt1 = new Element("option",{'value':'','selected':true}).insert("Select group...");
+							$('node-groupaction-select-group').insert(gopt1);
+
+							for(var i=0; i<groups.length; i++){
+								var gopt = new Element("option",{'value':groups[i].group.groupid}).insert(groups[i].group.name);
+								$('node-groupaction-select-group').insert(gopt);
+							}
+		    		}
+		  		});
+    		}
+  		});
+  	DATA_LOADED.node = true;
+  	DATA_LOADED.simile = false;
 }
 
 /**

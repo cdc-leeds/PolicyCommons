@@ -5417,7 +5417,7 @@ function addToLog($action,$type,$id){
 ////////////////////////////////////////////////////////////////////
 
 /**
- * Get debates
+ * Get debates (but not sub-debates)
  *
  * @param string $scope (optional, either 'all' or 'my' - default 'all' )
  * @param integer $groupid (optional - default: '') id of the group to filter on.
@@ -5429,8 +5429,12 @@ function addToLog($action,$type,$id){
 function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
     global $CFG,$USER;
 
+		$containsLinkTypeID = getLinkTypeByLabel("contains")->linktypeid;
+
 		// SQL for retrieving the debates in the system (i.e. all the
     // nodes that are of type 'Debate'
+		// Note this only retrieves the high-level debates (i.e. debates
+    // that are sub-debates within other debates are not returned)
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.NodeID) AS connectedness
@@ -5438,7 +5442,11 @@ function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='lon
             INNER JOIN NodeType nt ON t.NodeTypeID=nt.NodeTypeID
             WHERE
               t.Private = 'N' AND
-              nt.Name='Debate'";
+              nt.Name='Debate' AND
+              t.NodeID NOT IN (SELECT ToID
+                                 FROM Triple
+                                 WHERE
+                                  LinkTypeID = ".$containsLinkTypeID.")";
 
     if($scope == 'my'){
         $sql .= " AND t.UserID = '".$USER->userid."'";
@@ -5446,6 +5454,47 @@ function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='lon
 
     if ($groupid != "") {
     	$sql .= " AND t.NodeID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
+    }
+
+    $ns = new NodeSet();
+    return $ns->load($sql,$start,$max,'connectedness','DESC',$style);
+}
+
+/**
+ * Get debate contents -- i.e. the sub-debates and the issues
+ * contained within the given debate
+ *
+ * @param string $nodeid (required). The ID of the given debate
+ * @param string $scope (optional, either 'all' or 'my' - default 'all' )
+ * @param integer $groupid (optional - default: '') id of the group to filter on.
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
+ * @return NodeSet or Error
+ */
+function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
+    global $CFG,$USER;
+
+		$containsLinkTypeID = getLinkTypeByLabel("contains")->linktypeid;
+
+		// SQL for retrieving the debates in the system (i.e. all the
+    // nodes that are of type 'Debate'.
+		// Note this only retrieves the high-level debates (i.e. debates
+    // that are sub-debates within other debates are not returned)
+    $sql = "SELECT t.ToID AS NodeID,
+                (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.ToID)+
+                (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.ToID) AS connectedness
+            FROM Triple t
+            WHERE
+              t.FromID = ".$nodeid." AND
+              t.LinkTypeID = ".$containsLinkTypeID;
+
+    if($scope == 'my'){
+        $sql .= " AND UserID = '".$USER->userid."'";
+    }
+
+    if ($groupid != "") {
+    	$sql .= " AND ToID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
     }
 
     $ns = new NodeSet();

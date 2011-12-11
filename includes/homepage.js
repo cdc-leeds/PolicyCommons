@@ -679,7 +679,7 @@ function loadAllDebates(){
 							lOL.insert(iUL);
 							var nWrap = new Element("div", {'class':'idea-li-wrapper'});
 							var blobDiv = new Element("div", {'class':'idea-blob'});
-							var blobNode = renderNode(nodes[i].cnode,'idea-list'+i);
+							var blobNode = renderDebateAsNode(nodes[i].cnode,'idea-list'+i);
 							blobDiv.insert(blobNode);
 							nWrap.insert(blobDiv);
 							iUL.insert(nWrap);
