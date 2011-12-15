@@ -796,13 +796,13 @@ switch($method){
         $response = getMultiConnections($connectionids,$start,$max,$o,$s,$style);
     	break;
     case "getdebates":
-        $scope = optional_param('scope','my',PARAM_TEXT);
+        $scope = optional_param('scope','',PARAM_TEXT);
         $groupid = optional_param('groupid','',PARAM_TEXT);
         $response = getDebates($scope,$groupid,$start,$max,$style);
         break;
     case "getdebatecontents":
 			  $nodeid = required_param('nodeid',PARAM_TEXT);
-        $scope = optional_param('scope','my',PARAM_TEXT);
+        $scope = optional_param('scope','',PARAM_TEXT);
 				$groupid = optional_param('groupid','',PARAM_TEXT);
 				$response = getDebateContents($nodeid, $scope,$groupid,$start,$max,$style);
         break;

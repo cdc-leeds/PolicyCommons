@@ -5429,24 +5429,23 @@ function addToLog($action,$type,$id){
 function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
     global $CFG,$USER;
 
-		$containsLinkTypeID = getLinkTypeByLabel("contains")->linktypeid;
-
 		// SQL for retrieving the debates in the system (i.e. all the
     // nodes that are of type 'Debate'
 		// Note this only retrieves the high-level debates (i.e. debates
     // that are sub-debates within other debates are not returned)
-    $sql = "SELECT t.NodeID,
-                (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
-                (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.NodeID) AS connectedness
-            FROM Node t
-            INNER JOIN NodeType nt ON t.NodeTypeID=nt.NodeTypeID
+    $sql = "SELECT n.NodeID,
+                (SELECT COUNT(FromID) FROM Triple WHERE FromID=n.NodeID)+
+                (SELECT COUNT(ToID) FROM Triple WHERE ToiD=n.NodeID) AS connectedness
+            FROM Node n
+            INNER JOIN NodeType nt ON n.NodeTypeID=nt.NodeTypeID
             WHERE
-              t.Private = 'N' AND
+              n.Private = 'N' AND
               nt.Name='Debate' AND
-              t.NodeID NOT IN (SELECT ToID
-                                 FROM Triple
+              n.NodeID NOT IN (SELECT ToID
+                                 FROM Triple t
+                                 INNER JOIN LinkType lt ON t.LinkTypeID=lt.LinkTypeID
                                  WHERE
-                                  LinkTypeID = ".$containsLinkTypeID.")";
+                                  lt.Label = 'contains')";
 
     if($scope == 'my'){
         $sql .= " AND t.UserID = '".$USER->userid."'";
@@ -5475,8 +5474,6 @@ function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='lon
 function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
     global $CFG,$USER;
 
-		$containsLinkTypeID = getLinkTypeByLabel("contains")->linktypeid;
-
 		// SQL for retrieving the debates in the system (i.e. all the
     // nodes that are of type 'Debate'.
 		// Note this only retrieves the high-level debates (i.e. debates
@@ -5485,16 +5482,17 @@ function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max =
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.ToID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.ToID) AS connectedness
             FROM Triple t
+            INNER JOIN LinkType lt ON t.LinkTypeID=lt.LinkTypeID
             WHERE
               t.FromID = ".$nodeid." AND
-              t.LinkTypeID = ".$containsLinkTypeID;
+              lt.Label = 'contains'";
 
     if($scope == 'my'){
-        $sql .= " AND UserID = '".$USER->userid."'";
+        $sql .= " AND t.UserID = '".$USER->userid."'";
     }
 
     if ($groupid != "") {
-    	$sql .= " AND ToID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
+    	$sql .= " AND t.ToID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
     }
 
     $ns = new NodeSet();
