@@ -5484,7 +5484,7 @@ function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max =
             FROM Triple t
             INNER JOIN LinkType lt ON t.LinkTypeID=lt.LinkTypeID
             WHERE
-              t.FromID = ".$nodeid." AND
+              t.FromID = '".$nodeid."' AND
               lt.Label = 'contains'";
 
     if($scope == 'my'){
