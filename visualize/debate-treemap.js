@@ -89,7 +89,10 @@ function drawDebateMap(data) {
 var treemap = d3.layout.treemap()
     .size([w, h])
     .sticky(true)
-				.value(function(d) { return parseInt(d.connectedness); });
+				.value(function(d) { return parseInt(d.connectedness); })
+		// Sort so largest cell in treemap is at the top-left rather than
+		// bottom right
+				.sort(function(a, b) { return a.value - b.value});
 
   vis.data([data]).selectAll("div")
       .data(treemap.nodes)
