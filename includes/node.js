@@ -1006,7 +1006,15 @@ function renderReportNode(node, uniQ, role){
 /**
  * Create the url which is run when a node is clicked.
  */
-function createNodeURL(nodeid) {
+function createNodeURL(nodeid, view) {
+
+		// The 'view' should be one of three possible views. If no view is
+		// specified then default to "conn-neighbour"
+		if (!(view == "conn-list" ||
+				  view == "conn-neighbour" ||
+					view == "conn-net")) {
+				view = "conn-neighbour";
+		}
 
 	var url = URL_ROOT+"node.php?";
 	try {
@@ -1020,7 +1028,7 @@ function createNodeURL(nodeid) {
 	} catch (e){
 		url += "nodeid="+nodeid;		
 	}
-	url += "#conn-neighbour";
+	url += "#"+view;
 
 	return url;
 }
