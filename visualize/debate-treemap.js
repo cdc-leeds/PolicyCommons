@@ -25,24 +25,7 @@
 
 function loadMap(){
 
-	var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
-	$("tab-content-debatemap").update(tb1);
-	tb1.insert(displayConnectionAdd());
-	tb1.insert(displayConnectionVisualisations('net'));
-	tb1.insert(displaySnippetButtons(SNIPPET_CONNECTION_NET));
-
-	var tb2 = new Element("div", {'id':'connmessagediv','class':'toolbarrow'});	
-	var messagearea = new Element("div", {'id':'connmessage','class':'toolbitem'});	
-	tb2.insert(messagearea);
-
-	$("tab-content-debatemap").insert(tb2);
-
-		// Load the Connection Net data
-    var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
-    loadDiv.insert("<br/>(Loading Debate Map...)");
-
-		$('connmessage').update(loadDiv);
+		// Load the Map data
 	
 		var args = Object.clone(NET_ARGS);
 		args["start"] = 0;
@@ -63,8 +46,6 @@ function loadMap(){
 				drawDebateMap(d3Json);
 		});
 
-//		drawDebateMap();
-    $('connmessage').innerHTML="";	
 }
 
 function convertCohereNodesetJsonToD3 (cohereJson) {
@@ -86,7 +67,7 @@ function drawDebateMap(data) {
 	
 		// Set width & height for SVG
 		var debatemapDiv = new Element("div", {"id":"debatemap-div"});
-		$("tab-content-debatemap").insert(debatemapDiv);
+		$("tab-content-debatemap").update(debatemapDiv);
 
 		var w = $('tab-content-debatemap').offsetWidth - 30;
 		var h = getWindowHeight();
@@ -97,7 +78,8 @@ function drawDebateMap(data) {
 				.style("position", "relative")
 				.style("width", w + "px")
 				.style("height", h + "px")
-				.style("top", "40px");
+				.style("top", "10px")
+				.style("left", "5px");
 
 		vis.style("opacity", 1e-6)
 				.transition()
