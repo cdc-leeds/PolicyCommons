@@ -542,3 +542,34 @@ function createDebateURL(nodeid) {
 
 	return url;
 }
+
+
+/**
+ * Create the url which is run when an issue node is clicked.
+ */
+function createIssueURL(nodeid, view) {
+
+		// The 'view' should be one of three possible views. If no view is
+		// specified then default to "conn-net"
+		if (!(view == "conn-list" ||
+				  view == "conn-neighbour" ||
+					view == "conn-net")) {
+				view = "conn-net";
+		}
+
+	var url = URL_ROOT+"issue.php?";
+	try {
+		if (CURRENT_VIZ !== undefined && CURRENT_VIZ == 'neighbour') {
+			var args = Object.clone(NEIGHBOURHOOD_ARGS);
+			args['nodeid'] = nodeid;
+			url += Object.toQueryString(args);
+		} else {
+			url += "nodeid="+nodeid;
+		}
+	} catch (e){
+		url += "nodeid="+nodeid;
+	}
+	url += "#"+view;
+
+	return url;
+}

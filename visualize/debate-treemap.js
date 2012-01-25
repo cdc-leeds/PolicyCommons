@@ -116,9 +116,13 @@ function cell() {
 								return (d.role[0].role.name == "Issue") ?
 												 color(args["nodeid"]) : color(d.nodeid); })
 				.html(function(d) {
+						// Make text in each treemap cell be a hyperlink. If cell
+						// is a Debate then make hyperlink to Debate URL, else
+						// then assume cell is an Issue and make hyperlink to
+						// Issue URL.
 						return d.children ? null : ((d.role[0].role.name == "Debate") ?
 								 "<a href='"+createDebateURL(d.nodeid)+"'>"+d.name+"</a>" :
-								 "<a href='"+createNodeURL(d.nodeid)+"'>"+d.name+"</a>"); })
+								 "<a href='"+createIssueURL(d.nodeid)+"'>"+d.name+"</a>"); })
 
 		//Move the following to CSS -- create class called "treemap-cell"
 				.style("border", "solid 1px white")

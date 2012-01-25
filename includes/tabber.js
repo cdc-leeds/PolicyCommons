@@ -25,6 +25,7 @@
 var TABS = {"node":true, "web":true,"conn":true,"user":true};
 var GROUP_TABS = {"node":true, "web":true,"conn":true,"user":true, /*"svn":true, "stats":true,*/ "tags":true};
 var DEBATE_TABS = {"debatemap":true, "documents":true, "contributors":true};
+var ISSUE_TABS = {"conn":true};
 
 var DEFAULT_TAB = 'node';
 var DEFAULT_VIZ = 'list';
@@ -92,11 +93,21 @@ if ($('tab-node')) {
 		Event.observe('tab-documents','click', stpDocuments);
 		Event.observe('tab-contributors','click', stpContributors);
 	}
+
 	//load data counts
 if ($('tab-node')) {
 	loadNodeCount();
+}
+
+if ($('tab-conn')) {
 	loadConnectionCount();
+}
+
+if ($('tab-web')) {
 	loadUrlCount();
+}
+
+if ($('tab-user')) {
 	loadUserCount();
 }
 
@@ -131,6 +142,9 @@ function setTabPushed(e) {
 	} 
 	if (CONTEXT == 'debate')	{
 		checktabs = DEBATE_TABS;
+	}
+	if (CONTEXT == 'issuenode')	{
+		checktabs = ISSUE_TABS;
 	}
 
 	for (i in checktabs){

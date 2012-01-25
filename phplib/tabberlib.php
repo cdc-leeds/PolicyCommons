@@ -160,6 +160,17 @@ function display_tabber($context,$args){
         </div>
     </div>
     <?php
+    } else if ($context == 'issuenode'){
+    ?>
+    <div id="tabber">
+        <ul id="tabs" class="tab">
+            <li class="tab"><a class="tab" id="tab-conn" href="#conn-net"><span class="tab">Arguments (<span id="conn-list-count">0</span>)</span></a></li>
+        </ul>
+        <div id="tabs-content">
+            <div id='tab-content-conn' class='tabcontent'><div class="loading"><img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/><br/>(Loading arguments...)</div></div>
+        </div>
+    </div>
+    <?php
     } else {
     ?>
     <div id="tabber">
