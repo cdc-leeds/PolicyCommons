@@ -1,7 +1,9 @@
 d3.scale.log = function() {
-  var linear = d3.scale.linear(),
-      log = d3_scale_log,
-      pow = log.pow;
+  return d3_scale_log(d3.scale.linear(), d3_scale_logp);
+};
+
+function d3_scale_log(linear, log) {
+  var pow = log.pow;
 
   function scale(x) {
     return linear(log(x));
@@ -13,7 +15,7 @@ d3.scale.log = function() {
 
   scale.domain = function(x) {
     if (!arguments.length) return linear.domain().map(pow);
-    log = x[0] < 0 ? d3_scale_logn : d3_scale_log;
+    log = x[0] < 0 ? d3_scale_logn : d3_scale_logp;
     pow = log.pow;
     linear.domain(x.map(log));
     return scale;
@@ -46,29 +48,38 @@ d3.scale.log = function() {
     return ticks;
   };
 
-  scale.tickFormat = function() {
-    return d3_scale_logTickFormat;
+  scale.tickFormat = function(n, format) {
+    if (arguments.length < 2) format = d3_scale_logFormat;
+    if (arguments.length < 1) return format;
+    var k = n / scale.ticks().length,
+        f = log === d3_scale_logn ? (e = -1e-12, Math.floor) : (e = 1e-12, Math.ceil),
+        e;
+    return function(d) {
+      return d / pow(f(log(d) + e)) < k ? format(d) : "";
+    };
+  };
+
+  scale.copy = function() {
+    return d3_scale_log(linear.copy(), log);
   };
 
   return d3_scale_linearRebind(scale, linear);
 };
 
-function d3_scale_log(x) {
-  return Math.log(x) / Math.LN10;
+var d3_scale_logFormat = d3.format(".0e");
+
+function d3_scale_logp(x) {
+  return Math.log(x < 0 ? 0 : x) / Math.LN10;
 }
 
 function d3_scale_logn(x) {
-  return -Math.log(-x) / Math.LN10;
+  return -Math.log(x > 0 ? 0 : -x) / Math.LN10;
 }
 
-d3_scale_log.pow = function(x) {
+d3_scale_logp.pow = function(x) {
   return Math.pow(10, x);
 };
 
 d3_scale_logn.pow = function(x) {
   return -Math.pow(10, -x);
 };
-
-function d3_scale_logTickFormat(d) {
-  return d.toPrecision(1);
-}

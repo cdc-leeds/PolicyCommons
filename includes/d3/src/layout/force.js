@@ -3,6 +3,7 @@ d3.layout.force = function() {
   var force = {},
       event = d3.dispatch("tick"),
       size = [1, 1],
+      drag,
       alpha,
       friction = .9,
       linkDistance = d3_layout_forceLinkDistance,
@@ -14,9 +15,10 @@ d3.layout.force = function() {
       nodes = [],
       links = [],
       distances,
-      strengths;
+      strengths,
+      charges;
 
-  function repulse(node, kc) {
+  function repulse(node) {
     return function(quad, x1, y1, x2, y2) {
       if (quad.point !== node) {
         var dx = quad.cx - node.x,
@@ -25,30 +27,32 @@ d3.layout.force = function() {
 
         /* Barnes-Hut criterion. */
         if ((x2 - x1) * dn < theta) {
-          var k = kc * quad.count * dn * dn;
-          node.x += dx * k;
-          node.y += dy * k;
+          var k = quad.charge * dn * dn;
+          node.px -= dx * k;
+          node.py -= dy * k;
           return true;
         }
 
         if (quad.point && isFinite(dn)) {
-          var k = kc * dn * dn;
-          node.x += dx * k;
-          node.y += dy * k;
+          var k = quad.pointCharge * dn * dn;
+          node.px -= dx * k;
+          node.py -= dy * k;
         }
       }
+      return !quad.charge;
     };
   }
 
   function tick() {
     var n = nodes.length,
         m = links.length,
-        q = d3.geom.quadtree(nodes),
+        q,
         i, // current index
         o, // current object
         s, // current source
         t, // current target
         l, // current distance
+        k, // current force
         x, // x-distance
         y; // y-distance
 
@@ -63,30 +67,32 @@ d3.layout.force = function() {
         l = alpha * strengths[i] * ((l = Math.sqrt(l)) - distances[i]) / l;
         x *= l;
         y *= l;
-        t.x -= x;
-        t.y -= y;
-        s.x += x;
-        s.y += y;
+        t.x -= x * (k = s.weight / (t.weight + s.weight));
+        t.y -= y * k;
+        s.x += x * (k = 1 - k);
+        s.y += y * k;
       }
     }
 
     // apply gravity forces
-    var kg = alpha * gravity;
-    x = size[0] / 2;
-    y = size[1] / 2;
-    i = -1; while (++i < n) {
-      o = nodes[i];
-      o.x += (x - o.x) * kg;
-      o.y += (y - o.y) * kg;
+    if (k = alpha * gravity) {
+      x = size[0] / 2;
+      y = size[1] / 2;
+      i = -1; if (k) while (++i < n) {
+        o = nodes[i];
+        o.x += (x - o.x) * k;
+        o.y += (y - o.y) * k;
+      }
     }
 
-    // compute quadtree center of mass
-    d3_layout_forceAccumulate(q);
-
-    // apply charge forces
-    var kc = alpha * charge;
-    i = -1; while (++i < n) {
-      q.visit(repulse(nodes[i], kc));
+    // compute quadtree center of mass and apply charge forces
+    if (charge) {
+      d3_layout_forceAccumulate(q = d3.geom.quadtree(nodes), alpha, charges);
+      i = -1; while (++i < n) {
+        if (!(o = nodes[i]).fixed) {
+          q.visit(repulse(o));
+        }
+      }
     }
 
     // position verlet integration
@@ -101,16 +107,11 @@ d3.layout.force = function() {
       }
     }
 
-    event.tick.dispatch({type: "tick", alpha: alpha});
+    event.tick({type: "tick", alpha: alpha});
 
     // simulated annealing, basically
     return (alpha *= .99) < .005;
   }
-
-  force.on = function(type, listener) {
-    event[type].add(listener);
-    return force;
-  };
 
   force.nodes = function(x) {
     if (!arguments.length) return nodes;
@@ -153,7 +154,7 @@ d3.layout.force = function() {
 
   force.charge = function(x) {
     if (!arguments.length) return charge;
-    charge = x;
+    charge = typeof x === "function" ? x : +x;
     return force;
   };
 
@@ -181,6 +182,7 @@ d3.layout.force = function() {
 
     for (i = 0; i < n; ++i) {
       (o = nodes[i]).index = i;
+      o.weight = 0;
     }
 
     distances = [];
@@ -191,6 +193,8 @@ d3.layout.force = function() {
       if (typeof o.target == "number") o.target = nodes[o.target];
       distances[i] = linkDistance.call(this, o, i);
       strengths[i] = linkStrength.call(this, o, i);
+      ++o.source.weight;
+      ++o.target.weight;
     }
 
     for (i = 0; i < n; ++i) {
@@ -199,6 +203,17 @@ d3.layout.force = function() {
       if (isNaN(o.y)) o.y = position("y", h);
       if (isNaN(o.px)) o.px = o.x;
       if (isNaN(o.py)) o.py = o.y;
+    }
+
+    charges = [];
+    if (typeof charge === "function") {
+      for (i = 0; i < n; ++i) {
+        charges[i] = +charge.call(this, nodes[i], i);
+      }
+    } else {
+      for (i = 0; i < n; ++i) {
+        charges[i] = charge;
+      }
     }
 
     // initialize node position based on first neighbor
@@ -243,116 +258,52 @@ d3.layout.force = function() {
 
   // use `node.call(force.drag)` to make nodes draggable
   force.drag = function() {
+    if (!drag) drag = d3.behavior.drag()
+        .origin(Object)
+        .on("dragstart", dragstart)
+        .on("drag", d3_layout_forceDrag)
+        .on("dragend", d3_layout_forceDragEnd);
 
-    this
-      .on("mouseover.force", d3_layout_forceDragOver)
-      .on("mouseout.force", d3_layout_forceDragOut)
-      .on("mousedown.force", dragdown)
-      .on("touchstart.force", dragdown);
-
-    d3.select(window)
-      .on("mousemove.force", d3_layout_forceDragMove)
-      .on("touchmove.force", d3_layout_forceDragMove)
-      .on("mouseup.force", d3_layout_forceDragUp, true)
-      .on("touchend.force", d3_layout_forceDragUp, true)
-      .on("click.force", d3_layout_forceDragClick, true);
-
-    return force;
+    this.on("mouseover.force", d3_layout_forceDragOver)
+        .on("mouseout.force", d3_layout_forceDragOut)
+        .call(drag);
   };
 
-  function dragdown(d, i) {
-    var m = d3_layout_forcePoint(this.parentNode);
-    (d3_layout_forceDragNode = d).fixed = true;
-    d3_layout_forceDragMoved = false;
-    d3_layout_forceDragElement = this;
+  function dragstart(d) {
+    d3_layout_forceDragOver(d3_layout_forceDragNode = d);
     d3_layout_forceDragForce = force;
-    d3_layout_forceDragOffset = [m[0] - d.x, m[1] - d.y];
-    d3_layout_forceCancel();
   }
 
-  return force;
+  return d3.rebind(force, event, "on");
 };
 
 var d3_layout_forceDragForce,
-    d3_layout_forceDragNode,
-    d3_layout_forceDragMoved,
-    d3_layout_forceDragOffset,
-    d3_layout_forceStopClick,
-    d3_layout_forceDragElement;
+    d3_layout_forceDragNode;
 
 function d3_layout_forceDragOver(d) {
-  d.fixed = true;
+  d.fixed |= 2;
 }
 
 function d3_layout_forceDragOut(d) {
-  if (d !== d3_layout_forceDragNode) {
-    d.fixed = false;
-  }
+  if (d !== d3_layout_forceDragNode) d.fixed &= 1;
 }
 
-function d3_layout_forcePoint(container) {
-  return d3.event.touches
-      ? d3.svg.touches(container)[0]
-      : d3.svg.mouse(container);
+function d3_layout_forceDragEnd() {
+  d3_layout_forceDrag();
+  d3_layout_forceDragNode.fixed &= 1;
+  d3_layout_forceDragForce = d3_layout_forceDragNode = null;
 }
 
-function d3_layout_forceDragMove() {
-  if (!d3_layout_forceDragNode) return;
-  var parent = d3_layout_forceDragElement.parentNode;
-
-  // O NOES! The drag element was removed from the DOM.
-  if (!parent) {
-    d3_layout_forceDragNode.fixed = false;
-    d3_layout_forceDragOffset = d3_layout_forceDragNode = d3_layout_forceDragElement = null;
-    return;
-  }
-
-  var m = d3_layout_forcePoint(parent);
-  d3_layout_forceDragMoved = true;
-  d3_layout_forceDragNode.px = m[0] - d3_layout_forceDragOffset[0];
-  d3_layout_forceDragNode.py = m[1] - d3_layout_forceDragOffset[1];
-  d3_layout_forceCancel();
+function d3_layout_forceDrag() {
+  d3_layout_forceDragNode.px = d3.event.x;
+  d3_layout_forceDragNode.py = d3.event.y;
   d3_layout_forceDragForce.resume(); // restart annealing
 }
 
-function d3_layout_forceDragUp() {
-  if (!d3_layout_forceDragNode) return;
-
-  // If the node was moved, prevent the mouseup from propagating.
-  // Also prevent the subsequent click from propagating (e.g., for anchors).
-  if (d3_layout_forceDragMoved) {
-    d3_layout_forceStopClick = true;
-    d3_layout_forceCancel();
-  }
-
-  // Don't trigger this for touchend.
-  if (d3.event.type === "mouseup") {
-    d3_layout_forceDragMove();
-  }
-
-  d3_layout_forceDragNode.fixed = false;
-  d3_layout_forceDragForce =
-  d3_layout_forceDragOffset =
-  d3_layout_forceDragNode =
-  d3_layout_forceDragElement = null;
-}
-
-function d3_layout_forceDragClick() {
-  if (d3_layout_forceStopClick) {
-    d3_layout_forceCancel();
-    d3_layout_forceStopClick = false;
-  }
-}
-
-function d3_layout_forceCancel() {
-  d3.event.stopPropagation();
-  d3.event.preventDefault();
-}
-
-function d3_layout_forceAccumulate(quad) {
+function d3_layout_forceAccumulate(quad, alpha, charges) {
   var cx = 0,
       cy = 0;
-  quad.count = 0;
+  quad.charge = 0;
   if (!quad.leaf) {
     var nodes = quad.nodes,
         n = nodes.length,
@@ -361,10 +312,10 @@ function d3_layout_forceAccumulate(quad) {
     while (++i < n) {
       c = nodes[i];
       if (c == null) continue;
-      d3_layout_forceAccumulate(c);
-      quad.count += c.count;
-      cx += c.count * c.cx;
-      cy += c.count * c.cy;
+      d3_layout_forceAccumulate(c, alpha, charges);
+      quad.charge += c.charge;
+      cx += c.charge * c.cx;
+      cy += c.charge * c.cy;
     }
   }
   if (quad.point) {
@@ -373,12 +324,13 @@ function d3_layout_forceAccumulate(quad) {
       quad.point.x += Math.random() - .5;
       quad.point.y += Math.random() - .5;
     }
-    quad.count++;
-    cx += quad.point.x;
-    cy += quad.point.y;
+    var k = alpha * charges[quad.point.index];
+    quad.charge += quad.pointCharge = k;
+    cx += k * quad.point.x;
+    cy += k * quad.point.y;
   }
-  quad.cx = cx / quad.count;
-  quad.cy = cy / quad.count;
+  quad.cx = cx / quad.charge;
+  quad.cy = cy / quad.charge;
 }
 
 function d3_layout_forceLinkDistance(link) {

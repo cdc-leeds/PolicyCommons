@@ -1,19 +1,21 @@
 var xy = d3.geo.azimuthal().scale(240).mode("stereographic"),
+    circle = d3.geo.greatCircle(),
     path = d3.geo.path().projection(xy),
-    svg = d3.select("body").append("svg:svg");
+    svg = d3.select("body").append("svg");
 
 d3.json("../data/world-countries.json", function(collection) {
   svg.selectAll("path")
       .data(collection.features)
-    .enter().append("svg:path")
-      .attr("d", path)
-    .append("svg:title")
+    .enter().append("path")
+      .attr("d", function(d) { return path(circle.clip(d)); })
+    .append("title")
       .text(function(d) { return d.properties.name; });
 });
 
-function refresh() {
-  svg.selectAll("path")
-      .attr("d", path);
+function refresh(duration) {
+  var p = svg.selectAll("path");
+  if (duration) p = p.transition().duration(duration);
+  p.attr("d", function(d) { return path(circle.clip(d)); });
   d3.select("#lon span")
       .text(xy.origin()[0]);
   d3.select("#lat span")

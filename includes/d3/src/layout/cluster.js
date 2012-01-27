@@ -14,9 +14,10 @@ d3.layout.cluster = function() {
 
     // First walk, computing the initial x & y values.
     d3_layout_treeVisitAfter(root, function(node) {
-      if (node.children) {
-        node.x = d3_layout_clusterX(node.children);
-        node.y = d3_layout_clusterY(node.children);
+      var children = node.children;
+      if (children && children.length) {
+        node.x = d3_layout_clusterX(children);
+        node.y = d3_layout_clusterY(children);
       } else {
         node.x = previousNode ? x += separation(node, previousNode) : 0;
         node.y = 0;
@@ -33,7 +34,7 @@ d3.layout.cluster = function() {
     // Second walk, normalizing x & y to the desired size.
     d3_layout_treeVisitAfter(root, function(node) {
       node.x = (node.x - x0) / (x1 - x0) * size[0];
-      node.y = (1 - node.y / root.y) * size[1];
+      node.y = (1 - (root.y ? node.y / root.y : 1)) * size[1];
     });
 
     return nodes;
@@ -68,10 +69,10 @@ function d3_layout_clusterX(children) {
 
 function d3_layout_clusterLeft(node) {
   var children = node.children;
-  return children ? d3_layout_clusterLeft(children[0]) : node;
+  return children && children.length ? d3_layout_clusterLeft(children[0]) : node;
 }
 
 function d3_layout_clusterRight(node) {
-  var children = node.children;
-  return children ? d3_layout_clusterRight(children[children.length - 1]) : node;
+  var children = node.children, n;
+  return children && (n = children.length) ? d3_layout_clusterRight(children[n - 1]) : node;
 }

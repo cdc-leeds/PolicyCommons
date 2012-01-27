@@ -1,8 +1,10 @@
 d3.scale.pow = function() {
-  var linear = d3.scale.linear(),
-      exponent = 1,
-      powp = Number,
-      powb = powp;
+  return d3_scale_pow(d3.scale.linear(), 1);
+};
+
+function d3_scale_pow(linear, exponent) {
+  var powp = d3_scale_powPow(exponent),
+      powb = d3_scale_powPow(1 / exponent);
 
   function scale(x) {
     return linear(powp(x));
@@ -14,9 +16,6 @@ d3.scale.pow = function() {
 
   scale.domain = function(x) {
     if (!arguments.length) return linear.domain().map(powb);
-    var pow = (x[0] || x[x.length - 1]) < 0 ? d3_scale_pown : d3_scale_pow;
-    powp = pow(exponent);
-    powb = pow(1 / exponent);
     linear.domain(x.map(powp));
     return scale;
   };
@@ -36,21 +35,20 @@ d3.scale.pow = function() {
   scale.exponent = function(x) {
     if (!arguments.length) return exponent;
     var domain = scale.domain();
-    exponent = x;
+    powp = d3_scale_powPow(exponent = x);
+    powb = d3_scale_powPow(1 / exponent);
     return scale.domain(domain);
+  };
+
+  scale.copy = function() {
+    return d3_scale_pow(linear.copy(), exponent);
   };
 
   return d3_scale_linearRebind(scale, linear);
 };
 
-function d3_scale_pow(e) {
+function d3_scale_powPow(e) {
   return function(x) {
-    return Math.pow(x, e);
-  };
-}
-
-function d3_scale_pown(e) {
-  return function(x) {
-    return -Math.pow(-x, e);
+    return x < 0 ? -Math.pow(-x, e) : Math.pow(x, e);
   };
 }

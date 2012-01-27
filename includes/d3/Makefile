@@ -1,44 +1,59 @@
-JS_COMPILER = \
-	./lib/uglifyjs/bin/uglifyjs
+# See the README for installation instructions.
+
+NODE_PATH ?= ./node_modules
+JS_COMPILER = $(NODE_PATH)/uglify-js/bin/uglifyjs
+JS_TESTER = $(NODE_PATH)/vows/bin/vows
+
+JS_FILES = \
+	d3.js \
+	d3.chart.js \
+	d3.layout.js \
+	d3.csv.js \
+	d3.geo.js \
+	d3.geom.js \
+	d3.time.js
 
 all: \
+	$(JS_FILES) \
+	$(JS_FILES:.js=.min.js) \
+	package.json
+
+# Modify this rule to build your own custom release.
+# Run `make d3.custom.min.js` to produce the minified version.
+
+d3.custom.js: \
 	d3.js \
-	d3.min.js \
-	d3.behavior.js \
-	d3.behavior.min.js \
-	d3.chart.js \
-	d3.chart.min.js \
-	d3.layout.js \
-	d3.layout.min.js \
-	d3.csv.js \
-	d3.csv.min.js \
-	d3.geo.js \
-	d3.geo.min.js \
 	d3.geom.js \
-	d3.geom.min.js \
-	d3.time.js \
-	d3.time.min.js
+	d3.layout.js
 
 .INTERMEDIATE d3.js: \
 	src/start.js \
 	d3.core.js \
 	d3.scale.js \
 	d3.svg.js \
+	d3.behavior.js \
 	src/end.js
 
 d3.core.js: \
+	src/compat/date.js \
+	src/compat/style.js \
 	src/core/core.js \
-	src/core/date.js \
-	src/core/object.js \
 	src/core/array.js \
+	src/core/this.js \
 	src/core/functor.js \
 	src/core/rebind.js \
 	src/core/ascending.js \
 	src/core/descending.js \
+	src/core/mean.js \
+	src/core/median.js \
 	src/core/min.js \
 	src/core/max.js \
+	src/core/extent.js \
+	src/core/random.js \
+	src/core/number.js \
 	src/core/sum.js \
 	src/core/quantile.js \
+	src/core/transpose.js \
 	src/core/zip.js \
 	src/core/bisect.js \
 	src/core/first.js \
@@ -51,7 +66,6 @@ d3.core.js: \
 	src/core/merge.js \
 	src/core/split.js \
 	src/core/collapse.js \
-	src/core/call.js \
 	src/core/range.js \
 	src/core/requote.js \
 	src/core/round.js \
@@ -63,6 +77,7 @@ d3.core.js: \
 	src/core/ns.js \
 	src/core/dispatch.js \
 	src/core/format.js \
+	src/core/formatPrefix.js \
 	src/core/ease.js \
 	src/core/event.js \
 	src/core/interpolate.js \
@@ -70,8 +85,45 @@ d3.core.js: \
 	src/core/rgb.js \
 	src/core/hsl.js \
 	src/core/selection.js \
+	src/core/selection-select.js \
+	src/core/selection-selectAll.js \
+	src/core/selection-attr.js \
+	src/core/selection-classed.js \
+	src/core/selection-style.js \
+	src/core/selection-property.js \
+	src/core/selection-text.js \
+	src/core/selection-html.js \
+	src/core/selection-append.js \
+	src/core/selection-insert.js \
+	src/core/selection-remove.js \
+	src/core/selection-data.js \
+	src/core/selection-filter.js \
+	src/core/selection-map.js \
+	src/core/selection-order.js \
+	src/core/selection-sort.js \
+	src/core/selection-on.js \
+	src/core/selection-each.js \
+	src/core/selection-call.js \
+	src/core/selection-empty.js \
+	src/core/selection-node.js \
+	src/core/selection-transition.js \
+	src/core/selection-root.js \
+	src/core/selection-enter.js \
+	src/core/selection-enter-select.js \
 	src/core/transition.js \
-	src/core/timer.js
+	src/core/transition-select.js \
+	src/core/transition-selectAll.js \
+	src/core/transition-attr.js \
+	src/core/transition-style.js \
+	src/core/transition-text.js \
+	src/core/transition-remove.js \
+	src/core/transition-delay.js \
+	src/core/transition-duration.js \
+	src/core/transition-each.js \
+	src/core/transition-transition.js \
+	src/core/timer.js \
+	src/core/transform.js \
+	src/core/noop.js
 
 d3.scale.js: \
 	src/scale/scale.js \
@@ -99,13 +151,14 @@ d3.svg.js: \
 	src/svg/diagonal-radial.js \
 	src/svg/mouse.js \
 	src/svg/touches.js \
-	src/svg/symbol.js
+	src/svg/symbol.js \
+	src/svg/axis.js \
+	src/svg/brush.js
 
 d3.behavior.js: \
-	src/start.js \
 	src/behavior/behavior.js \
-	src/behavior/zoom.js \
-	src/end.js
+	src/behavior/drag.js \
+	src/behavior/zoom.js
 
 d3.chart.js: \
 	src/start.js \
@@ -138,9 +191,15 @@ d3.geo.js: \
 	src/geo/geo.js \
 	src/geo/azimuthal.js \
 	src/geo/albers.js \
+	src/geo/bonne.js \
+	src/geo/equirectangular.js \
 	src/geo/mercator.js \
+	src/geo/type.js \
 	src/geo/path.js \
 	src/geo/bounds.js \
+	src/geo/circle.js \
+	src/geo/greatArc.js \
+	src/geo/greatCircle.js \
 	src/end.js
 
 d3.csv.js: \
@@ -156,6 +215,23 @@ d3.time.js: \
 	src/time/format.js \
 	src/time/format-utc.js \
 	src/time/format-iso.js \
+	src/time/range.js \
+	src/time/second.js \
+	src/time/seconds.js \
+	src/time/minute.js \
+	src/time/minutes.js \
+	src/time/hour.js \
+	src/time/hours.js \
+	src/time/day.js \
+	src/time/days.js \
+	src/time/week.js \
+	src/time/weeks.js \
+	src/time/month.js \
+	src/time/months.js \
+	src/time/year.js \
+	src/time/years.js \
+	src/time/scale.js \
+	src/time/scale-utc.js \
 	src/end.js
 
 d3.geom.js: \
@@ -169,60 +245,24 @@ d3.geom.js: \
 	src/geom/quadtree.js \
 	src/end.js
 
-tests: \
-	tests/test-append.test \
-	tests/test-attr.test \
-	tests/test-classed.test \
-	tests/test-call.test \
-	tests/test-csv-parse.test \
-	tests/test-format.test \
-	tests/test-insert.test \
-	tests/test-interpolate.test \
-	tests/test-keys.test \
-	tests/test-max.test \
-	tests/test-min.test \
-	tests/test-sum.test \
-	tests/test-nest.test \
-	tests/test-permute.test \
-	tests/test-zip.test \
-	tests/test-remove.test \
-	tests/test-rgb.test \
-	tests/test-round.test \
-	tests/test-hsl.test \
-	tests/test-time-format.test \
-	tests/test-time-format-iso.test \
-	tests/test-time-format-utc.test \
-	tests/test-time-parse.test \
-	tests/test-time-parse-iso.test \
-	tests/test-time-parse-utc.test \
-	tests/test-transition.test \
-	tests/test-scale-linear.test \
-	tests/test-scale-polylinear.test \
-	tests/test-scale-log.test \
-	tests/test-scale-sqrt.test \
-	tests/test-scale-pow.test \
-	tests/test-scale-quantile.test \
-	tests/test-bisect.test \
-	tests/test-svg-arc.test \
-	tests/test-svg-area.test \
-	tests/test-svg-line.test \
-	tests/test-svg-symbol.test
+test: all
+	@$(JS_TESTER)
 
 %.min.js: %.js Makefile
 	@rm -f $@
 	$(JS_COMPILER) < $< > $@
 
-d3.js d3%.js: Makefile
+d3.%: Makefile
 	@rm -f $@
 	cat $(filter %.js,$^) > $@
 	@chmod a-w $@
 
-%.test: %.js %.out all
-	@/bin/echo -n "test: $* "
-	@node $< > $*.actual
-	@diff -U 3 $*.out $*.actual && rm -f $*.actual \
-		&& echo '\033[1;32mPASS\033[0m' \
-		|| echo test: $* '\033[1;31mFAIL\033[0m'
+install:
+	mkdir -p node_modules
+	npm install
+
+package.json: d3.js src/package.js
+	node src/package.js > $@
 
 clean:
 	rm -f d3*.js

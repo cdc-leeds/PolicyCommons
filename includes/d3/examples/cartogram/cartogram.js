@@ -6,34 +6,36 @@ var data = [
   .169, , .132, .167, .139, .184, .159, .14, .146, .157, , .139, .183, .16, .143
 ];
 
-var svg = d3.select("#chart")
-  .append("svg:svg");
+var svg = d3.select("#chart").append("svg")
+    .attr("width", 960)
+    .attr("height", 500);
 
 d3.json("../data/us-states.json", function(json) {
   var path = d3.geo.path();
 
   // A thick black stroke for the exterior.
-  svg.append("svg:g")
+  svg.append("g")
       .attr("class", "black")
     .selectAll("path")
       .data(json.features)
-    .enter().append("svg:path")
+    .enter().append("path")
       .attr("d", path);
 
   // A white overlay to hide interior black strokes.
-  svg.append("svg:g")
+  svg.append("g")
       .attr("class", "white")
     .selectAll("path")
       .data(json.features)
-    .enter().append("svg:path")
+    .enter().append("path")
       .attr("d", path);
 
   // The polygons, scaled!
-  svg.append("svg:g")
+  svg.append("g")
       .attr("class", "grey")
     .selectAll("path")
       .data(json.features)
-    .enter().append("svg:path")
+    .enter().append("path")
+      .attr("d", path)
       .attr("transform", function(d) {
         var centroid = path.centroid(d),
             x = centroid[0],
@@ -43,8 +45,7 @@ d3.json("../data/us-states.json", function(json) {
             + "translate(" + -x + "," + -y + ")";
       })
       .style("stroke-width", function(d) {
-        return 1 / Math.sqrt(data[+d.id] * 5);
-      })
-      .attr("d", path);
+        return 1 / Math.sqrt(data[+d.id] * 5 || 1);
+      });
 
 });
