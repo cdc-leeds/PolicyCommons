@@ -93,11 +93,27 @@ function convertCohereJsonToD3 (cohereJson) {
 				if (!nodeExists(fromCnode)) {
 						var position = d3Json.nodes.push(fromCnode) - 1;
 						nodePositions[fromCnode.nodeid] = position;
+
+						// Count the number of links the node is involved in. This
+						// is the first link.
+						d3Json.nodes[position].numlinks = 1;
+				} else {
+						// Add 1 to the number of links the node is involved in.
+						var position = nodePositions[fromCnode.nodeid];
+						d3Json.nodes[position].numlinks += 1;
 				}
 
 				if (!nodeExists(toCnode)) {
 						var position = d3Json.nodes.push(toCnode) - 1;
 						nodePositions[toCnode.nodeid] = position;
+
+						// Count the number of links the node is involved in. This
+						// is the first link.
+						d3Json.nodes[position].numlinks = 1;
+				} else {
+						// Add 1 to the number of links the node is involved in.
+						var position = nodePositions[toCnode.nodeid];
+						d3Json.nodes[position].numlinks += 1;
 				}
 
 				// Now deal with the links
@@ -415,6 +431,85 @@ function drawNetwork(data) {
 						this.parentNode.setAttribute("height", bb.height+5);
 						this.parentNode.setAttribute("width", bb.width+10);
 				});
+
+		// For "Argument" nodes, append a small circle that will be used
+		// to toggle expansion on the Argument node.
+		node.select(function(d) {
+				// First select only the "Argument" nodes from the set of all
+				// nodes
+				return (d.role[0].role.name === "Argument") ? this : null;})
+				.append("svg:circle")
+				.style("stroke", "steelblue")
+				.style("cursor", "pointer")
+				.attr("r", 5)
+				.on("click", expand)
+		// By default the Argument nodes are not expanded
+				.each(function(d) {
+						d.expand = false;
+						update(d);
+				});
+
+		// Toggle expansion of the clicked Argument node and update the
+		// visualisation
+		function expand(d) {
+				d.expand = d.expand ? false : true;
+
+				update(d);
+		}
+
+		// Update the visualisation when user clicks to toggle expansion
+		// of Argument node. Currently the function only hides the links
+		// and the Statement nodes connected to the Argument node the user
+		// has clicked (i.e. it doesn't update the underlying
+		// force-directed network drawn on the page)
+		function update(source) {
+				node.select(function(d) {
+						return (source.index === d.index) ? this : null;})
+						.select("circle")
+						.style("fill", function(d){
+								return d.expand ?	"white" : "lightsteelblue"});
+
+				// For this source node, get all the outgoing links where the
+				// target node is a Statement
+				link.select(function (d) {
+						// First get the links where 'source' is the source node
+						return (source.index === d.source.index) ? this : null;})
+				// Then further filter those links to just those with
+				// 'Statement' as target node
+						.select(function (d) {
+								return !(node.select(function (n) {
+										return ((n.index === d.target.index) &&
+														(n.role[0].role.name === "Statement")) ?
+												this : null;} ).empty()) ? this : null;})
+				// Hide the outgoing links
+						.each(function (d) {
+								d.hidden = source.expand ? false : true;})
+						.style("display", function (d) {
+								return d.hidden ? "none" : "";})
+				// Find if they are any nodes left isolated and hide them
+						.each(function(d) {
+								node.select(function (n) {
+										return (n.index === d.target.index) ?	this : null;})
+										.each(function (n) {
+												// If link connecting a node is hidden then
+												// reduce the 'numlinks' count for that node
+												// by 1. If link is displayed again then
+												// increase 'numlinks' count for that node by
+												// 1.
+												if (d.hidden) {
+														n.numlinks -= 1;
+												} else {
+														n.numlinks += 1;
+												}
+										})
+												// If 'numlinks' count for a node is 0 then
+												// hide that node.
+										.style("display", function (n) {
+												return (n.numlinks === 0) ? "none" : "";
+										});
+						});
+
+		}
 
 		node.selectAll("rect")
 				.attr("height",
