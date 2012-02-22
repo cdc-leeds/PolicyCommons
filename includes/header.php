@@ -34,6 +34,7 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/node.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/tabber.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/tipTip/tipTip.css" media="screen" />
 <link rel="icon" href="<?php echo $CFG->homeAddress; ?>favicon.ico" type="images/x-icon" />
 <script src="<?php echo $CFG->homeAddress; ?>includes/prototype.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/util.php" type="text/javascript"></script>
@@ -55,6 +56,7 @@ type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.layout.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/helper_functions.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/textFlow.js" type="text/javascript"></script>
+<script src='<?php echo $CFG->homeAddress; ?>includes/tipTip/jQuery.tipTip.js'></script>
 
 <script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $CFG->GOOGLE_MAPS_KEY; ?>' type="text/javascript"></script>
 <script>

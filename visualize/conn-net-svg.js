@@ -466,8 +466,32 @@ function drawNetwork(data) {
 				node.select(function(d) {
 						return (source.index === d.index) ? this : null;})
 						.select("circle")
+						.classed("collapsed", function (d) {return !d.expand;})
+						.classed("expanded", function (d) {return d.expand;})
 						.style("fill", function(d){
 								return d.expand ?	"white" : "lightsteelblue"});
+
+				// Display a tooltip whenever user hovers over the circle for
+				// toggling expansion. Tooltip prompts user to view or hide
+				// Statement nodes connected to Argument node.
+				jQuery('circle.collapsed').tipTip({
+						activation: "hover",
+						defaultPosition: "top",
+						delay: 0,
+						content: "View the justification for this argument"
+				});
+
+				jQuery('circle.expanded').tipTip({
+						activation: "hover",
+						defaultPosition: "top",
+						delay: 0,
+						content: "Hide the justification for this argument"
+				});
+
+				// Once the user clicks the circle (and the update() function
+				// is called) then hide any tooltip being displayed until next
+				// time user hovers over
+				jQuery("#tiptip_holder").hide();
 
 				// For this source node, get all the outgoing links where the
 				// target node is a Statement
