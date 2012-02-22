@@ -139,7 +139,7 @@ function drawNetwork(data) {
 		$("tab-content-conn").insert(networkDiv);
 
 		var w = $('tab-content-conn').offsetWidth - 30;
-		var h = getWindowHeight();
+		var h = jQuery(window).height();
 
 		var vis = d3.select("#network-div")
 				.append("svg:svg")
