@@ -26,6 +26,7 @@ var TABS = {"node":true, "web":true,"conn":true,"user":true};
 var GROUP_TABS = {"node":true, "web":true,"conn":true,"user":true, /*"svn":true, "stats":true,*/ "tags":true};
 var DEBATE_TABS = {"debatemap":true, "documents":true, "contributors":true};
 var ISSUE_TABS = {"conn":true};
+var DOCUMENT_TABS = {"docview":true};
 
 var DEFAULT_TAB = 'node';
 var DEFAULT_VIZ = 'list';
@@ -63,6 +64,9 @@ var stpDocuments =
 var stpContributors =
 		setTabPushed.bindAsEventListener($('tab-contributors'),'contributors');
 
+var stpDocView =
+		setTabPushed.bindAsEventListener($('tab-docview'), 'docview');
+
 /**
  *	set which tab to show and load first
  */
@@ -94,6 +98,10 @@ if ($('tab-node')) {
 		Event.observe('tab-contributors','click', stpContributors);
 	}
 
+		if ($('tab-docview')) {
+				Event.observe('tab-docview', 'click', stpDocView);
+		}
+
 	//load data counts
 if ($('tab-node')) {
 	loadNodeCount();
@@ -113,6 +121,8 @@ if ($('tab-user')) {
 
 		if ($('tab-debatemap')) {
 				setTabPushed($('tab-debatemap'), 'debatemap');
+		} else if ($('tab-docview')) {
+				setTabPushed($('tab-docview'), 'docview');
 		} else {
 				setTabPushed($('tab-'+getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ)),getAnchorVal(DEFAULT_TAB + "-" + DEFAULT_VIZ));
 		}
@@ -129,13 +139,13 @@ function setTabPushed(e) {
 	var parts = tabID.split("-");
 	var tab = parts[0];
   var viz = parts[1] ? parts[1] : DEFAULT_VIZ;
-	
+
 	if ($('Cohere-ConnectionNet')){
 		$('Cohere-ConnectionNet').stop();
 		$('Cohere-ConnectionNet').destroy();
 		$("tab-content-conn").innerHTML = "";
 	}
-				
+
 	var checktabs = TABS;
 	if (CONTEXT == 'group')	{
 		checktabs = GROUP_TABS;
@@ -145,6 +155,9 @@ function setTabPushed(e) {
 	}
 	if (CONTEXT == 'issuenode')	{
 		checktabs = ISSUE_TABS;
+	}
+	if (CONTEXT == 'document')	{
+		checktabs = DOCUMENT_TABS;
 	}
 
 	for (i in checktabs){
@@ -312,6 +325,13 @@ function setTabPushed(e) {
 					$('tab-contributors').setAttribute("href","#contributors");
 					Event.observe('tab-contributors','click', stpContributors);
 					//loadContributors(CONTEXT,USER_ARGS);
+				}
+				break;
+			case 'docview':
+				if(!DATA_LOADED.node) {
+					$('tab-docview').setAttribute("href","#docview");
+						Event.observe('tab-docview','click', stpDocView);
+						loadDocument(CONTEXT,NODE_ARGS);
 				}
 				break;
 		default:
@@ -659,6 +679,19 @@ function loadDebateMap(context,args){
 		bObj.addScriptTag();
   	DATA_LOADED.node = true;
   	DATA_LOADED.simile = false;
+}
+
+/**
+ *	Load the Document View. This displays policy documents (as HTML)
+ *  within the PolicyCommons environment
+ */
+function loadDocument(context,args) {
+		// Use jQuery.load() to load the external policy-document HTML
+		// inside the PolicyCommons page. jQuery.load() is governed by
+		// Same Origin Policy so policy-document address needs to have the
+		// same domain as the PolicyCommons app. Best solution is to copy
+		// policy-documents into the /uploads folder.
+		jQuery('#tab-content-docview').load(args['url']);
 }
 
 /**
