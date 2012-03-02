@@ -56,7 +56,7 @@ type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.layout.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/helper_functions.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/textFlow.js" type="text/javascript"></script>
-<script src='<?php echo $CFG->homeAddress; ?>includes/tipTip/jQuery.tipTip.js'></script>
+<script src='<?php echo $CFG->homeAddress; ?>includes/tipTip/jquery.tipTip.js'></script>
 
 <script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $CFG->GOOGLE_MAPS_KEY; ?>' type="text/javascript"></script>
 <script>
