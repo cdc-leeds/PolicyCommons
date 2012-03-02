@@ -692,6 +692,26 @@ function loadDocument(context,args) {
 		// same domain as the PolicyCommons app. Best solution is to copy
 		// policy-documents into the /uploads folder.
 		jQuery('#tab-content-docview').load(args['url']);
+
+		// If a node id is given as the anchor part of the URL then search
+		// for the text in the document, go straight to that point in the
+		// document and highlight the text.
+		var nodeid = location.hash.replace("#", "");
+
+		if (nodeid) {
+				var req =
+						SERVICE_ROOT + "&method=getnode&nodeid=" + nodeid;
+
+				jQuery.getJSON(req, function (data) {
+						jQuery('#tab-content-docview p:contains(' +
+									 data.cnode[0].name	+')')
+								.css("border", "2px solid red")
+								.attr("id", nodeid);
+
+						location.href = location.hash;
+				});
+		}
+
 }
 
 /**

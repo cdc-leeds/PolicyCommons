@@ -470,7 +470,9 @@ function drawNetwork(data) {
 		// is taken from. Source-Documents are URLs in the Cohere data
 		// model
 		function goToSourceDocument(d) {
-				var documentURL = URL_ROOT + "document.php?urlid=" + d.urlid;
+				var documentURL =
+						URL_ROOT + "document.php?urlid=" + d.urlid + "#" + d.nodeid;
+
 				jQuery(location).attr('href', documentURL);
 		}
 
