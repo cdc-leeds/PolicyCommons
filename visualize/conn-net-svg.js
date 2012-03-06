@@ -608,34 +608,32 @@ function drawNetwork(data) {
 				.attr("in2", "the-shadow")
 				.attr("mode", "normal");
 
-		force.on("tick",
-						 function() {
-								 link.select("path")
-										 .attr("d",
-													 function(d) {
-															 return moveto(d) + lineto(d);
-													 })
-										 .attr("stroke",
-													 function(d) {
-															 return linkColors[d.polarity];
-													 });
+		force.on("tick", tick);
 
-								 link.select("text")
-										 .attr("x",
-													 function(d){
-															 return (d.target.newX + d.source.newX) / 2;
-													 })
-										 .attr("y",
-													 function(d){
-															 return (d.target.newY + d.source.newY) / 2;
-													 })
+		function tick() {
+				link.select("path")
+						.attr("d", function(d) {
+								return moveto(d) + lineto(d); })
+						.attr("stroke", function(d) {
+								return linkColors[d.polarity]; });
 
-								 node.attr("transform",
-													 function(d) {
-															 return "translate(" + d.x + "," + d.y + ")";
-													 });
+				link.select("text")
+						.attr("x", function(d){
+								return (d.target.newX + d.source.newX) / 2; })
+						.attr("y", function(d){
+								return (d.target.newY + d.source.newY) / 2; })
 
-						 });
+				node.attr("transform", function(d) {
+						// Retrieve the width and height
+						// attributes which were calculated earlier
+						var node_width = parseFloat(node.attr("width"));
+						var node_height = parseFloat(node.attr("height"));
+
+						d.x = Math.max(0, Math.min(w - node_width, d.x));
+						d.y = Math.max(0, Math.min(h - node_height, d.y));
+						return "translate(" + d.x + "," + d.y + ")";
+				});
+		}
 }
 
 loadNetwork();
