@@ -408,9 +408,6 @@ function drawNetwork(data) {
 							})
 				.call(force.drag);
 
-		node.append("svg:title")
-				.text(function(d) { return d.name; });
-
 		node.append("svg:rect")
 				.attr("rx", 3)
 				.attr("filter", "url(#drop-shadow)")
