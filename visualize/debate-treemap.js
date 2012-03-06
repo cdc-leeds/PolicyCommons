@@ -71,7 +71,7 @@ function drawDebateMap(data) {
 
 		var w = $('tab-content-debatemap').offsetWidth - 30;
 		var h = jQuery(window).height();
-		var color = d3.scale.category20();
+		var color = d3.scale.category10();
 
 		var vis = d3.select("#debatemap-div")
 				.append("div")
