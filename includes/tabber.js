@@ -117,6 +117,7 @@ if ($('tab-user')) {
 }
 
 		if ($('tab-debatemap')) {
+				loadDocumentCount();
 				setTabPushed($('tab-debatemap'), 'debatemap');
 		} else if ($('tab-docview')) {
 				setTabPushed($('tab-docview'), 'docview');
@@ -314,7 +315,7 @@ function setTabPushed(e) {
 				if(!DATA_LOADED.url){
 					$('tab-documents').setAttribute("href","#documents");
 					Event.observe('tab-documents','click', stpDocuments);
-					//loadDocuments(CONTEXT,URL_ARGS);
+					loadDocuments(CONTEXT,URL_ARGS);
 				}
 				break;
 			case 'docview':
@@ -669,6 +670,90 @@ function loadDebateMap(context,args){
 		bObj.addScriptTag();
   	DATA_LOADED.node = true;
   	DATA_LOADED.simile = false;
+}
+
+/**
+ * get the number of documents for given debate
+ */
+function loadDocumentCount(){
+		var context = "node";
+	var args = Object.clone(URL_ARGS);
+	args["start"] = 0;
+	//don't get any nodes
+	args["max"] = 0;
+	
+	var reqUrl = SERVICE_ROOT + "&method=geturlsby" + context + "&" + Object.toQueryString(args);
+
+	new Ajax.Request(reqUrl, { method:'get',
+  			onSuccess: function(transport){
+  				var json = transport.responseText.evalJSON();
+      			if(json.error){
+      				alert(json.error[0].message);
+      				return;
+      			}      	
+      			
+      			//set the count in tab header
+      			$('document-count').innerHTML = "";
+      			$('document-count').insert(json.urlset[0].totalno);
+      		}
+      	});
+}
+
+// Function based on loadurls, as Documents are really Cohere URLs
+function loadDocuments(context, args) {
+		context = "node";
+	$("tab-content-documents").update(getLoading("(Loading documents...)"));
+	//set method
+	var reqUrl = SERVICE_ROOT + "&method=geturlsby" + context + "&" + Object.toQueryString(args);
+
+	new Ajax.Request(reqUrl, { method:'get',
+  			onSuccess: function(transport){
+  				var json = transport.responseText.evalJSON();
+      			if(json.error){
+      				alert(json.error[0].message);
+      				return;
+      			}  
+      			
+      			//set the count in tab header
+      			$('document-count').innerHTML = "";
+      			$('document-count').insert(json.urlset[0].totalno);
+				
+				var tb1 = new Element("div", {'class':'toolbarrow'});
+				$("tab-content-documents").update(tb1);
+				tb1.insert(displayWebsiteAdd());
+				
+				if(json.urlset[0].count != 0){
+					var sortOpts = {date: 'Create Date', name: 'Name', moddate: 'Modification Date',connectedness: 'Usage'};
+					tb1.insert(displaySortForm(sortOpts,args,'urls'));
+					Event.observe($('sort-urls-options-go'),'click',reorderURLs);
+					
+					if (context == "group") {
+						tb1.insert(displayWebsiteFilters(args,'node', filterWebsites, context));
+					}
+										
+					var tb2 = new Element("div", {'class':'toolbarrow'});
+					tb2.insert(displayURLsGroupAction());						
+					$("tab-content-documents").insert(tb2);
+					
+				    new Ajax.Autocompleter("url-addtagaction", "url-addtagaction_choices", SERVICE_ROOT +"&method=gettagsbyfirstcharacters&scope=all&format=list", {paramName: "q", minChars: 1, tokens: ","});				
+				}
+
+				//display nav
+				var total = json.urlset[0].totalno;
+				$("tab-content-documents").insert(createNav(total,json.urlset[0].start,json.urlset[0].count,args,context,"urls"));				
+				$("tab-content-documents").insert('<div style="clear: both; margin:0px; padding: 0px;"></div>');
+				
+				//display urls
+				displayDocuments($("tab-content-documents"),json.urlset[0].urls,parseInt(args['start'])+1);
+				
+				//display nav
+				if (total > parseInt( args["max"] )) {		
+					$("tab-content-documents").insert(createNav(total,json.urlset[0].start,json.urlset[0].count,args,context,"urls"));
+				}
+								
+    		}
+  		});
+	DATA_LOADED.url = true;
 }
 
 /**

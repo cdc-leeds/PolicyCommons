@@ -43,6 +43,7 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <script src="<?php echo $CFG->homeAddress; ?>includes/conns.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/users.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/debate.js" type="text/javascript"></script>
+<script src="<?php echo $CFG->homeAddress; ?>includes/documents.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/dateformat.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/jsr_class.js" type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/scriptaculous/scriptaculous.js' type="text/javascript"></script>

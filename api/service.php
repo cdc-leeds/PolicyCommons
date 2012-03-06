@@ -806,6 +806,12 @@ switch($method){
 				$groupid = optional_param('groupid','',PARAM_TEXT);
 				$response = getDebateContents($nodeid, $scope,$groupid,$start,$max,$style);
         break;
+    case "getdebatedocuments":
+			  $nodeid = required_param('nodeid',PARAM_TEXT);
+        $scope = optional_param('scope','',PARAM_TEXT);
+				$groupid = optional_param('groupid','',PARAM_TEXT);
+				$response = getURLsByNode($nodeid, $scope,$groupid,$start,$max,$style);
+        break;
     case "getconnectionsbyissuenode":
         $nodeid = required_param('nodeid',PARAM_TEXT);
 
