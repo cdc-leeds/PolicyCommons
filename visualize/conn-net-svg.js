@@ -454,9 +454,11 @@ function drawNetwork(data) {
 												.each(function (d) {
 														d.urlid = urls[0].url.urlid;})
 												.on("mouseover", function (d) {
-														this.style.textDecoration = "underline";})
+														this.style.textDecoration = "underline";
+														this.style.fontStyle = "italic";})
 												.on("mouseout", function (d) {
-														this.style.textDecoration = "none";})
+														this.style.textDecoration = "none";
+														this.style.fontStyle = "normal";})
 												.on("click", goToSourceDocument)
 												.style("cursor", "pointer");
 								}
