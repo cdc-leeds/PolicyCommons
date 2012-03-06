@@ -67,7 +67,7 @@ if ($url instanceof Error) {
     <div id="contextinfo">
         <h1><?php print $url->title; ?></h1>
         <a href="<?php print $url->url;?>" target="_blank">
-            <?php print $url->url;?>
+            [External link]
         </a>
         <?php
 
