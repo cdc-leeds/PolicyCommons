@@ -156,7 +156,7 @@ function drawNetwork(data) {
 		// Run the force directed layout algorithm
 		var force = d3.layout.force()
 				.charge(-2500)
-				.linkDistance(250)
+				.linkDistance(300)
 				.nodes(data.nodes)
 				.links(data.links)
 				.size([w, h])
