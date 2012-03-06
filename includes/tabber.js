@@ -24,7 +24,7 @@
 //this list the tabs 
 var TABS = {"node":true, "web":true,"conn":true,"user":true};
 var GROUP_TABS = {"node":true, "web":true,"conn":true,"user":true, /*"svn":true, "stats":true,*/ "tags":true};
-var DEBATE_TABS = {"debatemap":true, "documents":true, "contributors":true};
+var DEBATE_TABS = {"debatemap":true, "documents":true};
 var ISSUE_TABS = {"conn":true};
 var DOCUMENT_TABS = {"docview":true};
 
@@ -61,8 +61,6 @@ var stpDebateMap =
 		setTabPushed.bindAsEventListener($('tab-debatemap'),'debatemap');
 var stpDocuments =
 		setTabPushed.bindAsEventListener($('tab-documents'),'documents');
-var stpContributors =
-		setTabPushed.bindAsEventListener($('tab-contributors'),'contributors');
 
 var stpDocView =
 		setTabPushed.bindAsEventListener($('tab-docview'), 'docview');
@@ -95,7 +93,6 @@ if ($('tab-node')) {
 	if ($('tab-debatemap')) {
 		Event.observe('tab-debatemap','click', stpDebateMap);
 		Event.observe('tab-documents','click', stpDocuments);
-		Event.observe('tab-contributors','click', stpContributors);
 	}
 
 		if ($('tab-docview')) {
@@ -318,13 +315,6 @@ function setTabPushed(e) {
 					$('tab-documents').setAttribute("href","#documents");
 					Event.observe('tab-documents','click', stpDocuments);
 					//loadDocuments(CONTEXT,URL_ARGS);
-				}
-				break;
-			case 'contributors':
-				if(!DATA_LOADED.user){
-					$('tab-contributors').setAttribute("href","#contributors");
-					Event.observe('tab-contributors','click', stpContributors);
-					//loadContributors(CONTEXT,USER_ARGS);
 				}
 				break;
 			case 'docview':
