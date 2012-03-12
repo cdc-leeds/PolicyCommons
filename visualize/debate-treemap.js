@@ -89,7 +89,13 @@ function drawDebateMap(data) {
 var treemap = d3.layout.treemap()
     .size([w, h])
     .sticky(true)
-				.value(function(d) { return parseInt(d.connectedness); })
+		.value(function(d) {
+				// Make size of region in debate map be determined based on
+				// number of responses. Need to add 1 to num_responses so that
+				// if number of responses is 0 we still get the cell to
+				// display
+				return parseInt(d.num_responses)+1; })
+
 		// Sort so largest cell in treemap is at the top-left rather than
 		// bottom right
 				.sort(function(a, b) { return a.value - b.value});
@@ -120,9 +126,7 @@ function cell() {
 						// is a Debate then make hyperlink to Debate URL, else
 						// then assume cell is an Issue and make hyperlink to
 						// Issue URL.
-						return d.children ? null : ((d.role[0].role.name == "Debate") ?
-								 "<a href='"+createDebateURL(d.nodeid)+"'>"+d.name+"</a>" :
-								 "<a href='"+createIssueURL(d.nodeid)+"'>"+d.name+"</a>"); })
+						return d.children ? null : cell_html(d); })
 
 		//Move the following to CSS -- create class called "treemap-cell"
 				.style("border", "solid 1px white")
@@ -132,6 +136,26 @@ function cell() {
 				.style("position", "absolute")
 				.style("text-indent", "2px");
       //.attr("class", "treemap-cell");
+
+		function cell_html (d) {
+				var html = d.name + " (Responses: " + d.num_responses + ")";
+				var cell_type = d.role[0].role.name;
+
+				// Only if the number of responses is more than 0 do we add a
+				// hyperlink to the cell.
+				if (d.num_responses > 0) {
+						if (cell_type === "Debate") {
+								html =
+										"<a href='"+createDebateURL(d.nodeid)+"'>" +
+										html + "</a>";
+						} else if (cell_type === "Issue") {
+								html =
+										"<a href='"+createIssueURL(d.nodeid)+"'>" +
+										html + "</a>";
+						}
+				}
+				return html;
+		}
 }
 }
 
