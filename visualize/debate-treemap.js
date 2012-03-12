@@ -138,17 +138,31 @@ function cell() {
       //.attr("class", "treemap-cell");
 
 		function cell_html (d) {
-				var html = d.name + " (Responses: " + d.num_responses + ")";
+				var html = d.name;
 				var cell_type = d.role[0].role.name;
 
-				// Only if the number of responses is more than 0 do we add a
-				// hyperlink to the cell.
-				if (d.num_responses > 0) {
-						if (cell_type === "Debate") {
+				if (cell_type === "Debate") {
+						html = html + "<br /><br />" +
+								"(Issues: " + d.num_issues +
+								"; Responses: " + d.num_responses + ")";
+
+						// Only if the number of issues is more than 0 do we add a
+						// hyperlink for Sub-Debate cells. (In principle there
+						// should always be issues in debates/sub-debates, but in
+						// practice the modeller might not always get around to
+						// modelling the issues within a debate/sub-debate.)
+						if (d.num_issues > 0) {
 								html =
 										"<a href='"+createDebateURL(d.nodeid)+"'>" +
 										html + "</a>";
-						} else if (cell_type === "Issue") {
+						}
+				} else if (cell_type === "Issue") {
+						html = html + "<br /><br />" +
+								"(Responses: " + d.num_responses + ")";
+
+						// Only if the number of responses is more than 0 do we
+						// add a hyperlink to Issue cells.
+						if (d.num_responses > 0) {
 								html =
 										"<a href='"+createIssueURL(d.nodeid)+"'>" +
 										html + "</a>";
