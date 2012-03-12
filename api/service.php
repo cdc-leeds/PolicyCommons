@@ -811,9 +811,17 @@ switch($method){
 					for ($i = 0; $i < count($debate_nodes_arr); $i++) {
 						// For shorthand, get reference to cnode object
 						$cnode = $debate_node_set_obj->nodes[$i];
+
 						$cnode->num_responses =
 							getNumberOfResponses(
 								$cnode->nodeid, $cnode->role->name);
+
+						// For sub-debates, also get the number of issues
+						if ($cnode->role->name == "Debate") {
+							$cnode->num_issues =
+								getNumberOfIssues(
+									$cnode->nodeid, $cnode->role->name);
+						}
 					}
 					$response = $debate_node_set_obj;
         break;

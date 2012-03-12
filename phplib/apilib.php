@@ -5558,6 +5558,31 @@ function getResponsesToIssue($nodeid, $start = 0, $max = -1 ,
 	return $issueConnSetObj;
 }
 
+// This function determines the number of issues within each region
+// of a debate.
+// It recursively steps through the debate (going through each
+// sub-debate and sub-sub-debates, if any, within sub-debates) to find
+// the number of issues
+
+function getNumberOfIssues($nodeid, $node_type) {
+	$num_issues = 0;
+
+	if ($node_type == "Debate") {
+		$debate_node_set_obj = getDebateContents($nodeid);
+
+		// Copy just the array of nodes
+		$debate_nodes_arr = $debate_node_set_obj->nodes;
+		for ($i = 0; $i < count($debate_nodes_arr); $i++) {
+			$cnode = $debate_node_set_obj->nodes[$i];
+			$num_issues = $num_issues +	getNumberOfIssues($cnode->nodeid, $cnode->role->name);
+		}
+	} else if ($node_type == "Issue") {
+		$num_issues = 1;
+	}
+
+	return $num_issues;
+}
+
 // This function determines the number of responses within each region
 // of a debate (i.e. within each sub-debate and within each-issue
 // within each sub-debate).
@@ -5580,7 +5605,7 @@ function getNumberOfResponses($nodeid, $node_type) {
 	} else if ($node_type == "Issue") {
 		$issue_conn_set_obj = getResponsesToIssue($nodeid);
 		$num_responses = $issue_conn_set_obj->count;
-		}
+	}
 
 	return $num_responses;
 }
