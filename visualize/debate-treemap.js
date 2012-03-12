@@ -75,11 +75,9 @@ function drawDebateMap(data) {
 
 		var vis = d3.select("#debatemap-div")
 				.append("div")
-				.style("position", "relative")
+				.attr("class", "debatemap")
 				.style("width", w + "px")
-				.style("height", h + "px")
-				.style("top", "10px")
-				.style("left", "5px");
+				.style("height", h + "px");
 
 		vis.style("opacity", 1e-6)
 				.transition()
@@ -128,14 +126,7 @@ function cell() {
 						// Issue URL.
 						return d.children ? null : cell_html(d); })
 
-		//Move the following to CSS -- create class called "treemap-cell"
-				.style("border", "solid 1px white")
-				.style("font", "12px sans-serif")
-				.style("line-height", "12px")
-				.style("overflow", "hidden")
-				.style("position", "absolute")
-				.style("text-indent", "2px");
-      //.attr("class", "treemap-cell");
+				.attr("class", "debatemap-cell");
 
 		function cell_html (d) {
 				var html = d.name;

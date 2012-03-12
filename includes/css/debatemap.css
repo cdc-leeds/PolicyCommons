@@ -1,0 +1,22 @@
+.debatemap {
+		position: relative;
+		top: 10px;
+		left: 5px;
+}
+.debatemap-cell {
+		border: solid 1px white;
+		font: 16px sans-serif;
+		color: darkgrey; /* Default color for non-hyperlink text */
+		line-height: 16px;
+		overflow: hidden;
+		position: absolute;
+		text-indent: 2px;
+}
+
+.debatemap-cell a {
+		color: black; /* Color for hyperlink text*/
+}
+
+.debatemap-cell a:hover {
+		text-decoration: underline;
+}
