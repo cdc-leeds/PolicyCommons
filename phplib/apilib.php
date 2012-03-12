@@ -5498,5 +5498,64 @@ function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max =
     $ns = new NodeSet();
     return $ns->load($sql,$start,$max,'connectedness','DESC',$style);
 }
+
+// This function retrieves all the Arguments that address an
+// Issue. For each Argument, it retrieves the individual Statements
+// that make up the Argument. All data is returned as a Connection-Set
+// Object.
+function getResponsesToIssue($nodeid, $start = 0, $max = -1 ,
+														 $orderby = 'date', $sort ='DESC',
+														 $filterlinkgroup = 'all',
+														 $filterlinktypes = '',
+														 $filternodetypes='', $style='long') {
+
+	// Only retrieve a certain select group of connections, namely
+	// connections that show which Arguments address the given
+	// Issue node
+	$filterlinkgroup = "selected";
+	$filterlinktypes = "addresses";
+
+	$issueConnSetObj =
+		getConnectionsByNode($nodeid, $start, $max, $orderby, $sort,
+												 $filterlinkgroup, $filterlinktypes,
+												 $filternodetypes, $style);
+
+	// Copy just the array of connections from the returned
+	// ConnectionSet object
+	$issueConnsArr = $issueConnSetObj->connections;
+
+	// Clear the array of connections. Need to do this because
+	// when we separately retrieve the connections for each
+	// Argument node, the connection to the Issue is again
+	// retrieved, so we need to prevent duplicates.
+	$issueConnSetObj->connections = array();
+
+	// For each "Argument <addresses> Issue" connection...
+	for($i=0; $i < count($issueConnsArr); $i++) {
+
+		// Get the ID of the Argument node...
+		$argNodeID = $issueConnsArr[$i]->from->nodeid;
+
+		// And for that Argument node get all its connections to
+		// other Argument nodes and Statement nodes
+		$filterlinkgroup = '';
+		$filterlinktypes = '';
+		$filternodetypes = "Argument,Statement";
+		$argConnSetObj =
+			getConnectionsByNode($argNodeID, $start, $max, $orderby, $sort,
+													 $filterlinkgroup, $filterlinktypes,
+													 $filternodetypes, $style);
+
+		// Then merge these connections with the original
+		// ConnectionSet object retrieved for the Issue node
+		$issueConnSetObj->connections =
+			array_merge($issueConnSetObj->connections,
+									$argConnSetObj->connections);
+	}
+
+	// Result is the original Issue ConnectionSet object merged
+	// with connections retrieved for invidvidual Argument nodes
+	return $issueConnSetObj;
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>
