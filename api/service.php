@@ -830,6 +830,12 @@ switch($method){
 				// ConnectionSet object
 				$issueConnsArr = $issueConnSetObj->connections;
 
+				// Clear the array of connections. Need to do this because
+				// when we separately retrieve the connections for each
+				// Argument node, the connection to the Issue is again
+				// retrieved, so we need to prevent duplicates.
+				$issueConnSetObj->connections = array();
+
 				// For each "Argument <addresses> Issue" connection...
 				for($i=0; $i < count($issueConnsArr); $i++) {
 
@@ -848,9 +854,6 @@ switch($method){
 
 					// Then merge these connections with the original
 					// ConnectionSet object retrieved for the Issue node
-					$issueConnSetObj->count =
-						$issueConnSetObj->count + $argConnSetObj->count;
-					$issueConnSetObj->totalno = (string)$issueConnSetObj->count;
 					$issueConnSetObj->connections =
 						array_merge($issueConnSetObj->connections,
 												$argConnSetObj->connections);
