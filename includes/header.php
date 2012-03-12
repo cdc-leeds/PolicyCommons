@@ -53,9 +53,7 @@ type="text/javascript"></script>
 <!-- Prevent jQuery conflicting with Prototype-->
 <script type="text/javascript">jQuery.noConflict();</script>
 
-<script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.geom.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.layout.js" type="text/javascript"></script>
+<script src="<?php echo $CFG->homeAddress; ?>includes/d3/d3.v2.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/helper_functions.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/textFlow/textFlow.js" type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/tipTip/jquery.tipTip.js'></script>
