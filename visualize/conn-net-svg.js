@@ -148,7 +148,11 @@ function drawNetwork(data) {
 						draggable: false,
 						position: "center",
 						resizable: false
-				})
+				});
+
+		// Make semi-transparent overlay take up the whole page.
+		jQuery(".ui-widget-overlay")
+				.css("position", "fixed")
 				.css("height", "100%");
 	
 		// Set width & height for SVG
