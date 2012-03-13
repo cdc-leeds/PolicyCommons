@@ -89,10 +89,12 @@ var treemap = d3.layout.treemap()
     .sticky(true)
 		.value(function(d) {
 				// Make size of region in debate map be determined based on
-				// number of responses. Need to add 1 to num_responses so that
-				// if number of responses is 0 we still get the cell to
-				// display
-				return parseInt(d.num_responses)+1; })
+				// Log of the number of responses. Use log so that variation
+				// in size isn't too much. Need to add 2 to num_responses so
+				// that if number of responses is 0 we still get the cell to
+				// display (adding 1 would give log(1) which is 0). There
+				// probably is a more elegant way of doing this.
+				return Math.log(parseInt(d.num_responses)+2); })
 
 		// Sort so largest cell in treemap is at the top-left rather than
 		// bottom right
