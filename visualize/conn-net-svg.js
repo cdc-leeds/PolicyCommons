@@ -611,7 +611,7 @@ function drawNetwork(data) {
 
 		force.on("tick", tick);
 
-		function tick() {
+		function tick(e) {
 				link.select("path")
 						.attr("d", function(d) {
 								return moveto(d) + lineto(d); })
@@ -634,6 +634,16 @@ function drawNetwork(data) {
 						d.y = Math.max(0, Math.min(h - node_height, d.y));
 						return "translate(" + d.x + "," + d.y + ")";
 				});
+
+				// Don't wait until force-directed algorithm completely
+				// finishes (i.e. alpha == 0). Freeze the nodes when network
+				// gets fairly stable (< 0.009 seems to work well). Fixing the
+				// nodes also means the force-directed layout isn't resumed
+				// when nodes are dragged. So this achieves the result of
+				// removing the "bouncy" effect of the network visualisation
+				if (e.alpha < 0.009) {
+						node.each(function (d) { d.fixed = true; });
+				}
 		}
 }
 
