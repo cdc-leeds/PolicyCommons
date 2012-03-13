@@ -43,7 +43,7 @@ function loadNetwork(){
     loadDiv.insert("<br/>(Loading Connection Network View. This may take a few minutes depending on the number of Connections...)");
 
 		$('connmessage').update(loadDiv);
-	
+
 		var args = Object.clone(NET_ARGS);
 		args["start"] = 0;
 
@@ -133,6 +133,23 @@ function convertCohereJsonToD3 (cohereJson) {
 }
 
 function drawNetwork(data) {
+
+		// Open a modal dialog box (using JQuery UI plug-in) to alert user
+		// that network is being drawn. This creates a semi-transparent
+		// overlay on page that prevents user from interacting with page
+		// until drawing is complete.
+		var wait_dialog = jQuery("<div></div>")
+				.html("Drawing visualisation. This may take a few moments..."
+							+"<br /><br />"
+							+"<img src='"+URL_ROOT+"images/ajax-loader.gif'/>")
+				.css("text-align", "center")
+				.dialog({
+						modal: true,
+						draggable: false,
+						position: "center",
+						resizable: false
+				})
+				.css("height", "100%");
 	
 		// Set width & height for SVG
 		var networkDiv = new Element("div", {"id":"network-div"});
@@ -643,6 +660,9 @@ function drawNetwork(data) {
 				// removing the "bouncy" effect of the network visualisation
 				if (e.alpha < 0.009) {
 						node.each(function (d) { d.fixed = true; });
+
+						// Now remove modal dialog.
+						wait_dialog.dialog("destroy");
 				}
 		}
 }
