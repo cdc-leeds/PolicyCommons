@@ -86,10 +86,21 @@ documents. Ultimately, the aim of PolicyCommons is to support greater
 	participation in the democratic process, as well as to improve the
 	openness and accountability of the democratic process.</p>
 
+<p>PolicyCommons is currently at an ‘alpha’ stage, which means that a
+significant amount of development and testing needs to be done before
+it can be ready for general release.  Furthermore, it does not
+currently support the Internet Explorer browser and has only been
+tested on Firefox 3.6+, Safari 5.1, Chrome 15+, and Opera 11+. Please
+remember these prototype constraints when you use the tool.</p>
+
+<p>Click on the <em>Debates</em> tab above to begin browsing the available maps
+of policy-debates.</p>
+
+
 				</div>
 
 
-				<div id="tab-content-home-conn" style="overflow: hidden; clear:both; float:left; width: 740px; padding-right: 5px: 0px; padding: 0px; margin-top:10px; margin-left: 5px;">
+				<div id="tab-content-home-conn" style="display:none; overflow: hidden; clear:both; float:left; width: 740px; padding-right: 5px: 0px; padding: 0px; margin-top:10px; margin-left: 5px;">
 					<div style="margin-bottom:10px; height: 20px; background:#F8EAF3; padding-left: 5px; padding-top: 4px; "><strong>Most Recent Connection</strong></div>
 				</div>
 			 </div>
