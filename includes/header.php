@@ -36,6 +36,7 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/tabber.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/tipTip/tipTip.css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/css/debatemap.css" media="screen" />
+<link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/css/jquery-ui-1.8.18.custom.css" media="screen" />
 <link rel="icon" href="<?php echo $CFG->homeAddress; ?>favicon.ico" type="images/x-icon" />
 <script src="<?php echo $CFG->homeAddress; ?>includes/prototype.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/util.php" type="text/javascript"></script>
@@ -48,8 +49,8 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <script src="<?php echo $CFG->homeAddress; ?>includes/dateformat.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/jsr_class.js" type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/scriptaculous/scriptaculous.js' type="text/javascript"></script>
-<script src='<?php echo $CFG->homeAddress; ?>includes/jquery.js'
-type="text/javascript"></script>
+<script src='<?php echo $CFG->homeAddress; ?>includes/jquery.js' type="text/javascript"></script>
+<script src='<?php echo $CFG->homeAddress; ?>includes/jquery-ui-1.8.18.custom.min.js' type="text/javascript"></script>
 <!-- Prevent jQuery conflicting with Prototype-->
 <script type="text/javascript">jQuery.noConflict();</script>
 
