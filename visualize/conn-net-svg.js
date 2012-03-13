@@ -412,7 +412,8 @@ function drawNetwork(data) {
 				.attr("rx", 3)
 				.attr("filter", "url(#drop-shadow)")
 				.style("stroke", "black")
-				.style("fill", "aliceblue");
+				.style("fill", "aliceblue")
+				.style("cursor", "move");
 
 		node.append("svg:text")
 				.attr("font-size", 10)
