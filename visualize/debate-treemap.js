@@ -134,8 +134,8 @@ function cell() {
 
 				if (cell_type === "Debate") {
 						html = html + "<br /><br />" +
-								"(Issues: " + d.num_issues +
-								"; Responses: " + d.num_responses + ")";
+								"(Issues: " + d.num_issues + ")" + "<br />" +
+								"(Responses: " + d.num_responses + ")";
 
 						// Only if the number of issues is more than 0 do we add a
 						// hyperlink for Sub-Debate cells. (In principle there
