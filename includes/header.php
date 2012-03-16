@@ -51,6 +51,8 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <script src='<?php echo $CFG->homeAddress; ?>includes/scriptaculous/scriptaculous.js' type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/jquery.js' type="text/javascript"></script>
 <script src='<?php echo $CFG->homeAddress; ?>includes/jquery-ui-1.8.18.custom.min.js' type="text/javascript"></script>
+<!--Include SpryMap plugin so that argument maps can be grabbed and dragged like Google Maps -->
+<script src='<?php echo $CFG->homeAddress; ?>includes/spryMap/spryMap-2.js'></script>
 <!-- Prevent jQuery conflicting with Prototype-->
 <script type="text/javascript">jQuery.noConflict();</script>
 

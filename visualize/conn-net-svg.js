@@ -155,17 +155,33 @@ function drawNetwork(data) {
 				.css("position", "fixed")
 				.css("height", "100%");
 	
-		// Set width & height for SVG
+		// Set width & height for div that contains SVG visualisation
 		var networkDiv = new Element("div", {"id":"network-div"});
 		$("tab-content-conn").insert(networkDiv);
 
-		var w = $('tab-content-conn').offsetWidth - 30;
-		var h = jQuery(window).height();
+		jQuery("#network-div").css("overflow", "hidden")
+				.height(jQuery(window).height())
+				.width(jQuery("#tab-content-conn").width());
+
+		// Calculate desired width and height for the SVG visualisation.
+		// Make quite deep so text nodes aren't cropped.
+		var w = jQuery(document).width();
+		var h = jQuery(document).height();
 
 		var vis = d3.select("#network-div")
 				.append("svg:svg")
+				.attr("id", "arg-viz")
 				.attr("width", w)
 				.attr("height", h);
+
+		var map = new SpryMap({
+				id : "arg-viz",
+        height: h,
+        width: w,
+        startX: 0,
+        startY: 0,
+				lockEdges: false,
+				scrolling: false});
 
 		vis.style("opacity", 1e-6)
 				.transition()
@@ -173,6 +189,11 @@ function drawNetwork(data) {
 				.style("opacity", 1);
 
 		var defs = vis.append("svg:defs");
+
+		// Recalculate width and height for layout algorithm so it fits
+		// within the containing div
+		w = jQuery("#network-div").width();
+		h = jQuery("#network-div").height();
 
 		// Run the force directed layout algorithm
 		var force = d3.layout.force()
@@ -427,7 +448,12 @@ function drawNetwork(data) {
 							function(d) {
 									return "translate(" + d.x + "," + d.y + ")";
 							})
-				.call(force.drag);
+		// Make nodes draggable
+				.call(force.drag)
+		// When node is clicked to be dragged, stop the mousedown event
+		// from propagating to SpryMap event listener attached to parent,
+		// which is used to allow map as a whole to be draggable.
+				.on("mousedown", function() {d3.event.stopPropagation();});
 
 		node.append("svg:rect")
 				.attr("rx", 3)
@@ -646,13 +672,6 @@ function drawNetwork(data) {
 								return (d.target.newY + d.source.newY) / 2; })
 
 				node.attr("transform", function(d) {
-						// Retrieve the width and height
-						// attributes which were calculated earlier
-						var node_width = parseFloat(node.attr("width"));
-						var node_height = parseFloat(node.attr("height"));
-
-						d.x = Math.max(0, Math.min(w - node_width, d.x));
-						d.y = Math.max(0, Math.min(h - node_height, d.y));
 						return "translate(" + d.x + "," + d.y + ")";
 				});
 
@@ -667,6 +686,11 @@ function drawNetwork(data) {
 
 						// Now remove modal dialog.
 						wait_dialog.dialog("destroy");
+
+						// Insert Hint about how to interact with visualisation
+						jQuery("#connmessage").html(
+								"<em>Hint: Click and drag	individual nodes," +
+										" or click and grab to move entire map</em>.");
 				}
 		}
 }
