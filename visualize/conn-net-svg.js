@@ -164,9 +164,9 @@ function drawNetwork(data) {
 				.width(jQuery("#tab-content-conn").width());
 
 		// Calculate desired width and height for the SVG visualisation.
-		// Make quite deep so text nodes aren't cropped.
-		var w = jQuery(document).width();
-		var h = jQuery(document).height();
+		// Make quite large so text nodes aren't cropped.
+		var w = jQuery(document).width() * 2;
+		var h = jQuery(document).height() * 2;
 
 		var vis = d3.select("#network-div")
 				.append("svg:svg")
@@ -190,12 +190,16 @@ function drawNetwork(data) {
 
 		var defs = vis.append("svg:defs");
 
-		// Recalculate width and height for layout algorithm so it fits
-		// within the containing div
-		w = jQuery("#network-div").width();
-		h = jQuery("#network-div").height();
-
 		// Run the force directed layout algorithm
+		// XXX
+		// Note, with such a large setting for width and height, the
+		// visualisation is likely to be drawn off-screen. Thus, later,
+		// when layout is stopped we have to bring the visualisation back
+		// into the center of the containing div using CSS negative
+		// margins. This is a temporary solution until a proper way is
+		// found to display the visualisation in the centre of the
+		// containing div while at the same time giving room for
+		// visualisation to be drawn so no text-nodes are cropped.
 		var force = d3.layout.force()
 				.charge(-5000)
 				.linkDistance(175)
@@ -691,6 +695,52 @@ function drawNetwork(data) {
 						jQuery("#connmessage").html(
 								"<em>Hint: Click and drag	individual nodes," +
 										" or click and grab to move entire map</em>.");
+
+						// XXX Need to find a better way of positioning the
+						// visualisation in the middle of the container, while at
+						// the same time giving it enough space so none of the
+						// nodes is cropped. For now calculate the center of where
+						// the visualisation was drawn, then calculate the center
+						// of the containing div, and use CSS negative margins to
+						// make the adjustment.
+
+						// Get center of the containing div
+						var container_div_center = {
+								x: jQuery("#network-div").width() / 2,
+								y: jQuery("#network-div").height() / 2};
+
+						// Get the max and min x,y coordinates of the
+						// visualisation so we can calculate the center.
+						var min_x, min_y, max_x, max_y;
+
+						node.each(function (d) {
+								if (min_x === undefined) {
+										min_x = max_x = d.x;
+										min_y = max_y = d.y;
+								} else if (d.x < min_x) {
+										min_x = d.x;
+								} else if (d.x > max_x) {
+										max_x = d.x;
+								} else if (d.y < min_y) {
+										min_y = d.y;
+								} else if (d.y > max_y) {
+										max_y = d.y;
+								}
+						});
+
+						var visualisation_center = {
+								x: (min_x + max_x) / 2,
+								y: (min_y + max_y) / 2
+						};
+
+						// Calculate negative margin-top and margin-left amount
+						var top_adjustment =
+								container_div_center.y - visualisation_center.y;
+						var left_adjustment =
+								container_div_center.x - visualisation_center.x;
+
+						jQuery("#arg-viz").css("margin-top", top_adjustment+"px")
+								.css("margin-left", left_adjustment+"px");
 				}
 		}
 }
