@@ -188,6 +188,30 @@ function drawNetwork(data) {
 				.duration(1000)
 				.style("opacity", 1);
 
+		// Add zoom behaviour to the visualisation
+		vis.call(d3.behavior.zoom()
+						 .on("zoom", zoom))
+		// Intercept the "mousedown" event attached to the zoom behaviour
+		// so it doesn't interfere with the SpryMap dragging behaviour
+				.on("mousedown.zoom", function(){ return false;})
+
+		// Allow mousewheel to be used for zooming. This means we have to
+		// prevent mousewheel from scrolling the page. "DOMMouseScroll" is
+		// included for Firefox compatibility.
+				.on("mousewheel", function () { d3.event.preventDefault(); })
+				.on("DOMMouseScroll", function () { d3.event.preventDefault(); });
+
+		// To make it easy to adjust the scale when zooming, group all of
+		// the visualisation together in an "<svg:g>" element so we can
+		// apply the scaling transformation to that containing element.
+		vis = vis.append("svg:g");
+
+		function zoom() {
+			  vis
+						.attr("transform", "translate(" + d3.event.translate + ")"
+									+ "scale(" + d3.event.scale + ")");
+		}
+
 		var defs = vis.append("svg:defs");
 
 		// Run the force directed layout algorithm
@@ -693,8 +717,11 @@ function drawNetwork(data) {
 
 						// Insert Hint about how to interact with visualisation
 						jQuery("#connmessage").html(
-								"<em>Hint: Click and drag	individual nodes," +
-										" or click and grab to move entire map</em>.");
+								"<em>Hint 1: Move	individual nodes, or click and grab" +
+										" outside of any node to move entire map.</em>" +
+										"<br />" +
+										"<em>Hint 2: Use mouse-wheel or" +
+										" double-click/SHIFT-double-click to zoom-in/out</em>.");
 
 						// XXX Need to find a better way of positioning the
 						// visualisation in the middle of the container, while at
