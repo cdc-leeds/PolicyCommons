@@ -485,10 +485,7 @@ function drawNetwork(data) {
 
 		node.append("svg:rect")
 				.attr("rx", 3)
-				.attr("filter", "url(#drop-shadow)")
-				.style("stroke", "black")
-				.style("fill", "aliceblue")
-				.style("cursor", "move");
+				.attr("filter", "url(#drop-shadow)");
 
 		node.append("svg:text")
 				.attr("font-size", 10)
@@ -550,6 +547,11 @@ function drawNetwork(data) {
 
 				jQuery(location).attr('href', documentURL);
 		}
+
+		// Give "Issue" nodes a separate styling
+		node.select(function (d) {
+				return (d.role[0].role.name === "Issue") ? this : null;	})
+				.attr("class", "issue-node");
 
 		// For "Argument" nodes, append a small circle that will be used
 		// to toggle expansion on the Argument node.

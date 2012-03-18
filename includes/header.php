@@ -37,6 +37,7 @@ PolicyCommons -- navigate the pros and cons in policy debates
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/tipTip/tipTip.css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/css/debatemap.css" media="screen" />
 <link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/css/jquery-ui-1.8.18.custom.css" media="screen" />
+<link rel="stylesheet" href="<?php echo $CFG->homeAddress; ?>includes/css/argument-network.css" media="screen" />
 <link rel="icon" href="<?php echo $CFG->homeAddress; ?>favicon.ico" type="images/x-icon" />
 <script src="<?php echo $CFG->homeAddress; ?>includes/prototype.js" type="text/javascript"></script>
 <script src="<?php echo $CFG->homeAddress; ?>includes/util.php" type="text/javascript"></script>

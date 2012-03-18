@@ -1,0 +1,11 @@
+.node rect {
+		stroke: black;
+		fill: aliceblue;
+		cursor: move;
+}
+
+.issue-node rect {
+		stroke: black;
+		fill: dodgerblue;
+		cursor: move;
+}
