@@ -145,6 +145,7 @@ function updateuserstatus() {
     <div style="float: right;">
 
 		<div id="menu">
+			<a href='<?php echo $CFG->homeAddress; ?>index.php'>Home</a> |
 			<?php
 				global $USER;
 				if(isset($USER->userid)){
@@ -153,10 +154,10 @@ function updateuserstatus() {
 					} else {
 						$name = $USER->name;
 					}
-					echo "Signed in as: <a title='edit profile' href='".$CFG->homeAddress."user.php?userid=".$USER->userid."'>". $name ."</a> | <a title='Sign Out' href='".$CFG->homeAddress."logout.php'>Sign Out</a> ";
+					echo " Signed in as: <a title='edit profile' href='".$CFG->homeAddress."user.php?userid=".$USER->userid."'>". $name ."</a> | <a title='Sign Out' href='".$CFG->homeAddress."logout.php'>Sign Out</a> ";
 
 				} else {
-					echo "<a title='Sign In' href='".$CFG->homeAddress."login.php'>Sign In</a> | <a title='Sign Up' href='".$CFG->homeAddress."register.php'>Sign Up</a> ";
+					echo " <a title='Sign In' href='".$CFG->homeAddress."login.php'>Sign In</a> ";
 				}
 			?>
 			| <a href='<?php echo $CFG->homeAddress; ?>about.php'>About</a>
