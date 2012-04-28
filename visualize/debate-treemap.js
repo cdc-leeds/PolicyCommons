@@ -25,80 +25,80 @@
 
 function loadMap(){
 
-		// Load the Map data
-	
-		var args = Object.clone(NET_ARGS);
-		args["start"] = 0;
+    // Load the Map data
 
-		//get all (not just the normal 20 max)
-		args["max"] = -1;
-	
-		//request to get the current connections  
-	  var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&" + Object.toQueryString(args);
+    var args = Object.clone(NET_ARGS);
+    args["start"] = 0;
 
-		d3.json(reqUrl, function(cohereJson) {
-				var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+    //get all (not just the normal 20 max)
+    args["max"] = -1;
 
-				//set the count in tab header
-      	$('map-elements-count').innerHTML = "";
-      	$('map-elements-count').insert(cohereJson.nodeset[0].totalno);
+    //request to get the current connections
+    var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&" + Object.toQueryString(args);
 
-				drawDebateMap(d3Json);
-		});
+    d3.json(reqUrl, function(cohereJson) {
+        var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+
+        //set the count in tab header
+        $('map-elements-count').innerHTML = "";
+        $('map-elements-count').insert(cohereJson.nodeset[0].totalno);
+
+        drawDebateMap(d3Json);
+    });
 
 }
 
 function convertCohereNodesetJsonToD3 (cohereJson) {
-		var d3Json = {
-				children: []
-		};
+    var d3Json = {
+        children: []
+    };
 
-		var nodes = cohereJson.nodeset[0].nodes;
+    var nodes = cohereJson.nodeset[0].nodes;
 
-		for (var i=0, len=nodes.length; i<len; i++) {
-				var newNode = Object.clone(nodes[i].cnode);
-				d3Json.children.push(newNode);
-		}
+    for (var i=0, len=nodes.length; i<len; i++) {
+        var newNode = Object.clone(nodes[i].cnode);
+        d3Json.children.push(newNode);
+    }
 
-		return d3Json;
+    return d3Json;
 }
 
 function drawDebateMap(data) {
-	
-		// Set width & height for SVG
-		var debatemapDiv = new Element("div", {"id":"debatemap-div"});
-		$("tab-content-debatemap").update(debatemapDiv);
 
-		var w = $('tab-content-debatemap').offsetWidth - 30;
-		var h = jQuery(window).height();
-		var color = d3.scale.category10();
+    // Set width & height for SVG
+    var debatemapDiv = new Element("div", {"id":"debatemap-div"});
+    $("tab-content-debatemap").update(debatemapDiv);
 
-		var vis = d3.select("#debatemap-div")
-				.append("div")
-				.attr("class", "debatemap")
-				.style("width", w + "px")
-				.style("height", h + "px");
+    var w = $('tab-content-debatemap').offsetWidth - 30;
+    var h = jQuery(window).height();
+    var color = d3.scale.category10();
 
-		vis.style("opacity", 1e-6)
-				.transition()
-				.duration(1000)
-				.style("opacity", 1);
+    var vis = d3.select("#debatemap-div")
+        .append("div")
+        .attr("class", "debatemap")
+        .style("width", w + "px")
+        .style("height", h + "px");
+
+    vis.style("opacity", 1e-6)
+        .transition()
+        .duration(1000)
+        .style("opacity", 1);
 
 var treemap = d3.layout.treemap()
     .size([w, h])
     .sticky(true)
-		.value(function(d) {
-				// Make size of region in debate map be determined based on
-				// Log of the number of responses. Use log so that variation
-				// in size isn't too much. Need to add 2 to num_responses so
-				// that if number of responses is 0 we still get the cell to
-				// display (adding 1 would give log(1) which is 0). There
-				// probably is a more elegant way of doing this.
-				return Math.log(parseInt(d.num_responses)+2); })
+    .value(function(d) {
+        // Make size of region in debate map be determined based on
+        // Log of the number of responses. Use log so that variation
+        // in size isn't too much. Need to add 2 to num_responses so
+        // that if number of responses is 0 we still get the cell to
+        // display (adding 1 would give log(1) which is 0). There
+        // probably is a more elegant way of doing this.
+        return Math.log(parseInt(d.num_responses)+2); })
 
-		// Sort so largest cell in treemap is at the top-left rather than
-		// bottom right
-				.sort(function(a, b) { return a.value - b.value});
+    // Sort so largest cell in treemap is at the top-left rather than
+    // bottom right
+        .sort(function(a, b) { return a.value - b.value});
 
   vis.data([data]).selectAll("div")
       .data(treemap.nodes)
@@ -111,58 +111,58 @@ function cell() {
       .style("top", function(d) { return d.y + "px"; })
       .style("width", function(d) { return d.dx - 1 + "px"; })
       .style("height", function(d) { return d.dy - 1 + "px"; })
-				.style("background", function(d) {
-						var args = Object.clone(NET_ARGS);
-						if (d.nodeid != undefined)
-								// Sub-Debates (i.e. sections within a Debate) should
-								// have a unique background colour in the treemap. But
-								// Issues in a treemap should have the same background
-								// colour as the Sub-Debate or section they are
-								// contained in.
-								return (d.role[0].role.name == "Issue") ?
-												 color(args["nodeid"]) : color(d.nodeid); })
-				.html(function(d) {
-						// Make text in each treemap cell be a hyperlink. If cell
-						// is a Debate then make hyperlink to Debate URL, else
-						// then assume cell is an Issue and make hyperlink to
-						// Issue URL.
-						return d.children ? null : cell_html(d); })
+        .style("background", function(d) {
+            var args = Object.clone(NET_ARGS);
+            if (d.nodeid != undefined)
+                // Sub-Debates (i.e. sections within a Debate) should
+                // have a unique background colour in the treemap. But
+                // Issues in a treemap should have the same background
+                // colour as the Sub-Debate or section they are
+                // contained in.
+                return (d.role[0].role.name == "Issue") ?
+                         color(args["nodeid"]) : color(d.nodeid); })
+        .html(function(d) {
+            // Make text in each treemap cell be a hyperlink. If cell
+            // is a Debate then make hyperlink to Debate URL, else
+            // then assume cell is an Issue and make hyperlink to
+            // Issue URL.
+            return d.children ? null : cell_html(d); })
 
-				.attr("class", "debatemap-cell");
+        .attr("class", "debatemap-cell");
 
-		function cell_html (d) {
-				var html = d.name;
-				var cell_type = d.role[0].role.name;
+    function cell_html (d) {
+        var html = d.name;
+        var cell_type = d.role[0].role.name;
 
-				if (cell_type === "Debate") {
-						html = html + "<br /><br />" +
-								"(Issues: " + d.num_issues + ")" + "<br />" +
-								"(Responses: " + d.num_responses + ")";
+        if (cell_type === "Debate") {
+            html = html + "<br /><br />" +
+                "(Issues: " + d.num_issues + ")" + "<br />" +
+                "(Responses: " + d.num_responses + ")";
 
-						// Only if the number of issues is more than 0 do we add a
-						// hyperlink for Sub-Debate cells. (In principle there
-						// should always be issues in debates/sub-debates, but in
-						// practice the modeller might not always get around to
-						// modelling the issues within a debate/sub-debate.)
-						if (d.num_issues > 0) {
-								html =
-										"<a href='"+createDebateURL(d.nodeid)+"'>" +
-										html + "</a>";
-						}
-				} else if (cell_type === "Issue") {
-						html = html + "<br /><br />" +
-								"(Responses: " + d.num_responses + ")";
+            // Only if the number of issues is more than 0 do we add a
+            // hyperlink for Sub-Debate cells. (In principle there
+            // should always be issues in debates/sub-debates, but in
+            // practice the modeller might not always get around to
+            // modelling the issues within a debate/sub-debate.)
+            if (d.num_issues > 0) {
+                html =
+                    "<a href='"+createDebateURL(d.nodeid)+"'>" +
+                    html + "</a>";
+            }
+        } else if (cell_type === "Issue") {
+            html = html + "<br /><br />" +
+                "(Responses: " + d.num_responses + ")";
 
-						// Only if the number of responses is more than 0 do we
-						// add a hyperlink to Issue cells.
-						if (d.num_responses > 0) {
-								html =
-										"<a href='"+createIssueURL(d.nodeid)+"'>" +
-										html + "</a>";
-						}
-				}
-				return html;
-		}
+            // Only if the number of responses is more than 0 do we
+            // add a hyperlink to Issue cells.
+            if (d.num_responses > 0) {
+                html =
+                    "<a href='"+createIssueURL(d.nodeid)+"'>" +
+                    html + "</a>";
+            }
+        }
+        return html;
+    }
 }
 }
 
