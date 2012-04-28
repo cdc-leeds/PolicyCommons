@@ -23,7 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 
-function loadMap(){
+function loadMap() {
 
     // Load the Map data
 
@@ -36,7 +36,7 @@ function loadMap(){
     //request to get the current connections
     var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&" + Object.toQueryString(args);
 
-    d3.json(reqUrl, function(cohereJson) {
+    d3.json(reqUrl, function (cohereJson) {
         var d3Json = convertCohereNodesetJsonToD3(cohereJson);
 
         //set the count in tab header
@@ -48,7 +48,7 @@ function loadMap(){
 
 }
 
-function convertCohereNodesetJsonToD3 (cohereJson) {
+function convertCohereNodesetJsonToD3(cohereJson) {
     var d3Json = {
         children: []
     };
