@@ -28,10 +28,10 @@ function loadMap(){
     // Load the Map data
 
     var args = Object.clone(NET_ARGS);
-    args["start"] = 0;
+    args.start = 0;
 
     //get all (not just the normal 20 max)
-    args["max"] = -1;
+    args.max = -1;
 
     //request to get the current connections
     var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&" + Object.toQueryString(args);
@@ -120,7 +120,7 @@ function cell() {
                 // colour as the Sub-Debate or section they are
                 // contained in.
                 return (d.role[0].role.name == "Issue") ?
-                         color(args["nodeid"]) : color(d.nodeid); })
+                         color(args.nodeid) : color(d.nodeid); })
         .html(function(d) {
             // Make text in each treemap cell be a hyperlink. If cell
             // is a Debate then make hyperlink to Debate URL, else
