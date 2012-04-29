@@ -57,7 +57,8 @@ function convertCohereNodesetJsonToD3(cohereJson) {
 
     var nodes = cohereJson.nodeset[0].nodes;
 
-    for (var i=0, len=nodes.length; i<len; i++) {
+    var i;
+    for (i = 0; i < nodes.length; i += 1) {
         var newNode = Object.clone(nodes[i].cnode);
         d3Json.children.push(newNode);
     }
@@ -68,7 +69,7 @@ function convertCohereNodesetJsonToD3(cohereJson) {
 function drawDebateMap(data) {
 
     // Set width & height for SVG
-    var debatemapDiv = new Element("div", {"id":"debatemap-div"});
+    var debatemapDiv = new Element("div", {"id": "debatemap-div"});
     $("tab-content-debatemap").update(debatemapDiv);
 
     var w = $('tab-content-debatemap').offsetWidth - 30;
@@ -96,7 +97,8 @@ function drawDebateMap(data) {
             // that if number of responses is 0 we still get the cell to
             // display (adding 1 would give log(1) which is 0). There
             // probably is a more elegant way of doing this.
-            return Math.log(parseInt(d.num_responses, 10) + 2); })
+            return Math.log(parseInt(d.num_responses, 10) + 2);
+        })
 
     // Sort so largest cell in treemap is at the top-left rather than
     // bottom right
@@ -122,17 +124,20 @@ function drawDebateMap(data) {
                     // colour as the Sub-Debate or section they are
                     // contained in.
                     return (d.role[0].role.name === "Issue") ?
-                        color(args.nodeid) : color(d.nodeid); }})
-            .html(function(d) {
+                        color(args.nodeid) : color(d.nodeid);
+                }
+            })
+            .html(function (d) {
                 // Make text in each treemap cell be a hyperlink. If cell
                 // is a Debate then make hyperlink to Debate URL, else
                 // then assume cell is an Issue and make hyperlink to
                 // Issue URL.
-                return d.children ? null : cell_html(d); })
+                return d.children ? null : cell_html(d);
+            })
 
             .attr("class", "debatemap-cell");
 
-        function cell_html (d) {
+        function cell_html(d) {
             var html = d.name;
             var cell_type = d.role[0].role.name;
 
@@ -148,7 +153,7 @@ function drawDebateMap(data) {
                 // modelling the issues within a debate/sub-debate.)
                 if (d.num_issues > 0) {
                     html =
-                        "<a href='"+createDebateURL(d.nodeid)+"'>" +
+                        "<a href='" + createDebateURL(d.nodeid) + "'>" +
                         html + "</a>";
                 }
             } else if (cell_type === "Issue") {
@@ -159,7 +164,7 @@ function drawDebateMap(data) {
                 // add a hyperlink to Issue cells.
                 if (d.num_responses > 0) {
                     html =
-                        "<a href='"+createIssueURL(d.nodeid)+"'>" +
+                        "<a href='" + createIssueURL(d.nodeid) + "'>" +
                         html + "</a>";
                 }
             }
