@@ -668,8 +668,17 @@ function loadDebateMap(context,args){
 		var bObj = new JSONscriptRequest(URL_ROOT+"visualize/debate-treemap.js");
 		bObj.buildScriptTag();
 		bObj.addScriptTag();
-  	DATA_LOADED.node = true;
-  	DATA_LOADED.simile = false;
+
+    var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
+
+    jQuery.getJSON(reqUrl, args, function (cohereJson) {
+        var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+
+        //set the count in tab header
+        jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
+
+        drawDebateMap(d3Json);
+    });
 }
 
 /**

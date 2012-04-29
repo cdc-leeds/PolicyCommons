@@ -23,32 +23,6 @@
  *                                                                              *
  ********************************************************************************/
 
-function loadMap() {
-
-    // Load the Map data
-
-    var args = Object.clone(NET_ARGS);
-    args.start = 0;
-
-    //get all (not just the normal 20 max)
-    args.max = -1;
-
-    //request to get the current connections
-    var reqUrl = SERVICE_ROOT +
-        "&method=getdebatecontents&" +
-        Object.toQueryString(args);
-
-    d3.json(reqUrl, function (cohereJson) {
-        var d3Json = convertCohereNodesetJsonToD3(cohereJson);
-
-        //set the count in tab header
-        jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
-
-        drawDebateMap(d3Json);
-    });
-
-}
-
 function convertCohereNodesetJsonToD3(cohereJson) {
     var d3Json = {
         children: []
@@ -171,5 +145,3 @@ function drawDebateMap(data) {
         }
     }
 }
-
-loadMap();
