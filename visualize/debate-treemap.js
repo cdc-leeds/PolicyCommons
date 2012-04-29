@@ -42,8 +42,7 @@ function loadMap() {
         var d3Json = convertCohereNodesetJsonToD3(cohereJson);
 
         //set the count in tab header
-        $('map-elements-count').innerHTML = "";
-        $('map-elements-count').insert(cohereJson.nodeset[0].totalno);
+        jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
 
         drawDebateMap(d3Json);
     });
@@ -68,11 +67,11 @@ function convertCohereNodesetJsonToD3(cohereJson) {
 
 function drawDebateMap(data) {
 
-    // Set width & height for SVG
-    var debatemapDiv = new Element("div", {"id": "debatemap-div"});
-    $("tab-content-debatemap").update(debatemapDiv);
+    // Insert a new <div> for the debate map
+    jQuery('#tab-content-debatemap').html('<div id="debatemap-div"></div>');
 
-    var w = $('tab-content-debatemap').offsetWidth - 30;
+    // Set width & height for SVG
+    var w = jQuery('#tab-content-debatemap').get(0).offsetWidth - 30;
     var h = jQuery(window).height();
     var color = d3.scale.category10();
 
