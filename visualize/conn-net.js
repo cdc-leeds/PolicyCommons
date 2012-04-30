@@ -67,27 +67,42 @@ function loadCNet() {
 	//event to resize
 	Event.observe(window,"resize",resizeApplet);	
 
-	checkIsActive();
+    try {
+	      checkIsActive('Cohere-ConnectionNet', 10, 1000);
+        loadAppletData();
+    }
+    catch (e) {
+        $('connmessage').innerHTML = e.message;
+    }
 	
 }
 
-function checkIsActive() {
+// This function repeatedly polls whether the applet has loaded. If the applet
+// fails to load after a certain time (i.e. after polling a set number of times)
+// the function throws an exception. (Such a function is necessary because there
+// is no onLoad or onActive event fired by applets which can be monitored in
+// JavaScript.
+function checkIsActive(appletId, attempts, interval) {
 
-	try {
-		if ($('Cohere-ConnectionNet') && $('Cohere-ConnectionNet').isActive()) {
-				var IE = "false"; 
-				if (document.all) {
-					IE = "true"
-				}
-				$('Cohere-ConnectionNet').setIsIE(IE);
+    var isActive = $(appletId) && $(appletId).isActive();
 
-				loadAppletData();	
-		}
-	} catch(e) { 
-	      setTimeout(checkIsActive, 1000);	      
+    if (attempts > 0) {
+        if (isActive) {
+            return true;
+        }
+        else {
+            setTimeout(function () {
+                checkIsActive(appletId, attempts - 1, interval)
+            }, interval);
+        }
+    }
+    else {
+        throw {
+            name: "AppletTimeout",
+            message: "Applet failed to load in time."
+        };
     }
 }
-
 
 function loadAppletData() {
 	
@@ -122,6 +137,9 @@ function loadAppletData() {
 }
 
 function drawConnNetApplet(conns) {
+
+		var IE = (document.all) ? "true" : "false";
+		$('Cohere-ConnectionNet').setIsIE(IE);
 
     $('Cohere-ConnectionNet').prepareGraph(USER, "network");
 
