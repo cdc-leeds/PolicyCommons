@@ -663,26 +663,28 @@ function loadusers(context,args){
 /**
  *	Load the Debate Map View
  */
-function loadDebateMap(context,args){
+function loadDebateMap(context,args) {
 
-		var bObj = new JSONscriptRequest(URL_ROOT+"visualize/debate-treemap.js");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
+    var scriptUrl = URL_ROOT + 'visualize/debate-treemap.js';
 
-    var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
+    jQuery.getScript(scriptUrl, load);
 
-    jQuery.getJSON(reqUrl, args, function (cohereJson) {
-        var d3Json = convertCohereNodesetJsonToD3(cohereJson);
-        var config = {
-            data: d3Json,
-            container: 'tab-content-debatemap'
-        }
+    function load() {
+        var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
 
-        //set the count in tab header
-        jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
+        jQuery.getJSON(reqUrl, args, function (cohereJson) {
+            var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+            var config = {
+                data: d3Json,
+                container: 'tab-content-debatemap'
+            }
 
-        drawDebateMap(config);
-    });
+            //set the count in tab header
+            jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
+
+            drawDebateMap(config);
+        });
+    }
 }
 
 /**
