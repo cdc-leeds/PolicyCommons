@@ -1498,22 +1498,17 @@ function loadConnectionNeighbourhood(){
 /**
  * load JS file for creating the connection network (applet)
  */
-function loadConnectionNet(){
-		if (document.createElementNS) {
-				// JavaScript method needed for the D3 SVG library (it is used
-				// to create elements in SVG namespace on the fly)
-				var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net-svg.js");
-				bObj.buildScriptTag();
-				bObj.addScriptTag();
-		}
-		else {
-				// Then we are probably dealing with Internet Explorer, which
-				// doesn't understand namespaces. So fallback to original
-				// Cohere Java ConnectionNet visualisation
-				var bObj = new JSONscriptRequest(URL_ROOT+"visualize/conn-net.js");
-				bObj.buildScriptTag();
-				bObj.addScriptTag();
-		}
+function loadConnectionNet() {
+    // Check whether there is the document.createElementNS method which D3
+    // Library needs to create elements in SVG namespace on the fly. If method
+    // isn't present then (we are probably dealing with IE so) fall back to
+    // original Cohere ConnectionNet Java applet.
+    var scriptUrl = (document.createElementNS) ? URL_ROOT +
+        "visualize/conn-net-svg.js" : URL_ROOT + "visualize/conn-net.js";
+
+    var bObj = new JSONscriptRequest(scriptUrl);
+    bObj.buildScriptTag();
+    bObj.addScriptTag();
 }
 
 /**
