@@ -97,8 +97,6 @@ function loadAppletData() {
 	
 	$('connmessage').update(loadDiv);
 	
-	$('Cohere-ConnectionNet').prepareGraph(USER, "network");
-	
 	var args = Object.clone(NET_ARGS);
 	args["start"] = 0;
 
@@ -124,52 +122,71 @@ function loadAppletData() {
       			}  
       			
       			var conns = json.connectionset[0].connections;
-
-      			if (conns.length > 0) {
-	      			for(var i=0; i< conns.length; i++){
-	      				var c = conns[i].connection;
-	      				var fN = c.from[0].cnode;
-	      				var tN = c.to[0].cnode;
-
-	      				var fnRole = c.fromrole[0].role;
-	      				var fNNodeImage = "";
-	      				if (fN.imagethumbnail != null && fN.imagethumbnail != "") {
-	      					fNNodeImage = URL_ROOT + fN.imagethumbnail;
-	      				} else if (fN.role[0].role.image != null && fN.role[0].role.image != "") {
-	      					fNNodeImage = URL_ROOT + fN.role[0].role.image;
-	      				}	      				
-	      				
-	      				var tnRole = c.torole[0].role;
-	      				var tNNodeImage = "";
-	      				if (tN.imagethumbnail != null && tN.imagethumbnail != "") {
-	      					tNNodeImage = URL_ROOT + tN.imagethumbnail;
-	      				} else if (tN.role[0].role.image != null && tN.role[0].role.image != "") {
-	      					tNNodeImage = URL_ROOT + tN.role[0].role.image;
-	      				}	      				
-	      				
-	      				//create from & to nodes
-	      				$('Cohere-ConnectionNet').addNode(fN.nodeid, fN.name, fN.description, fN.users[0].user.userid, fN.creationdate, fN.otheruserconnections, fNNodeImage, fN.users[0].user.thumb, fN.users[0].user.name, fN.role[0].role.name);	      				
-	      				$('Cohere-ConnectionNet').addNode(tN.nodeid, tN.name, tN.description, tN.users[0].user.userid, tN.creationdate, tN.otheruserconnections, tNNodeImage, tN.users[0].user.thumb, tN.users[0].user.name, tN.role[0].role.name);
-	      				
-	      				// add edge/conn
-	      				$('Cohere-ConnectionNet').addEdge(c.connid, fN.nodeid, tN.nodeid, c.linktype[0].linktype.grouplabel, c.linktype[0].linktype.label, c.creationdate, c.userid, c.users[0].user.name, c.fromrole[0].role.name,c.torole[0].role.name);
-	      			}	
-      				$('connmessage').innerHTML="";	
-
-						// let the user know that system is falling back to Java
-						// visualisation
-						$("connmessage").innerHTML = "Your browser doesn't appear to"+
-			" support SVG, so, instead you are viewing a Java-applet-based"+
-			" visualisation. Alternatively, you can try to reload the URL "+
-			"in	Firefox, Safari, Opera, or Chrome.";
-
-					$('Cohere-ConnectionNet').displayGraph(NET_ARGS['netnodeid']);
-				} else {
-					$('connmessage').innerHTML="No Connections have been made yet.";
-				}
+            drawConnNetApplet(conns);
       		}
       	});
-} 
+}
+
+function drawConnNetApplet(conns) {
+
+    $('Cohere-ConnectionNet').prepareGraph(USER, "network");
+
+    if (conns.length > 0) {
+	      for(var i=0; i< conns.length; i++){
+	      		var c = conns[i].connection;
+	      		var fN = c.from[0].cnode;
+	      		var tN = c.to[0].cnode;
+
+	      		var fnRole = c.fromrole[0].role;
+	      		var fNNodeImage = "";
+	      		if (fN.imagethumbnail != null && fN.imagethumbnail != "") {
+	      				fNNodeImage = URL_ROOT + fN.imagethumbnail;
+	      		} else if (fN.role[0].role.image != null && fN.role[0].role.image != "") {
+	      				fNNodeImage = URL_ROOT + fN.role[0].role.image;
+	      		}
+
+	      		var tnRole = c.torole[0].role;
+	      		var tNNodeImage = "";
+	      		if (tN.imagethumbnail != null && tN.imagethumbnail != "") {
+	      				tNNodeImage = URL_ROOT + tN.imagethumbnail;
+	      		} else if (tN.role[0].role.image != null && tN.role[0].role.image != "") {
+	      				tNNodeImage = URL_ROOT + tN.role[0].role.image;
+	      		}
+
+	      		//create from & to nodes
+	      		$('Cohere-ConnectionNet').addNode(
+                fN.nodeid, fN.name, fN.description, fN.users[0].user.userid,
+	      		    fN.creationdate, fN.otheruserconnections, fNNodeImage,
+	      		    fN.users[0].user.thumb, fN.users[0].user.name,
+	      		    fN.role[0].role.name);
+
+	      		$('Cohere-ConnectionNet').addNode(
+                tN.nodeid, tN.name, tN.description, tN.users[0].user.userid,
+                tN.creationdate, tN.otheruserconnections, tNNodeImage,
+                tN.users[0].user.thumb, tN.users[0].user.name,
+                tN.role[0].role.name);
+
+	      		// add edge/conn
+	      		$('Cohere-ConnectionNet').addEdge(
+                c.connid, fN.nodeid, tN.nodeid,
+	      		    c.linktype[0].linktype.grouplabel, c.linktype[0].linktype.label,
+	      		    c.creationdate, c.userid, c.users[0].user.name,
+                c.fromrole[0].role.name, c.torole[0].role.name);
+	      }
+      	$('connmessage').innerHTML="";
+
+				// let the user know that system is falling back to Java
+				// visualisation
+				$("connmessage").innerHTML = "Your browser doesn't appear to" +
+			      " support SVG, so, instead you are viewing a Java-applet-based" +
+			      " visualisation. Alternatively, you can try to reload the URL " +
+			      "in	Firefox, Safari, Opera, or Chrome.";
+
+				$('Cohere-ConnectionNet').displayGraph(NET_ARGS['netnodeid']);
+		} else {
+				$('connmessage').innerHTML="No Connections have been made yet.";
+		}
+}
 
 function resizeApplet(){
 	if ($('Cohere-ConnectionNet')) {
