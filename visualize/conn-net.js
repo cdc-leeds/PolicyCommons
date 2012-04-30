@@ -35,7 +35,14 @@ function loadCNet() {
 	tb2.insert(messagearea);
 
 	$("tab-content-conn").insert(tb2);
+
+    var loadDiv = new Element("div",{'class':'loading'});
+    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
+    loadDiv.insert("<br/>(Loading Connection Network View. This may take a few" +
+                   " minutes depending on the number of Connections...)");
 	
+	$('connmessage').update(loadDiv);
+
 	//get applet width & height 
 	var x = $('tab-content-conn').offsetWidth - 30;
 	var y = getWindowHeight() - 320;
@@ -90,12 +97,6 @@ function checkIsActive() {
 function loadAppletData() {
 	
 	loading = true;
-
-    var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
-    loadDiv.insert("<br/>(Loading Connection Network View. This may take a few minutes depending on the number of Connections...)");
-	
-	$('connmessage').update(loadDiv);
 	
 	var args = Object.clone(NET_ARGS);
 	args["start"] = 0;
