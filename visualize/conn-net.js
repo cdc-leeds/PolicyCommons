@@ -22,72 +22,7 @@
  *                                                                              *
  ********************************************************************************/
 
-function loadCNet(){
-	
-	/*var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
-	$("tab-content-conn").update(tb1);
-	tb1.insert(displayConnectionAdd());
-	tb1.insert(displayConnectionVisualisations('net'));
-	tb1.insert(displaySnippetButtons(SNIPPET_CONNECTION_NET));
-	
-	var tb2 = new Element("div", {'id':'connmessagediv','class':'toolbarrow'});	
-	
-	var link = new Element("a", {'id':'expandconnlink', 'title':'Enlarge/Reduce Map', 'style':'visibility:hidden;cursor:pointer'});
-	link.insert('<span id="linkbuttonconn">Enlarge Map</span>');
-	Event.observe(link,"click", function() {	
-		if ($('header').style.display == "none") {
-			smallScreenApplet('silly');
-			$('linkbuttonconn').update('Enlarge Map');
-		} else {
-			fullScreenApplet('silly');
-			$('linkbuttonconn').update('Reduce Map');
-		}
-	});  
-	
-	tb2.insert(link);
-
-	var view = new Element("a", {'id':'viewdetailconnlink', 'title':"show futher information for the currently selected item", 'style':'margin-left: 30px;cursor:pointer; visibility:hidden;'});
-	view.insert('<span id="viewbuttons">Explore Selected Item</span>');
-	Event.observe(view,"click", function() {	
-		if ($('Cohere-ConnectionNet').isActive()){
-			try {			
-				var type = $('Cohere-ConnectionNet').getSelectedTabIndex();
-				if (type == 0) {
-					var nodeid = $('Cohere-ConnectionNet').getSelectedNodeID();
-					if (nodeid != "") {
-						viewNodeDetails(nodeid);
-					} else {
-						alert("Cannot retrieve required information from Map");
-					}
-				} else if (type == 1) {
-					var userid = $('Cohere-ConnectionNet').getSelectedUserID();
-					if (userid != "") {
-						viewUserHome(userid);
-					} else {
-						alert("Cannot retrieve required information from Map");
-					}
-				}
-			} catch(err) {alert("err:"+err);}
-		}
-	});     
-	tb2.insert(view);
-
-	var view2 = new Element("a", {'id':'viewconnlink', 'title':'Show all connections for the selected link', 'style':'margin-left: 30px;cursor:pointer; visibility:hidden;'});
-	view2.insert('<span id="viewbuttons">Explore Selected Link</span>');
-	Event.observe(view2,"click", function() {	
-		if ($('Cohere-ConnectionNet').isActive()){
-			try {			
-				var connectionids = $('Cohere-ConnectionNet').getSelectedConnectionIDs();
-				if (connectionids != "") {
-					showMultiConnections(connectionids);
-				} else {
-					alert("Cannot retrieve required information from Map");
-				}
-			} catch(err) {alert("err:"+err.description);}
-		}
-	});     
-	tb2.insert(view2);
-	*/
+function loadCNet() {
 
 	var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
 	$("tab-content-conn").update(tb1);
@@ -170,18 +105,11 @@ function loadAppletData() {
 	//get all (not just the normal 20 max)
 	args["max"] = -1;
 	
-	//var date = new Date();
-	//var sentTime = date.getTime();
-	//alert("sentTime = "+sentTime);
-	
 	//request to get the current connections  
 	var reqUrl = SERVICE_ROOT + "&method=getconnectionsby" + CONTEXT + "&style=short&" + Object.toQueryString(args);
 
 	new Ajax.Request(reqUrl, { method:'post',
   			onSuccess: function(transport){
-				//var date2 = new Date();
-  				//var backTime = date2.getTime();  				
-  				//alert("back with the data:"+(backTime-sentTime));
   			
   				var json = null;
   				try {
@@ -190,16 +118,13 @@ function loadAppletData() {
   					alert(e);
   				}
   				
-				//var date3 = new Date();
-  				//alert("evalJSON:"+(date3.getTime()-backTime));
-  				
       			if(json.error){
       				alert(json.error[0].message);
       				return;
       			}  
       			
       			var conns = json.connectionset[0].connections;
-      			//alert("connection count = "+conns.length);
+
       			if (conns.length > 0) {
 	      			for(var i=0; i< conns.length; i++){
 	      				var c = conns[i].connection;
@@ -238,9 +163,6 @@ function loadAppletData() {
 			" visualisation. Alternatively, you can try to reload the URL "+
 			"in	Firefox, Safari, Opera, or Chrome.";
 
-					//$('expandconnlink').style.visibility = 'visible';    
-					//$('viewdetailconnlink').style.visibility = 'visible';					
-					//$('viewconnlink').style.visibility = 'visible';					
 					$('Cohere-ConnectionNet').displayGraph(NET_ARGS['netnodeid']);
 				} else {
 					$('connmessage').innerHTML="No Connections have been made yet.";
