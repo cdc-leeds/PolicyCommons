@@ -67,18 +67,14 @@ function loadCNet() {
 	//event to resize
 	Event.observe(window,"resize",resizeApplet);	
 
-	loading = false;
 	checkIsActive();
 	
 }
-
-var loading = false;
 
 function checkIsActive() {
 
 	try {
 		if ($('Cohere-ConnectionNet') && $('Cohere-ConnectionNet').isActive()) {
-			if (!loading) {
 				var IE = "false"; 
 				if (document.all) {
 					IE = "true"
@@ -86,7 +82,6 @@ function checkIsActive() {
 				$('Cohere-ConnectionNet').setIsIE(IE);
 
 				loadAppletData();	
-			}
 		}
 	} catch(e) { 
 	      setTimeout(checkIsActive, 1000);	      
@@ -95,8 +90,6 @@ function checkIsActive() {
 
 
 function loadAppletData() {
-	
-	loading = true;
 	
 	var args = Object.clone(NET_ARGS);
 	args["start"] = 0;
