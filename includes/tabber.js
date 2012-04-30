@@ -673,7 +673,7 @@ function loadDebateMap(context,args) {
         var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
 
         jQuery.getJSON(reqUrl, args, function (cohereJson) {
-            var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+            var d3Json = ARGVIZ.convertCohereNodesetJson(cohereJson);
             var config = {
                 data: d3Json,
                 container: 'tab-content-debatemap'
@@ -682,7 +682,7 @@ function loadDebateMap(context,args) {
             //set the count in tab header
             jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
 
-            drawDebateMap(config);
+            ARGVIZ.drawDebateMap(config);
         });
     }
 }
