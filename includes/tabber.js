@@ -673,11 +673,15 @@ function loadDebateMap(context,args){
 
     jQuery.getJSON(reqUrl, args, function (cohereJson) {
         var d3Json = convertCohereNodesetJsonToD3(cohereJson);
+        var config = {
+            data: d3Json,
+            container: 'tab-content-debatemap'
+        }
 
         //set the count in tab header
         jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
 
-        drawDebateMap(d3Json);
+        drawDebateMap(config);
     });
 }
 

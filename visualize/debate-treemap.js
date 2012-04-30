@@ -39,13 +39,16 @@ function convertCohereNodesetJsonToD3(cohereJson) {
     return d3Json;
 }
 
-function drawDebateMap(data) {
+function drawDebateMap(config) {
+
+    var data = config.data;
+    var container = '#' + config.container;
 
     // Insert a new <div> for the debate map
-    jQuery('#tab-content-debatemap').html('<div id="debatemap-div"></div>');
+    jQuery(container).html('<div id="debatemap-div"></div>');
 
     // Set width & height for SVG
-    var w = jQuery('#tab-content-debatemap').get(0).offsetWidth - 30;
+    var w = jQuery(container).get(0).offsetWidth - 30;
     var h = jQuery(window).height();
     var color = d3.scale.category10();
 
