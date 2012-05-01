@@ -1509,6 +1509,62 @@ function loadConnectionNet() {
     var bObj = new JSONscriptRequest(scriptUrl);
     bObj.buildScriptTag();
     bObj.addScriptTag();
+
+	  var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
+	  $("tab-content-conn").update(tb1);
+	  tb1.insert(displayConnectionAdd());
+	  tb1.insert(displayConnectionVisualisations('net'));
+	  tb1.insert(displaySnippetButtons(SNIPPET_CONNECTION_NET));
+
+	  var tb2 = new Element("div", {'id':'connmessagediv','class':'toolbarrow'});
+	  var messagearea = new Element("div", {'id':'connmessage','class':'toolbitem'});
+	  tb2.insert(messagearea);
+
+	  $("tab-content-conn").insert(tb2);
+
+		// Load the Connection Net data
+    var loadDiv = new Element("div",{'class':'loading'});
+    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
+    loadDiv.insert("<br/>(Loading Connection Network View. This may take a " +
+                   "few minutes depending on the number of Connections...)");
+
+		$('connmessage').update(loadDiv);
+
+		var args = Object.clone(NET_ARGS);
+		args["start"] = 0;
+
+		//get all (not just the normal 20 max)
+		args["max"] = -1;
+
+		//request to get the current connections
+		var reqUrl = SERVICE_ROOT + "&method=getconnectionsby" + CONTEXT +
+		    "&style=short&";
+
+    jQuery.getJSON(reqUrl, args, draw);
+
+    function draw(cohereJson) {
+        $('connmessage').innerHTML="";
+
+        if (document.createElementNS) {
+            var d3Json = convertCohereJsonToD3(cohereJson);
+            drawNetwork(d3Json);
+        } else {
+            var conns = cohereJson.connectionset[0].connections;
+
+            if (conns.length > 0) {
+                drawConnNetApplet(conns);
+
+				        // let the user know that system is falling back to Java
+				        // visualisation
+				        $("connmessage").innerHTML = "Your browser doesn't appear to" +
+			              " support SVG, so, instead you are viewing a Java-applet-based" +
+			              " visualisation. Alternatively, you can try to reload the URL " +
+			              "in	Firefox, Safari, Opera, or Chrome.";
+            } else {
+                $('connmessage').innerHTML= "No Connections have been made yet.";
+            }
+        }
+    }
 }
 
 /**

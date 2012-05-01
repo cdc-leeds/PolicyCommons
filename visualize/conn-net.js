@@ -22,30 +22,6 @@
  *                                                                              *
  ********************************************************************************/
 
-function loadCNet() {
-
-	var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
-	$("tab-content-conn").update(tb1);
-	tb1.insert(displayConnectionAdd());
-	tb1.insert(displayConnectionVisualisations('net'));
-	tb1.insert(displaySnippetButtons(SNIPPET_CONNECTION_NET));
-
-	var tb2 = new Element("div", {'id':'connmessagediv','class':'toolbarrow'});	
-	var messagearea = new Element("div", {'id':'connmessage','class':'toolbitem'});	
-	tb2.insert(messagearea);
-
-	$("tab-content-conn").insert(tb2);
-
-    var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
-    loadDiv.insert("<br/>(Loading Connection Network View. This may take a few" +
-                   " minutes depending on the number of Connections...)");
-	
-	$('connmessage').update(loadDiv);
-
-    loadAppletData();
-}
-
 // This function repeatedly polls whether the applet has loaded. If the applet
 // fails to load after a certain time (i.e. after polling a set number of times)
 // the function throws an exception. (Such a function is necessary because there
@@ -71,43 +47,6 @@ function checkIsActive(appletId, attempts, interval) {
             message: "Applet failed to load in time."
         };
     }
-}
-
-function loadAppletData() {
-	
-	var args = Object.clone(NET_ARGS);
-	args["start"] = 0;
-
-	//get all (not just the normal 20 max)
-	args["max"] = -1;
-	
-	//request to get the current connections  
-	var reqUrl = SERVICE_ROOT + "&method=getconnectionsby" + CONTEXT + "&style=short&" + Object.toQueryString(args);
-
-	new Ajax.Request(reqUrl, { method:'post',
-  			onSuccess: function(transport){
-  			
-  				var json = null;
-  				try {
-  					json = transport.responseText.evalJSON();
-  				} catch(e) {
-  					alert(e);
-  				}
-  				
-      			if(json.error){
-      				alert(json.error[0].message);
-      				return;
-      			}  
-      			
-      			var conns = json.connectionset[0].connections;
-
-            if (conns.length > 0) {
-                drawConnNetApplet(conns);
-            } else {
-                $('connmessage').innerHTML= "No Connections have been made yet.";
-            }
-      		}
-      	});
 }
 
 function drawConnNetApplet(conns) {
@@ -193,14 +132,6 @@ function drawConnNetApplet(conns) {
 	      		    c.creationdate, c.userid, c.users[0].user.name,
                 c.fromrole[0].role.name, c.torole[0].role.name);
 	      }
-      	$('connmessage').innerHTML="";
-
-				// let the user know that system is falling back to Java
-				// visualisation
-				$("connmessage").innerHTML = "Your browser doesn't appear to" +
-			      " support SVG, so, instead you are viewing a Java-applet-based" +
-			      " visualisation. Alternatively, you can try to reload the URL " +
-			      "in	Firefox, Safari, Opera, or Chrome.";
 
 				$('Cohere-ConnectionNet').displayGraph(NET_ARGS['netnodeid']);
 }
@@ -411,6 +342,3 @@ function showAppletNetworkSearchDialog(nodeid) {
 function showAppletNetworkSearchNewDialog(nodeid) {
 	loadDialog('structuredsearchnew', URL_ROOT+"plugin/ui/structuredsearchNew.php?focalnodeid="+encodeURIComponent(nodeid), 790, 650);
 }
-
-
-loadCNet();
