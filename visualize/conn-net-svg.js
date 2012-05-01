@@ -726,6 +726,9 @@ var ARGVIZ = ARGVIZ || {};
 
 						    jQuery("#arg-viz").css("margin-top", top_adjustment+"px")
 								    .css("margin-left", left_adjustment+"px");
+
+                // Invoke callback function if there is one
+                config.callback && config.callback();
 				    }
 		    }
     }
