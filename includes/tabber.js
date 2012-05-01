@@ -1554,10 +1554,34 @@ function loadConnectionNet() {
         $('connmessage').innerHTML="";
 
         if (document.createElementNS) {
+
+		        // Open a modal dialog box (using JQuery UI plug-in) to alert user
+		        // that network is being drawn. This creates a semi-transparent
+		        // overlay on page that prevents user from interacting with page
+		        // until drawing is complete.
+		        var wait_dialog = jQuery("<div></div>")
+				        .html("Drawing visualisation. This may take a few moments..."
+							        +"<br /><br />"
+							        +"<img src='"+URL_ROOT+"images/ajax-loader.gif'/>")
+				        .css("text-align", "center")
+				        .dialog({
+						        modal: true,
+						        draggable: false,
+						        position: "center",
+						        resizable: false
+				        });
+
+		        // Make semi-transparent overlay of modal dialog take up the whole
+            // page.
+		        jQuery(".ui-widget-overlay")
+				        .css("position", "fixed")
+				        .css("height", "100%");
+
             var d3Json = ARGVIZ.convertCohereConnectionsetJson(conns);
             var config = {
                 data: d3Json,
-                container: 'tab-content-conn'
+                container: 'tab-content-conn',
+                callback: function () { wait_dialog.dialog("destroy"); }
             }
             ARGVIZ.drawNetwork(config);
 

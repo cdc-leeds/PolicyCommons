@@ -278,27 +278,6 @@ var ARGVIZ = ARGVIZ || {};
     function drawNetwork(config) {
         var data = config.data;
         var container = '#' + config.container;
-
-		    // Open a modal dialog box (using JQuery UI plug-in) to alert user
-		    // that network is being drawn. This creates a semi-transparent
-		    // overlay on page that prevents user from interacting with page
-		    // until drawing is complete.
-		    var wait_dialog = jQuery("<div></div>")
-				    .html("Drawing visualisation. This may take a few moments..."
-							    +"<br /><br />"
-							    +"<img src='"+URL_ROOT+"images/ajax-loader.gif'/>")
-				    .css("text-align", "center")
-				    .dialog({
-						    modal: true,
-						    draggable: false,
-						    position: "center",
-						    resizable: false
-				    });
-
-		    // Make semi-transparent overlay take up the whole page.
-		    jQuery(".ui-widget-overlay")
-				    .css("position", "fixed")
-				    .css("height", "100%");
 	      
 		    // Set width & height for div that contains SVG visualisation
         jQuery(container).append('<div id="network-div"></div>');
@@ -677,9 +656,6 @@ var ARGVIZ = ARGVIZ || {};
 				    // removing the "bouncy" effect of the network visualisation
 				    if (e.alpha < 0.009) {
 						    node.each(function (d) { d.fixed = true; });
-
-						    // Now remove modal dialog.
-						    wait_dialog.dialog("destroy");
 
 						    // XXX Need to find a better way of positioning the
 						    // visualisation in the middle of the container, while at
