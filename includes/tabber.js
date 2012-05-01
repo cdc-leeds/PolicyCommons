@@ -1499,16 +1499,6 @@ function loadConnectionNeighbourhood(){
  * load JS file for creating the connection network (applet)
  */
 function loadConnectionNet() {
-    // Check whether there is the document.createElementNS method which D3
-    // Library needs to create elements in SVG namespace on the fly. If method
-    // isn't present then (we are probably dealing with IE so) fall back to
-    // original Cohere ConnectionNet Java applet.
-    var scriptUrl = (document.createElementNS) ? URL_ROOT +
-        "visualize/conn-net-svg.js" : URL_ROOT + "visualize/conn-net.js";
-
-    var bObj = new JSONscriptRequest(scriptUrl);
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
 
 	  var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
 	  $("tab-content-conn").update(tb1);
@@ -1522,25 +1512,36 @@ function loadConnectionNet() {
 
 	  $("tab-content-conn").insert(tb2);
 
-		// Load the Connection Net data
-    var loadDiv = new Element("div",{'class':'loading'});
-    loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
-    loadDiv.insert("<br/>(Loading Connection Network View. This may take a " +
-                   "few minutes depending on the number of Connections...)");
+    // Check whether there is the document.createElementNS method which D3
+    // Library needs to create elements in SVG namespace on the fly. If method
+    // isn't present then (we are probably dealing with IE so) fall back to
+    // original Cohere ConnectionNet Java applet.
+    var scriptUrl = (document.createElementNS) ? URL_ROOT +
+        "visualize/conn-net-svg.js" : URL_ROOT + "visualize/conn-net.js";
 
-		$('connmessage').update(loadDiv);
+    jQuery.getScript(scriptUrl, load);
 
-		var args = Object.clone(NET_ARGS);
-		args["start"] = 0;
+    function load() {
+		    // Load the Connection Net data
+        var loadDiv = new Element("div",{'class':'loading'});
+        loadDiv.insert("<img src='"+URL_ROOT+"images/ajax-loader.gif'/>");
+        loadDiv.insert("<br/>(Loading Connection Network View. This may take a " +
+                       "few minutes depending on the number of Connections...)");
 
-		//get all (not just the normal 20 max)
-		args["max"] = -1;
+		    $('connmessage').update(loadDiv);
 
-		//request to get the current connections
-		var reqUrl = SERVICE_ROOT + "&method=getconnectionsby" + CONTEXT +
-		    "&style=short&";
+		    var args = Object.clone(NET_ARGS);
+		    args["start"] = 0;
 
-    jQuery.getJSON(reqUrl, args, draw);
+		    //get all (not just the normal 20 max)
+		    args["max"] = -1;
+
+		    //request to get the current connections
+		    var reqUrl = SERVICE_ROOT + "&method=getconnectionsby" + CONTEXT +
+		        "&style=short&";
+
+        jQuery.getJSON(reqUrl, args, draw);
+    }
 
     function draw(cohereJson) {
         var conns = cohereJson.connectionset[0].connections;
