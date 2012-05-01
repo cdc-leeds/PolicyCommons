@@ -1555,7 +1555,11 @@ function loadConnectionNet() {
 
         if (document.createElementNS) {
             var d3Json = convertCohereConnectionsetJson(conns);
-            drawNetwork(d3Json);
+            var config = {
+                data: d3Json,
+                container: 'tab-content-conn'
+            }
+            drawNetwork(config);
         } else {
             drawConnNetApplet(conns);
 

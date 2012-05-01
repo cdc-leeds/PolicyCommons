@@ -90,7 +90,9 @@ function convertCohereConnectionsetJson (connections) {
 		return d3Json;
 }
 
-function drawNetwork(data) {
+function drawNetwork(config) {
+    var data = config.data;
+    var container = '#' + config.container;
 
 		// Open a modal dialog box (using JQuery UI plug-in) to alert user
 		// that network is being drawn. This creates a semi-transparent
@@ -114,11 +116,11 @@ function drawNetwork(data) {
 				.css("height", "100%");
 	
 		// Set width & height for div that contains SVG visualisation
-    jQuery('#tab-content-conn').append('<div id="network-div"></div>');
+    jQuery(container).append('<div id="network-div"></div>');
 
 		jQuery("#network-div").css("overflow", "hidden")
 				.height(jQuery(window).height())
-				.width(jQuery("#tab-content-conn").width());
+				.width(jQuery(container).width());
 
 		// Calculate desired width and height for the SVG visualisation.
 		// Make quite large so text nodes aren't cropped.
