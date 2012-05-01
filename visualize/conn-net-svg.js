@@ -191,10 +191,11 @@ function drawNetwork(data) {
 				.start();
 
 		// First draw the links
-		var linkColors = new Object();
-		linkColors.positive = "#2ca02c";
-		linkColors.negative = "#d62728";
-		linkColors.neutral = "#c7c7c7";
+    var linkColors = {
+        positive: "#2ca02c",
+        negative: "#d62728",
+        neutral: "#c7c7c7"
+    };
 
 		var link = vis.selectAll("g.link")
 				.data(data.links)
