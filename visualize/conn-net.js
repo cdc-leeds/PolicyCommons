@@ -100,7 +100,12 @@ function loadAppletData() {
       			}  
       			
       			var conns = json.connectionset[0].connections;
-            drawConnNetApplet(conns);
+
+            if (conns.length > 0) {
+                drawConnNetApplet(conns);
+            } else {
+                $('connmessage').innerHTML= "No Connections have been made yet.";
+            }
       		}
       	});
 }
@@ -147,7 +152,6 @@ function drawConnNetApplet(conns) {
 
     $('Cohere-ConnectionNet').prepareGraph(USER, "network");
 
-    if (conns.length > 0) {
 	      for(var i=0; i< conns.length; i++){
 	      		var c = conns[i].connection;
 	      		var fN = c.from[0].cnode;
@@ -199,9 +203,6 @@ function drawConnNetApplet(conns) {
 			      "in	Firefox, Safari, Opera, or Chrome.";
 
 				$('Cohere-ConnectionNet').displayGraph(NET_ARGS['netnodeid']);
-		} else {
-				$('connmessage').innerHTML="No Connections have been made yet.";
-		}
 }
 
 function resizeApplet(){
