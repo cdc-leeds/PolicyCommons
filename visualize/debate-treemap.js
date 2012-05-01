@@ -24,7 +24,7 @@
  ********************************************************************************/
 var ARGVIZ = ARGVIZ || {};
 
-ARGVIZ = (function () {
+(function (MODULE_NAME) {
 
     function convertCohereNodesetJson(cohereJson) {
         var d3Json = {
@@ -151,9 +151,8 @@ ARGVIZ = (function () {
         }
     }
 
-    return {
-        convertCohereNodesetJson: convertCohereNodesetJson,
-        drawDebateMap: drawDebateMap
-    };
+    // Expose public API for the module
+    MODULE_NAME.convertCohereNodesetJson = convertCohereNodesetJson;
+    MODULE_NAME.drawDebateMap = drawDebateMap;
 
-})();
+})(ARGVIZ);

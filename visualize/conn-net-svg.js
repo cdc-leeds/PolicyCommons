@@ -24,7 +24,7 @@
  ********************************************************************************/
 var ARGVIZ = ARGVIZ || {};
 
-ARGVIZ = (function () {
+(function (MODULE_NAME) {
 
     function convertCohereConnectionsetJson (connections) {
 		    var d3Json = {
@@ -738,9 +738,8 @@ ARGVIZ = (function () {
 		    }
     }
 
-    return {
-        convertCohereConnectionsetJson: convertCohereConnectionsetJson,
-        drawNetwork: drawNetwork
-    };
+    // Expose public API for the module
+    MODULE_NAME.convertCohereConnectionsetJson = convertCohereConnectionsetJson;
+    MODULE_NAME.drawNetwork = drawNetwork;
 
-})();
+})(ARGVIZ);
