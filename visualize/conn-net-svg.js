@@ -114,8 +114,7 @@ function drawNetwork(data) {
 				.css("height", "100%");
 	
 		// Set width & height for div that contains SVG visualisation
-		var networkDiv = new Element("div", {"id":"network-div"});
-		$("tab-content-conn").insert(networkDiv);
+    jQuery('#tab-content-conn').append('<div id="network-div"></div>');
 
 		jQuery("#network-div").css("overflow", "hidden")
 				.height(jQuery(window).height())
