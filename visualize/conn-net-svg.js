@@ -681,14 +681,6 @@ var ARGVIZ = ARGVIZ || {};
 						    // Now remove modal dialog.
 						    wait_dialog.dialog("destroy");
 
-						    // Insert Hint about how to interact with visualisation
-						    jQuery("#connmessage").html(
-								    "<em>Hint 1: Move	individual nodes, or click and grab" +
-										    " outside of any node to move entire map.</em>" +
-										    "<br />" +
-										    "<em>Hint 2: Use mouse-wheel or" +
-										    " double-click/SHIFT-double-click to zoom-in/out</em>.");
-
 						    // XXX Need to find a better way of positioning the
 						    // visualisation in the middle of the container, while at
 						    // the same time giving it enough space so none of the

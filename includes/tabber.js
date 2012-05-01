@@ -1560,6 +1560,14 @@ function loadConnectionNet() {
                 container: 'tab-content-conn'
             }
             ARGVIZ.drawNetwork(config);
+
+						// Insert Hint about how to interact with visualisation
+						jQuery("#connmessage").html(
+								"<em>Hint 1: Move	individual nodes, or click and grab" +
+										" outside of any node to move entire map.</em>" +
+										"<br />" +
+										"<em>Hint 2: Use mouse-wheel or" +
+										" double-click/SHIFT-double-click to zoom-in/out</em>.");
         } else {
             drawConnNetApplet(conns);
 
