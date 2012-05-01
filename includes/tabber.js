@@ -1554,12 +1554,12 @@ function loadConnectionNet() {
         $('connmessage').innerHTML="";
 
         if (document.createElementNS) {
-            var d3Json = convertCohereConnectionsetJson(conns);
+            var d3Json = ARGVIZ.convertCohereConnectionsetJson(conns);
             var config = {
                 data: d3Json,
                 container: 'tab-content-conn'
             }
-            drawNetwork(config);
+            ARGVIZ.drawNetwork(config);
         } else {
             drawConnNetApplet(conns);
 
