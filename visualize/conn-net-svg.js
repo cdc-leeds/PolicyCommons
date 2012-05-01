@@ -22,14 +22,13 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-function convertCohereJsonToD3 (cohereJson) {
+function convertCohereConnectionsetJson (connections) {
 		var d3Json = {
 				nodes: [],
 				links: []
 		};
 
 		var nodePositions = {};
-		var connections = cohereJson.connectionset[0].connections;
 
 		function nodeExists(theNode) {
 				for (var i=0, len=d3Json.nodes.length; i<len; i++) {

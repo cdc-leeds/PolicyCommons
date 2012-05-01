@@ -1543,26 +1543,27 @@ function loadConnectionNet() {
     jQuery.getJSON(reqUrl, args, draw);
 
     function draw(cohereJson) {
+        var conns = cohereJson.connectionset[0].connections;
+
+        if (conns.length == 0) {
+            $('connmessage').innerHTML= "No Connections have been made yet.";
+            return false;
+        }
+
         $('connmessage').innerHTML="";
 
         if (document.createElementNS) {
-            var d3Json = convertCohereJsonToD3(cohereJson);
+            var d3Json = convertCohereConnectionsetJson(conns);
             drawNetwork(d3Json);
         } else {
-            var conns = cohereJson.connectionset[0].connections;
+            drawConnNetApplet(conns);
 
-            if (conns.length > 0) {
-                drawConnNetApplet(conns);
-
-				        // let the user know that system is falling back to Java
-				        // visualisation
-				        $("connmessage").innerHTML = "Your browser doesn't appear to" +
-			              " support SVG, so, instead you are viewing a Java-applet-based" +
-			              " visualisation. Alternatively, you can try to reload the URL " +
-			              "in	Firefox, Safari, Opera, or Chrome.";
-            } else {
-                $('connmessage').innerHTML= "No Connections have been made yet.";
-            }
+				    // let the user know that system is falling back to Java
+				    // visualisation
+				    $("connmessage").innerHTML = "Your browser doesn't appear to" +
+			          " support SVG, so, instead you are viewing a Java-applet-based" +
+			          " visualisation. Alternatively, you can try to reload the URL " +
+			          "in	Firefox, Safari, Opera, or Chrome.";
         }
     }
 }
