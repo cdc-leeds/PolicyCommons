@@ -43,38 +43,7 @@ function loadCNet() {
 	
 	$('connmessage').update(loadDiv);
 
-	//get applet width & height 
-	var x = $('tab-content-conn').offsetWidth - 30;
-	var y = getWindowHeight() - 320;
-
-	var applet = new Element('applet', 
-						{	'id':'Cohere-ConnectionNet', 
-							'name':'Cohere-ConnectionNet',
-							'archive': 'visualize/connectionnetjars/cohere.jar, visualize/connectionnetjars/prefuse.jar, visualize/connectionnetjars/plugin.jar',
-							'code':'cohere.CohereApplet.class',
-							'width':x,
-							'height':y,
-							'mayscript':true,
-							'scriptable':true,
-							'separate_jvm':true,
-							'alt':'(Your browser recognizes the APPLET element but does not run the applet.)'
-						});
-							
-	var appletDiv = new Element('div', {'id':'appletDiv', 'style': 'float:left;'});
-    appletDiv.insert(applet);    												
-	$("tab-content-conn").insert(appletDiv);
-	
-	//event to resize
-	Event.observe(window,"resize",resizeApplet);	
-
-    try {
-	      checkIsActive('Cohere-ConnectionNet', 10, 1000);
-        loadAppletData();
-    }
-    catch (e) {
-        $('connmessage').innerHTML = e.message;
-    }
-	
+    loadAppletData();
 }
 
 // This function repeatedly polls whether the applet has loaded. If the applet
@@ -137,6 +106,41 @@ function loadAppletData() {
 }
 
 function drawConnNetApplet(conns) {
+
+    //get applet width & height
+    var x = $('tab-content-conn').offsetWidth - 30;
+    var y = getWindowHeight() - 320;
+
+    var jar_list = 'visualize/connectionnetjars/cohere.jar, ' +
+        'visualize/connectionnetjars/prefuse.jar, ' +
+        'visualize/connectionnetjars/plugin.jar';
+
+    var applet = new Element('applet', {
+        'id': 'Cohere-ConnectionNet',
+        'name': 'Cohere-ConnectionNet',
+        'archive': jar_list,
+        'code': 'cohere.CohereApplet.class',
+        'width': x,
+        'height': y,
+        'mayscript': true,
+        'scriptable': true,
+        'separate_jvm': true,
+        'alt': '(Your browser recognizes the APPLET element but does not run the applet.)'
+    });
+
+    var appletDiv = new Element('div', {
+        'id': 'appletDiv',
+        'style': 'float:left;'
+    });
+
+    appletDiv.insert(applet);
+    $("tab-content-conn").insert(appletDiv);
+
+    // Verify applet has loaded. Throw an exception if it hasn't.
+    checkIsActive('Cohere-ConnectionNet', 10, 1000);
+
+    //event to resize
+    Event.observe(window,"resize",resizeApplet);
 
 		var IE = (document.all) ? "true" : "false";
 		$('Cohere-ConnectionNet').setIsIE(IE);
