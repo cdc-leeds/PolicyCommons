@@ -698,36 +698,6 @@ function getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort 
 function getNodesBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="",$style='long'){
     global $CFG,$USER;
 
-    /*$q = trim($q);
-    $q = htmlspecialchars_decode($q, ENT_QUOTES);
-    $len = strlen($q);
-    $startChar = mb_substr($q, 0, 1);
-    $lastChar = mb_substr($q, $len-1, $len);
-    $sql = "SELECT t.NodeID,
-        (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
-        (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.NodeID) AS connectedness
-        FROM Node t WHERE ";
-
-    if ($startChar == "\"" && $lastChar == "\"") {
-    	$q = mb_substr($q, 1, $len-2);
-        $sql .= "(t.Name LIKE('%".mysql_escape_string($q)."%')".
-        		" OR t.Description LIKE ('%".mysql_escape_string($q)."%'))";
-    } else {
-    	$pieces = explode(" ", $q);
-    	$loopCount = 0;
-    	foreach ($pieces as $value) {
-    		if ($loopCount == 0) {
-    		    $search .= "(t.Name LIKE('%".mysql_escape_string($value)."%')".
-                			" OR t.Description LIKE ('%".mysql_escape_string($value)."%'))";
-    		} else {
-    			$search .= " OR (t.Name LIKE('%".mysql_escape_string($value)."%')".
-                			" OR t.Description LIKE ('%".mysql_escape_string($value)."%'))";
-    		}
-    		$loopCount++;
-    	}
-		$sql .= "( ".$search." )";
-    }*/
-
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.NodeID) AS connectedness
@@ -1366,23 +1336,6 @@ function autoCompleteURLDetails($url){
         $description = substr($description, 1, $description.length-2);
     }
 
-    // TO get all meta tags
-    //preg_match_all('/(<meta[^>]*>)/i', $subject, $result);
-
-    //didn't work
-    /*try {
-    	if ($metatagarray = get_meta_tags( $url )) {
-    		//$keywords = $metatagarray[ "keywords" ];
-    		$description = $metatagarray[ "description" ];
-    		$description = trim($description);
-    	} else {
-    		$description = "wrong";
-
-    	}
-    } catch (Exception $ex) {
-    	$description = $ex->getMessage();
-    }*/
-
     $url = new URL();
     $url->title = $title;
     $url->description = $description;
@@ -1567,34 +1520,6 @@ function getURLsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='A
  */
 function getURLsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long'){
     global $CFG,$USER;
-
-    /*$q = trim($q);
-    $q = htmlspecialchars_decode($q, ENT_QUOTES);
-    $len = strlen($q);
-    $startChar = mb_substr($q, 0, 1);
-    $lastChar = mb_substr($q, $len-1, $len);
-    $sql = "SELECT t.URLID, COUNT(ut.NodeID) AS connectedness FROM URL t
-        LEFT OUTER JOIN URLNode ut ON t.URLID = ut.URLID WHERE ";
-
-    if ($startChar == "\"" && $lastChar == "\"") {
-    	$q = mb_substr($q, 1, $len-2);
-        $sql .= "(t.Title LIKE('%".mysql_escape_string($q)."%')".
-        		" OR t.URL LIKE('%".mysql_escape_string($q)."%'))";
-    } else {
-    	$pieces = explode(" ", $q);
-    	$loopCount = 0;
-    	foreach ($pieces as $value) {
-    		if ($loopCount == 0) {
-    		    $search .= "(t.Title LIKE('%".mysql_escape_string($value)."%')".
-        					" OR t.URL LIKE('%".mysql_escape_string($value)."%')) ";
-    		} else {
-    			$search .= " OR (t.Title LIKE('%".mysql_escape_string($value)."%')".
-						" OR t.URL LIKE('%".mysql_escape_string($value)."%')) ";
-    		}
-    		$loopCount++;
-    	}
-		$sql .= "( ".$search." )";
-    }*/
 
     $sql = "SELECT DISTINCT t.URLID, COUNT(ut.NodeID) AS connectedness FROM URL t
             LEFT OUTER JOIN URLNode ut ON t.URLID = ut.URLID
@@ -1900,12 +1825,6 @@ function copyConnection($connid){
     $private = $USER->privatedata;
     $cobj = new Connection($connid);
     $cobj->load();
-
-    //check user has the nodes - NO!! Client side copy of these only
-    //$f = addNode($cobj->from->name,$cobj->from->description,$private);
-    //$fromnodeid = $f->nodeid;
-    //$t = addNode($cobj->to->name,$cobj->to->description,$private);
-    //$tonodeid = $t->nodeid;
 
     //check user has the roles
     $fr = addRole($cobj->fromrole->name, $cobj->fromrole->image);
@@ -2287,31 +2206,6 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  */
 function getConnectionsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long'){
     global $DB, $USER,$CFG;
-
-    /*$q = trim($q);
-    $q = htmlspecialchars_decode($q, ENT_QUOTES);
-    $len = strlen($q);
-    $startChar = mb_substr($q, 0, 1);
-    $lastChar = mb_substr($q, $len-1, $len);
-
-    $sql = "SELECT t.NodeID from Node t WHERE ";
-
-    if ($startChar == "\"" && $lastChar == "\"") {
-    	$q = mb_substr($q, 1, $len-2);
-		$sql .= "t.Name LIKE ('%".mysql_escape_string($q)."%') ";
-    } else {
-    	$pieces = explode(" ", $q);
-    	$loopCount = 0;
-    	foreach ($pieces as $value) {
-    		if ($loopCount == 0) {
-    		    $search .= "t.Name LIKE ('%".mysql_escape_string($value)."%')";
-    		} else {
-    		    $search .= " OR t.Name LIKE ('%".mysql_escape_string($value)."%')";
-    		}
-    		$loopCount++;
-    	}
-		$sql .= "( ".$search." )";
-    }*/
 
 	$sql = "SELECT DISTINCT t.NodeID from Node t
         LEFT JOIN TagNode tn ON t.NodeID = tn.NodeID
@@ -2809,7 +2703,6 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
 		}
 		$matchesFound = searchNetworkConnections($checkConnections, $matchedConnections, $nextNodes, $searchLinkLabels, $linkgroup, $labelmatch, $depth, 0, $direction, $scope);
 	}
-	//return database_error($matchesFound);
 
 	$cs = new ConnectionSet($matchesFound);
 	return $cs->loadConnections($matchesFound, $style);
@@ -2856,7 +2749,6 @@ function getConnectionsByPathByDepth($scope='all', $labelmatch='false', $nodeid,
 		}
 		$matchesFound = searchNetworkConnectionsByDepth($checkConnections, $matchedConnections, $nextNodes, $labelmatch, $depth, 0, $linklabels, $linkgroups, $directions, $nodetypes, $scope);
 	}
-	//return database_error($matchesFound);
 
 	$cs = new ConnectionSet($matchesFound);
 	return $cs->loadConnections($matchesFound, $style);
@@ -4430,28 +4322,6 @@ function getRecentUsers($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$st
 function getMostConnectedUsers($start = 0,$max = 20,$style='long',$groupid='') {
 	global $CFG,$USER, $DB;
 
-
-	/*select UserID, sum(num) as bignum From (
-
-	(SELECT m.UserID AS UserID, count(DISTINCT c.UserID) AS num FROM Triple t
-	RIGHT JOIN Node c ON c.NodeID = t.ToID
-	RIGHT JOIN Node m ON m.NodeID = t.FromID
-	WHERE c.UserID != m.UserID AND c.UserID IN (SELECT UserID FROM UserGroup WHERE GroupID='137108251470343583001284988782')
-	AND m.UserID IN (SELECT UserID FROM UserGroup WHERE GroupID='137108251470343583001284988782')
-	AND t.TripleID IN (Select TripleID FROM TripleGroup WHERE GroupID='137108251470343583001284988782')
-	group by m.UserID)
-
-	UNION ALL
-
-	(SELECT c.UserID AS UserID, count(DISTINCT m.UserID) AS num FROM Triple t
-	RIGHT JOIN Node c ON c.NodeID = t.ToID
-	RIGHT JOIN Node m ON m.NodeID = t.FromID
-	WHERE c.UserID != m.UserID AND c.UserID IN (SELECT UserID FROM UserGroup WHERE GroupID='137108251470343583001284988782')
-	AND m.UserID IN (SELECT UserID FROM UserGroup WHERE GroupID='137108251470343583001284988782')
-	AND t.TripleID IN (Select TripleID FROM TripleGroup WHERE GroupID='137108251470343583001284988782')
-	group by c.UserID)
-	) as alldata group by alldata.UserID*/
-
 	$qry = "SELECT UserID, sum(num) as bignum FROM ( ";
 
 	$qry .= "(Select m.UserID AS UserID, count(DISTINCT c.UserID) AS num ";
@@ -5084,34 +4954,6 @@ function getUsersByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @return NodeSet or Error
  */
 function getUsersBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long'){
-
-    /*$q = trim($q);
-    $q = htmlspecialchars_decode($q, ENT_QUOTES);
-    $len = strlen($q);
-    $startChar = mb_substr($q, 0, 1);
-    $lastChar = mb_substr($q, $len-1, $len);
-
-    $sql = "SELECT t.UserID FROM Users t WHERE ";
-
-    if ($startChar == "\"" && $lastChar == "\"") {
-    	$q = mb_substr($q, 1, $len-2);
-    	$sql .= "t.Name LIKE ('%".mysql_escape_string($q)."%')".
-        	"OR t.Description LIKE ('%".mysql_escape_string($q)."%')";
-    } else {
-    	$pieces = explode(" ", $q);
-    	$loopCount = 0;
-    	foreach ($pieces as $value) {
-    		if ($loopCount == 0) {
-    		    $search .= "t.Name LIKE ('%".mysql_escape_string($value)."%')";
-    		} else {
-    		    $search .= " OR t.Name LIKE ('%".mysql_escape_string($value)."%')";
-    		}
-		    $search .=" OR t.Description LIKE ('%".mysql_escape_string($value)."%')";
-
-    		$loopCount++;
-    	}
-        $sql .= "( ".$search." )";
-    }*/
 
     $sql = "SELECT DISTINCT t.UserID FROM Users t
         	LEFT JOIN TagUsers tn ON t.UserID = tn.UserID
