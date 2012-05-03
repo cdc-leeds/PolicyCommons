@@ -188,7 +188,6 @@ function setTabPushed(e) {
 		USER_ARGS['orderby'] = 'lastactive';
 	}
 	
-	//alert(data[1]);
 	//if viz not equal to the default then load up
 	if(viz != DEFAULT_VIZ){
 		CURRENT_VIZ = viz;
@@ -229,14 +228,12 @@ function setTabPushed(e) {
 				DATA_LOADED.user = false;
 				break;
 			case 'neighbour':
-				//if(!DATA_LOADED.neighbour){
 					$('tab-conn').setAttribute("href","#conn-neighbour");
 					Event.stopObserving('tab-conn','click', stpConnList);
 					Event.stopObserving('tab-conn','click', stpConnNeighbour);
 					Event.observe('tab-conn','click', stpConnNeighbour);
 					loadConnectionNeighbourhood();
 					DATA_LOADED.conn = false;
-				//}
 				break;
 			case 'net':
 				$('tab-conn').setAttribute("href","#conn-net");
@@ -247,7 +244,6 @@ function setTabPushed(e) {
 				DATA_LOADED.conn = false;
 				break;
 			default:
-				//alert("default");
 		}
 	} else {
 		CURRENT_TAB = tab;
@@ -293,9 +289,6 @@ function setTabPushed(e) {
 				}
 				break;		
 			case 'svn':
-				//$('tab-svn').setAttribute("href","#svn-list");
-				//Event.stopObserving('tab-svn','click', stpSVNList);
-				//Event.observe('tab-svn','click', stpSVNList);
 				loadSocialNet(CONTEXT,CONN_ARGS);
 				break;
 			case 'tags':
@@ -657,7 +650,6 @@ function loadusers(context,args){
 				}
     		}
   		});
-  	//DATA_LOADED.user = true;
 }
 
 /**
@@ -832,8 +824,6 @@ function reverseConnections(){
 		}
 	}	
 
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadconnections(CONTEXT,CONN_ARGS);
 }
  
@@ -846,8 +836,6 @@ function reorderConnections(){
 	CONN_ARGS['sort'] = $('select-sort-conn').options[$('select-sort-conn').selectedIndex].value;
 	CONN_ARGS['orderby'] = $('select-orderby-conn').options[$('select-orderby-conn').selectedIndex].value;
 	
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadconnections(CONTEXT,CONN_ARGS);
 }
 
@@ -876,8 +864,6 @@ function filterConnections() {
 		NET_ARGS['filternodetypes'] = SELECTED_NODETYPES;	
 	}
 
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadconnections(CONTEXT,CONN_ARGS);
 }
 
@@ -894,8 +880,6 @@ function filterIdeas() {
 		NODE_ARGS['filternodetypes'] = SELECTED_NODETYPES;	
 	}
 
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadnodes(CONTEXT,NODE_ARGS);
 }
 
@@ -907,8 +891,6 @@ function filterWebsites() {
 	if (SELECTED_USERS != "") {
 		URL_ARGS['filterusers'] = SELECTED_USERS;	
 	}
-
-	//window.location.href=createNewURL(CONN_ARGS);
 
 	loadurls(CONTEXT,URL_ARGS);
 }
@@ -922,8 +904,6 @@ function reorderURLs(){
 	URL_ARGS['sort'] = $('select-sort-urls').options[$('select-sort-urls').selectedIndex].value;
 	URL_ARGS['orderby'] = $('select-orderby-urls').options[$('select-orderby-urls').selectedIndex].value;
 	
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadurls(CONTEXT,URL_ARGS);
 }
 
@@ -936,8 +916,6 @@ function reorderUsers(){
 	USER_ARGS['sort'] = $('select-sort-user').options[$('select-sort-user').selectedIndex].value;
 	USER_ARGS['orderby'] = $('select-orderby-user').options[$('select-orderby-user').selectedIndex].value;
 	
-	//window.location.href=createNewURL(CONN_ARGS);
-
 	loadusers(CONTEXT,USER_ARGS);
 }
 
@@ -1217,7 +1195,6 @@ function createNavCounter(total, start, count, type){
     	var objH = new Element("span",{'class':'nav'});
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        //objH.insert("<b>Showing " + s1 + " to " + s2 + " of " + total + " " + type + "</b>");
         objH.insert("<b>" + s1 + " to " + s2 + " (" + total + ")</b>");
     } else {
     	var objH = new Element("span");
@@ -1237,7 +1214,6 @@ function createNavCounter(total, start, count, type){
         			break;
         		case 'users':
         			objH.insert("<p><b>You are not a member of any groups yet, <a href='javascript:loadDialog(\"creategroup\",\""+ URL_ROOT +"plugin/ui/addgroup.php\");'>why not start a new group?</a></b></p>");
-        			//objH.insert("<p><b>Need help getting started? <a href=\""+ URL_ROOT +"#screencast\">Watch our screencast</a> on how to create a group.</b></p>");
         			
         			break;
         	}
@@ -1251,7 +1227,6 @@ function createNavCounter(total, start, count, type){
 var Pages = {
 	next: function(e){
 		var data = $A(arguments);
-		//alert(data[1]);
 		eval("load"+data[1]+"(data[2],data[3])");
 	} 
 };
@@ -1426,7 +1401,6 @@ function displaySnippetButtons(type){
  */
 function loadNodesSimile(){
 	//dynamically load the simile js files
-	//aObj = new JSONscriptRequest("http://simile.mit.edu/timeline/api/timeline-api.js");
 	var aObj = new JSONscriptRequest(URL_ROOT+"visualize/timeline_2.3.0/timeline_js/timeline-api.js");
     aObj.buildScriptTag();
     aObj.addScriptTag();
@@ -1778,9 +1752,6 @@ function displayNodesGroupAction(){
   	var opt4 = new Element("option",{'value':'tagallselectednodes'}).insert("Tag My ideas");
 	sel.insert(opt4);
 
-	//var opt3 = new Element("option",{'value':'addselectednodestomyworkspace'}).insert("Add to my workspace");
-	//sel.insert(opt3);
-	
 	ga.insert(sel);
  
 	var tagdiv = new Element('div',{'class':'toolbaritem', 'style':'float:left;'});
@@ -1820,9 +1791,6 @@ function displayURLsGroupAction(){
 	var sel = new Element("select",{'id':'url-groupaction-select', 'class':'toolbaritem', 'style':'float:left;'}).observe('change',groupActionURLChange);
    	sel.className = "toolbar";
 	
-   	//var opt2 = new Element("option",{'value':'deleteallselectedurls'}).insert("Delete");
-	//sel.insert(opt2);
-
   	var opt4 = new Element("option",{'value':'tagallselectedurls'}).insert("Tag My websites");
 	sel.insert(opt4);
 

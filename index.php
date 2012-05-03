@@ -31,7 +31,6 @@
     <div id="tabber">
         <ul id="tabs" class="tab">
             <li class="tab"><a class="tab" id="tab-home" href="#home"><span class="tab">Home</span></a></li>
-            <!-- li class="tab"><a class="tab" id="tab-welcome" href="#welcome"><span class="tab">Welcome</span></a></li -->
             <li class="tab"><a class="tab" id="tab-debates" href="#debates"><span class="tab">Debates</span></a></li>
             <li class="tab" style="display:none"><a class="tab" id="tab-node" href="#node"><span class="tab">Ideas</span></a></li>
             <li class="tab" style="display:none"><a class="tab" id="tab-conn" href="#conn"><span class="tab">Connections</span></a></li>
