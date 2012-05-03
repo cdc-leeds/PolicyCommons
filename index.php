@@ -28,40 +28,6 @@
     include_once("includes/header.php");
 ?>
 
-<style type="text/css">
-#tab-content-welcome {
-    font-size: 140%;
-    font-weight:bold;
-}
-
-.hi-light {
-    color: #e80074;
-}
-
-ul.home-node-head-list {
-   list-style:none;
-   margin: 0px 0px 0px 15px;
-   padding: 3px;
-}
-
-li.home-node-head-item {
-   font-weight: bold;
-   display:inline;
-   margin-left: 10px;
-}
-
-li.current {
-   color: #85C042;
-   padding: 3px;
-   border: 1px solid #7F0000;
-}
-
-li.option {
-    color: #7F0000;
-    cursor:pointer;
-    padding: 3px;
-}
-</style>
     <div id="tabber">
         <ul id="tabs" class="tab">
             <li class="tab"><a class="tab" id="tab-home" href="#home"><span class="tab">Home</span></a></li>

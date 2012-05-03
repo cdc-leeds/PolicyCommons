@@ -25,35 +25,6 @@
     include_once("config.php");
     include_once("includes/header.php");
 ?>
-<style type="text/css">
-.hi-light {
-    color: #e80074;
-}
-
-ul.home-node-head-list {
-   list-style:none;
-   margin: 0px 0px 0px 15px;
-   padding: 3px;
-}
-
-li.home-node-head-item {
-   font-weight: bold;
-   display:inline;
-   margin-left: 10px;
-}
-
-li.current {
-   color: #40B5B2;
-   padding: 3px;
-   border: 1px solid #FACEE3;
-}
-
-li.option {
-    color: #e80074;
-    cursor:pointer;
-    padding: 3px;
-}
-</style>
 
     <h1>About PolicyCommons</h1>
 <p>PolicyCommons is a tool that displays arguments about policies as
