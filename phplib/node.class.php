@@ -315,17 +315,6 @@ class CNode {
                 $res2 = mysql_query( $qry2, $DB->conn);
                 if (!$res2) {
                     return database_error();
-                } else {
-					if ($CFG->TWITTER_STREAM_ON == "Y" && $private == "N") {
-						/*$twitterURL = $CFG->homeAddress."node.php?nodeid=".$this->nodeid."#conn-neighbour";
-						$defaultUser = new User($CFG->defaultUserID);
-						$defaultUser->load('short');
-						$key = $defaultUser->getTwitterKey();
-						$secret = $defaultUser->getTwitterSecret();
- 						if ($key  != "" && $secret != "") {
-                			tweet($name, $USER->name, $twitterURL, $key, $secret);
-                		}*/
-                	}
                 }
             }
         }
@@ -926,7 +915,7 @@ class CNode {
         $sql = "SELECT t.NodeID FROM Node t WHERE t.UserID = '".$USER->userid."' AND t.NodeID='".$this->nodeid."'";
         $res = mysql_query( $sql, $DB->conn );
         $n = mysql_num_rows( $res );
-        if($n == 0 /*|| $this->otheruserconnections != 0*/){
+        if($n == 0){
             throw new Exception("access denied");
         }
     }
@@ -944,7 +933,7 @@ class CNode {
         $sql = "SELECT t.NodeID FROM Node t WHERE t.UserID = '".$USER->userid."' AND t.NodeID='".$this->nodeid."'";
         $res = mysql_query( $sql, $DB->conn );
         $n = mysql_num_rows( $res );
-        if($n == 0 /*|| $this->otheruserconnections != 0*/){
+        if($n == 0){
             throw new Exception("access denied");
         }
     }
