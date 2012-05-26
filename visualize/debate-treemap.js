@@ -112,10 +112,10 @@ var ARGVIZ = ARGVIZ || {};
                     // is a Debate then make hyperlink to Debate URL, else
                     // then assume cell is an Issue and make hyperlink to
                     // Issue URL.
-                    return d.children ? null : cell_html(d);
+                    return d.children ? null : cell_html(d, this);
                 });
 
-            function cell_html(d) {
+            function cell_html(d, current_cell) {
                 var html = d.name;
                 var cell_type = d.role[0].role.name;
 
@@ -124,15 +124,38 @@ var ARGVIZ = ARGVIZ || {};
                         "(Issues: " + d.num_issues + ")" + "<br />" +
                         "(Responses: " + d.num_responses + ")";
 
-                    // Only if the number of issues is more than 0 do we add a
-                    // hyperlink for Sub-Debate cells. (In principle there
+                    // Only if the number of issues is more than 0 do we make
+                    // Sub-Debate cells clickable. (In principle there
                     // should always be issues in debates/sub-debates, but in
                     // practice the modeller might not always get around to
                     // modelling the issues within a debate/sub-debate.)
                     if (d.num_issues > 0) {
-                        html =
-                            "<a href='" + createDebateURL(d.nodeid) + "'>" +
-                            html + "</a>";
+                        d3.select(current_cell)
+                            .attr("class", "debatemap-cell clickable")
+                            .style("cursor", "pointer")
+                        // Add onclick event to sub-debate cell so that it
+                        // draws a map of the contents of that sub-debate
+                        // TODO This shouldn't be hardcoded in ARGVIZ library
+                            .on("click", function (d) {
+                                var reqUrl = SERVICE_ROOT +
+                                    "&method=getdebatecontents" +
+                                    "&nodeid=" + d.nodeid;
+
+                                jQuery('#'+config.container)
+                                    .html('<div class="loading">' +
+                                          '<img src='+URL_ROOT+'images/ajax-loader.gif />' +
+                                    '</div>');
+
+                                jQuery.getJSON(reqUrl, function (cohereJson) {
+                                    var d3Json = ARGVIZ.convertCohereNodesetJson(cohereJson);
+                                    var params = {
+                                        data: d3Json,
+                                        container: config.container
+                                    }
+
+                                    ARGVIZ.drawDebateMap(params);
+                                });
+                            });
                     }
                 } else if (cell_type === "Issue") {
                     html = html + "<br /><br />" +

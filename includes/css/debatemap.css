@@ -20,3 +20,11 @@
 .debatemap-cell a:hover {
 		text-decoration: underline;
 }
+
+.clickable {
+		color: black;
+}
+
+.clickable:hover {
+		text-decoration: underline;
+}
