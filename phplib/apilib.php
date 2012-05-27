@@ -5311,34 +5311,53 @@ function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='lon
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20)
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @return NodeSet or Error
+ * @return ConnectionSet
  */
-function getDebateContents($nodeid, $scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
+function getDebateContents(
+  $nodeid, $scope='all', $groupid='', $start = 0,$max = 20, $style='long') {
+
     global $CFG,$USER;
 
-		// SQL for retrieving the debates in the system (i.e. all the
-    // nodes that are of type 'Debate'.
-		// Note this only retrieves the high-level debates (i.e. debates
-    // that are sub-debates within other debates are not returned)
-    $sql = "SELECT t.ToID AS NodeID,
-                (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.ToID)+
-                (SELECT COUNT(ToID) FROM Triple WHERE ToiD=t.ToID) AS connectedness
-            FROM Triple t
-            INNER JOIN LinkType lt ON t.LinkTypeID=lt.LinkTypeID
-            WHERE
-              t.FromID = '".$nodeid."' AND
-              lt.Label = 'contains'";
+	// Only retrieve a certain select group of connections, namely
+	// connections that show which Arguments address the given
+	// Issue node
+	$filterlinkgroup = "selected";
+	$filterlinktypes = "contains";
 
-    if($scope == 'my'){
-        $sql .= " AND t.UserID = '".$USER->userid."'";
+  $debate_conn_set_obj = getConnectionsByNode(
+    $nodeid, $start, $max, $orderby='date', $sort='DESC', $filterlinkgroup,
+    $filterlinktypes, $filternodetypes, $style);
+
+	// Copy just the array of connections from the returned
+	// ConnectionSet object
+  $debate_conns_arr = $debate_conn_set_obj->connections;
+
+	// For each "Debate <contains> Debate/Issue" connection...
+	for($i = 0; $i < count($debate_conns_arr); $i++) {
+
+		// Get the ID of the contained Debate/Issue node...
+    if ($nodeid === $debate_conns_arr[$i]->from->nodeid) {
+      $contained_node_id = $debate_conns_arr[$i]->to->nodeid;
+      $contained_role = $debate_conns_arr[$i]->to->role->name;
+
+      // Recursively get contents of sub-debates
+      if ($contained_role === 'Debate') {
+      $subdebate_conn_set_obj = getDebateContents($contained_node_id);
+      $debate_conn_set_obj->connections = array_merge(
+        $debate_conn_set_obj->connections,
+        $subdebate_conn_set_obj->connections);
+      }
+
+      // Get contents of issues
+      if ($contained_role === 'Issue') {
+        $issue_conn_set_obj = getResponsesToIssue($contained_node_id);
+        $debate_conn_set_obj->connections = array_merge(
+          $debate_conn_set_obj->connections,
+          $issue_conn_set_obj->connections);
+      }
     }
-
-    if ($groupid != "") {
-    	$sql .= " AND t.ToID IN (SELECT NodeID FROM NodeGroup WHERE GroupID='".$groupid."')";
-    }
-
-    $ns = new NodeSet();
-    return $ns->load($sql,$start,$max,'connectedness','DESC',$style);
+  }
+  return $debate_conn_set_obj;
 }
 
 // This function retrieves all the Arguments that address an

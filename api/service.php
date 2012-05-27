@@ -804,26 +804,7 @@ switch($method){
 			  $nodeid = required_param('nodeid',PARAM_TEXT);
         $scope = optional_param('scope','',PARAM_TEXT);
 				$groupid = optional_param('groupid','',PARAM_TEXT);
-				$debate_node_set_obj = getDebateContents($nodeid, $scope,$groupid,$start,$max,$style);
-
-					// Copy just the array of nodes
-					$debate_nodes_arr = $debate_node_set_obj->nodes;
-					for ($i = 0; $i < count($debate_nodes_arr); $i++) {
-						// For shorthand, get reference to cnode object
-						$cnode = $debate_node_set_obj->nodes[$i];
-
-						$cnode->num_responses =
-							getNumberOfResponses(
-								$cnode->nodeid, $cnode->role->name);
-
-						// For sub-debates, also get the number of issues
-						if ($cnode->role->name == "Debate") {
-							$cnode->num_issues =
-								getNumberOfIssues(
-									$cnode->nodeid, $cnode->role->name);
-						}
-					}
-					$response = $debate_node_set_obj;
+        $response = getDebateContents($nodeid);
         break;
     case "getdebatedocuments":
 			  $nodeid = required_param('nodeid',PARAM_TEXT);
