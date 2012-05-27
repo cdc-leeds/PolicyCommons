@@ -1471,17 +1471,11 @@ function loadConnectionNeighbourhood(){
  */
 function loadConnectionNet() {
 
-	  var tb1 = new Element("div", {'id':'netbuttons', 'class':'toolbarrow'});
-	  $("tab-content-conn").update(tb1);
-	  tb1.insert(displayConnectionAdd());
-	  tb1.insert(displayConnectionVisualisations('net'));
-	  tb1.insert(displaySnippetButtons(SNIPPET_CONNECTION_NET));
-
 	  var tb2 = new Element("div", {'id':'connmessagediv','class':'toolbarrow'});
 	  var messagearea = new Element("div", {'id':'connmessage','class':'toolbitem'});
 	  tb2.insert(messagearea);
 
-	  $("tab-content-conn").insert(tb2);
+	  $("tab-content-conn").update(tb2);
 
     // Check whether there is the document.createElementNS method which D3
     // Library needs to create elements in SVG namespace on the fly. If method
