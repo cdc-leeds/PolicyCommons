@@ -238,7 +238,6 @@ function bookmark(obj) {
 				Event.stopObserving(obj, 'click');
 				Event.observe(obj,'click', function (){ unbookmark(this) } );
 
-   				//fadeMessage("Bookmark added for<br><br>"+obj.label); 				
    			} 
    		}				      			     	   			
   	});
@@ -262,27 +261,12 @@ function unbookmark(obj) {
 					Event.stopObserving(obj, 'click');
 					Event.observe(obj,'click', function (){ bookmark(this) } );
 					
- 	   				//fadeMessage("Bookmark removed for<br><br>"+obj.label); 				
 	   			} 
 	   		}				      			     	   			
 	  	});
 	  }
  }
 
-/**
- * Ask to open a url
- */
-/*function viewNodeURL(node, clip) {	
-	var reqUrl = URL_ROOT + "spamalert.php?type=idea&id="+obj.id;
-	new Ajax.Request(reqUrl, { method:'get',
-		onError: function(error) {
-	   		alert(error);
-		},
-		onSuccess: function(transport){
-			//launch url
-		}
-	});
-}*/
 
 /**
  * Send a spam alert to the server.
@@ -302,7 +286,6 @@ function reportNodeSpamAlert(obj, node) {
 				obj.style.cursor = 'auto';	   	
 				$(obj).unbind("click");	    				
 				node.status = 1;
-				//fadeMessage(obj.label"\n\n has been reported as spam"); 				
 			}
 		});
 	}
@@ -467,15 +450,6 @@ function renderNode(node, uniQ, role, includemenu, type){
 
 	if (type == "active") {
 		itDiv.insert("<a href='"+createNodeURL(node.nodeid)+"'"+breakout+">"+ node.name + "</a>");
-	/*}else if (type == "connselect") {
-		var labellink = new Element('a', {'href':'#'});
-		labellink.insert(node.name);
-		Event.observe(labellink,'click',function (){ 
-			loadConnectionNode(node, role);
-		});
-		itDiv.insert(labellink);
-		//itDiv.insert("<a href='#' onclick='javascript:"+handle+"(\""+node.nodeid+"\", \""+node.name+"\", \""+role.name+"\", \""+role.image+"\")'>"+ node.name + "</a>");
-		*/
 	} else if (type == "inactive" || type == "connselect") {
 		itDiv.insert("<span>"+node.name+"</span>");
 	}
@@ -616,17 +590,6 @@ function renderNode(node, uniQ, role, includemenu, type){
 		headerDiv.insert("<div style='float:left'><span class='active' id='desctoggle"+uniQ+"' title='Click to view meta data' onClick='ideatoggle(\"desc"+uniQ+"\",\""+node.nodeid+"\",\"desc\")'>Details <span id='opendesc"+uniQ+"'>+</span></span> </div>");
 	}
 	
-	/*if(node.urls && node.urls.length > 0){
-		headerDiv.insert("<div style='float:left'>&nbsp;| <span class='active' id='urlstoggle"+uniQ+"' title='Click to view associated websites' onClick='ideatoggle(\"urls"+uniQ+"\")'>URLs ("+node.urls.length+")<span id='openurls"+uniQ+"'>+</span></span></div>");
-	}
-
-	if(node.groups && node.groups.length >0){
-		headerDiv.insert("<div style='float:left'>&nbsp;| <span class='active' id='groupstoggle"+uniQ+"' title='Click to view associated groups' onClick='ideatoggle(\"groups"+uniQ+"\")'>Groups ("+node.groups.length+")<span id='opengroups"+uniQ+"'>+</span></span></div>");
-	}
-
-	if(node.tags && node.tags.length >0){
-		headerDiv.insert("<div style='float:left'>&nbsp;| <span class='active' id='tagstoggle"+uniQ+"' title='Click to view associated tags' onClick='ideatoggle(\"tags"+uniQ+"\")'>Tags ("+node.tags.length+")<span id='opentags"+uniQ+"'>+</span></span></div>");
-	}*/
 
 	//headerDiv.insert("<span class='active' id='datatoggle"+uniQ+"' onClick='ideatoggle(\"data"+uniQ+"\")'>Data <span id='opendata"+uniQ+"'>+</span></span>");
 	
@@ -646,7 +609,7 @@ function renderNode(node, uniQ, role, includemenu, type){
 		
 		var ddUL = new Element('ul',{'class':'dd-list'});
 		
-		if (USER == user.userid) { // && node.otheruserconnections == 0){
+		if (USER == user.userid) {
 			var ddLI = new Element('li',{'class':'dd-li'}).insert('Edit');
 			Event.observe(ddLI,'click',function (){loadDialog('editnode',URL_ROOT+"plugin/ui/idea.php?nodeid="+node.nodeid)});
 			ddUL.insert(ddLI);
@@ -668,11 +631,6 @@ function renderNode(node, uniQ, role, includemenu, type){
 		Event.observe(ddLI,'click',function (){showNetworkSearchDialogNew(node)});
 		ddUL.insert(ddLI);
 		
-		/*if (node.private == 'N') {
-			var ddLI = new Element('li',{'class':'dd-li'}).insert('Tweet');
-			Event.observe(ddLI,'click',function (){tweetNode(node)});
-			ddUL.insert(ddLI);
-		}*/
 
 		var ddLI = new Element('li',{'class':'dd-li'}).insert('Get Snippet');
 		Event.observe(ddLI,'click',function (){ showSnippet(SNIPPET_IDEA, node.nodeid) });
@@ -723,7 +681,6 @@ function renderNode(node, uniQ, role, includemenu, type){
 		var urlDiv = new Element("div", {"id":"urls"+uniQ, "style":"margin-top: 5px;"});
 		urlDiv.insert("<div style='margin-top: 5px;'>Websites:</div>");
 		
-		//urlDiv.style.display = 'none';
 		descDiv.insert(urlDiv);
 		
 		var otherURLs = new Array();
@@ -864,7 +821,6 @@ function renderNode(node, uniQ, role, includemenu, type){
 	imDiv.insert(idDiv);
 	
 	iwDiv.insert(imDiv);
-	//iwDiv.insert(iaDiv);
 	iwDiv.insert('<div style="clear:both;"></div>');
 	iDiv.insert(ihDiv);
 	iDiv.insert('<div style="clear:both;"></div>');
@@ -971,34 +927,9 @@ function renderReportNode(node, uniQ, role){
 	
 	ihDiv.insert(nodeTable);
 		
-	/*var iwDiv = new Element("div", {'class':'idea-wrapper'});
-	var imDiv = new Element("div", {'class':'idea-main'});
-	var idDiv = new Element("div", {'class':'idea-detail'});
-		
-	// display the data headers
-	var headerDiv = new Element("div", {'style':'width: 100%'});
-	
-	if(node.description || node.hasdesc){
-		headerDiv.insert("<div style='float:left'><span class='active' id='desctoggle"+uniQ+"' title='Click to view description' onClick='ideatoggle(\"desc"+uniQ+"\",\""+node.nodeid+"\",\"desc\")'>Desc <span id='opendesc"+uniQ+"'>+</span></span> </div>");
-	} 
-
-	idDiv.insert(headerDiv);
-				
-	var dStr = "<div id='desc"+uniQ+"' class='ideadata' style='display:none; padding-top: 5px;'>";
-		
-	dStr += "</div>";
-	idDiv.insert(dStr);
-			
-	imDiv.insert(idDiv);
-	
-	iwDiv.insert(imDiv);
-	//iwDiv.insert(iaDiv);
-	iwDiv.insert('<div style="clear:both;"></div>');
-	*/
 	
 	iDiv.insert(ihDiv);
 	iDiv.insert('<div style="float: left;clear:both;"></div>');
-	//iDiv.insert(iwDiv);
 	
 	return iDiv;
 }
@@ -1238,7 +1169,6 @@ function addSelectedNodesToWorkspace(){
  			onSuccess: function(transport){
  				//now refresh the page
 				try {
-			        //alert("now all deleted");
 			        window.location.reload(true);
 			    } catch(err) {
 			        //do nothing   
@@ -1267,7 +1197,6 @@ function addSelectedNodesToGroup(){
  			onSuccess: function(transport){
  				//now refresh the page
 				try {
-			        //alert("now all deleted");
 			        window.location.reload(true);
 			    } catch(err) {
 			        //do nothing   
@@ -1295,7 +1224,6 @@ function removeSelectedNodesFromGroup(){
  			onSuccess: function(transport){
  				//now refresh the page
 				try {
-			        //alert("now all deleted");
 			        window.location.reload(true);
 			    } catch(err) {
 			        //do nothing   
@@ -1328,7 +1256,6 @@ function printNodes(){
 	args["style"] = 'short';
 	
 	var reqUrl = url+"&method=getnodesby"+CONTEXT+"&"+Object.toQueryString(args);		
-	//var urlcall =  URL_ROOT+"plugin/ui/printnodes.php?url="+encodeURIComponent(reqUrl);
 	var urlcall =  URL_ROOT+"plugin/ui/printnodes.php?context="+CONTEXT+"&title="+args['title']+"&url="+encodeURIComponent(reqUrl);
 	
 	loadDialog('printnodes', urlcall, 700, 700);
