@@ -149,7 +149,7 @@ function display_tabber($context,$args){
     ?>
     <div id="tabber">
         <ul id="tabs" class="tab">
-            <li class="tab"><a class="tab" id="tab-debatemap" href="#debatemap"><span class="tab">Debate Map (<span id="map-elements-count">0</span>)</span></a></li>
+            <li class="tab"><a class="tab" id="tab-debatemap" href="#debatemap"><span class="tab">Debate Map</span></a></li>
             <li class="tab"><a class="tab" id="tab-documents" href="#documents"><span class="tab">Documents (<span id="document-count">0</span>)</span></a></li>
         </ul>
         <div id="tabs-content">

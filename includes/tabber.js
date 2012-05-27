@@ -671,9 +671,6 @@ function loadDebateMap(context,args) {
                 container: 'tab-content-debatemap'
             }
 
-            //set the count in tab header
-            jQuery('#map-elements-count').text(cohereJson.nodeset[0].totalno);
-
             ARGVIZ.drawDebateMap(config);
         });
     }
