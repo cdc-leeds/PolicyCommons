@@ -5319,8 +5319,7 @@ function getDebateContents(
     global $CFG,$USER;
 
 	// Only retrieve a certain select group of connections, namely
-	// connections that show which Arguments address the given
-	// Issue node
+	// connections that show Debate <contains> {Debate or Issue}
 	$filterlinkgroup = "selected";
 	$filterlinktypes = "contains";
 
@@ -5332,6 +5331,8 @@ function getDebateContents(
 	// ConnectionSet object
   $debate_conns_arr = $debate_conn_set_obj->connections;
 
+  $tmp_connections_arr = array();
+
 	// For each "Debate <contains> Debate/Issue" connection...
 	for($i = 0; $i < count($debate_conns_arr); $i++) {
 
@@ -5342,21 +5343,34 @@ function getDebateContents(
 
       // Recursively get contents of sub-debates
       if ($contained_role === 'Debate') {
-      $subdebate_conn_set_obj = getDebateContents($contained_node_id);
-      $debate_conn_set_obj->connections = array_merge(
-        $debate_conn_set_obj->connections,
-        $subdebate_conn_set_obj->connections);
+        $subdebate_conn_set_obj = getDebateContents($contained_node_id);
+        $tmp_connections_arr = array_merge(
+          $tmp_connections_arr,
+          $subdebate_conn_set_obj->connections);
       }
 
       // Get contents of issues
       if ($contained_role === 'Issue') {
         $issue_conn_set_obj = getResponsesToIssue($contained_node_id);
-        $debate_conn_set_obj->connections = array_merge(
-          $debate_conn_set_obj->connections,
+        $tmp_connections_arr = array_merge(
+          $tmp_connections_arr,
           $issue_conn_set_obj->connections);
       }
     }
+
+    // If is a sub-debate then Debate contains (sub)Debate from list of
+    // connections (important so as to avoid duplicate connections when
+    // searching contents recursively)
+    if ($nodeid === $debate_conns_arr[$i]->to->nodeid) {
+      unset($debate_conn_set_obj->connections[$i]);
+    }
   }
+
+  // Merge all contents of debates and sub-debates
+  $debate_conn_set_obj->connections = array_merge(
+    $debate_conn_set_obj->connections,
+    $tmp_connections_arr);
+
   return $debate_conn_set_obj;
 }
 
