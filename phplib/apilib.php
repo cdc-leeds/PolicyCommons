@@ -5341,12 +5341,36 @@ function getDebateContents(
       $contained_node_id = $debate_conns_arr[$i]->to->nodeid;
       $contained_role = $debate_conns_arr[$i]->to->role->name;
 
+      // Check if we have attributes for storing number of issues and number of
+      // responses for this Debate. If we don't then add and initialise to
+      // 0.
+      isset($debate_conn_set_obj->num_issues) or
+        $debate_conn_set_obj->num_issues = 0;
+
+      isset($debate_conn_set_obj->num_responses) or
+        $debate_conn_set_obj->num_responses = 0;
+
       // Recursively get contents of sub-debates
       if ($contained_role === 'Debate') {
         $subdebate_conn_set_obj = getDebateContents($contained_node_id);
         $tmp_connections_arr = array_merge(
           $tmp_connections_arr,
           $subdebate_conn_set_obj->connections);
+
+        // Add count of number of issues and responses from sub-debate to the
+        // counts for this debate
+        $debate_conn_set_obj->num_issues += $subdebate_conn_set_obj->num_issues;
+        $debate_conn_set_obj->num_responses +=
+          $subdebate_conn_set_obj->num_responses;
+
+        // In final result we'll get rid of num_issues and num_responses as
+        // attributes of connection_set object for sub_debates. So add these
+        // counts to the node itself
+        $debate_conn_set_obj->connections[$i]->to->num_issues =
+          $subdebate_conn_set_obj->num_issues;
+
+        $debate_conn_set_obj->connections[$i]->to->num_responses =
+          $subdebate_conn_set_obj->num_responses;
       }
 
       // Get contents of issues
@@ -5355,6 +5379,17 @@ function getDebateContents(
         $tmp_connections_arr = array_merge(
           $tmp_connections_arr,
           $issue_conn_set_obj->connections);
+
+        // Update the number of responses and number of issues for this debate
+        // (i.e. the 'from' node that we are on)
+        $debate_conn_set_obj->num_issues += 1;
+        $debate_conn_set_obj->num_responses += $issue_conn_set_obj->count;
+
+        // In final result we'll get rid of num_responses as attribute of
+        // connection_set object for issues. So add this count to the issue node
+        // itself.
+        $debate_conn_set_obj->connections[$i]->to->num_responses =
+          $issue_conn_set_obj->count;
       }
     }
 
@@ -5365,6 +5400,11 @@ function getDebateContents(
       unset($debate_conn_set_obj->connections[$i]);
     }
   }
+
+  // We might have 'unset' some of the connections so should re-index the
+  // connections array
+  $debate_conn_set_obj->connections = array_values(
+    $debate_conn_set_obj->connections);
 
   // Merge all contents of debates and sub-debates
   $debate_conn_set_obj->connections = array_merge(
