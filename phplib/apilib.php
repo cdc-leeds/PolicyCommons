@@ -5427,13 +5427,7 @@ function getResponsesToIssue($nodeid, $start = 0, $max = -1 ,
 	// Only retrieve a certain select group of connections, namely
 	// connections that show which Arguments address the given
 	// Issue node
-	$filterlinkgroup = "selected";
-	$filterlinktypes = "addresses";
-
-	$issueConnSetObj =
-		getConnectionsByNode($nodeid, $start, $max, $orderby, $sort,
-												 $filterlinkgroup, $filterlinktypes,
-												 $filternodetypes, $style);
+	$issueConnSetObj = getIssuePositions($nodeid);
 
 	// Copy just the array of connections from the returned
 	// ConnectionSet object
