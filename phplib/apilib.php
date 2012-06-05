@@ -5375,7 +5375,7 @@ function getDebateContents(
 
       // Get contents of issues
       if ($contained_role === 'Issue') {
-        $issue_conn_set_obj = getResponsesToIssue($contained_node_id);
+        $issue_conn_set_obj = getIssuePositions($contained_node_id);
         $tmp_connections_arr = array_merge(
           $tmp_connections_arr,
           $issue_conn_set_obj->connections);
