@@ -5473,6 +5473,27 @@ function getResponsesToIssue($nodeid, $start = 0, $max = -1 ,
 	return $issueConnSetObj;
 }
 
+/**
+ * Function to retrieve the positions that address an issue
+ *
+ * @param string $nodeid The ID of the issue-node
+ * @return ConnectionSet
+ */
+function getIssuePositions(
+  $nodeid, $start = 0, $max = -1, $orderby = 'date', $sort ='DESC',
+  $filterlinkgroup = 'all', $filterlinktypes = '', $filternodetypes = '',
+  $style = 'long') {
+
+  $filterlinkgroup = "selected";
+  $filterlinktypes = "addresses";
+
+  $issue_conn_set_obj = getConnectionsByNode(
+    $nodeid, $start, $max, $orderby, $sort, $filterlinkgroup, $filterlinktypes,
+    $filternodetypes, $style);
+
+  return $issue_conn_set_obj;
+}
+
 // This function determines the number of issues within each region
 // of a debate.
 // It recursively steps through the debate (going through each
