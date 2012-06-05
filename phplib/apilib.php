@@ -5533,7 +5533,7 @@ function getNumberOfResponses($nodeid, $node_type) {
 			$num_responses = $num_responses +	getNumberOfResponses($cnode->nodeid, $cnode->role->name);
 		}
 	} else if ($node_type == "Issue") {
-		$issue_conn_set_obj = getResponsesToIssue($nodeid);
+		$issue_conn_set_obj = getIssuePositions($nodeid);
 		$num_responses = $issue_conn_set_obj->count;
 	}
 
