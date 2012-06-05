@@ -5376,9 +5376,6 @@ function getDebateContents(
       // Get contents of issues
       if ($contained_role === 'Issue') {
         $issue_conn_set_obj = getIssuePositions($contained_node_id);
-        $tmp_connections_arr = array_merge(
-          $tmp_connections_arr,
-          $issue_conn_set_obj->connections);
 
         // Update the number of responses and number of issues for this debate
         // (i.e. the 'from' node that we are on)
