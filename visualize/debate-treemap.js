@@ -42,6 +42,75 @@ var ARGVIZ = ARGVIZ || {};
         return d3Json;
     }
 
+    /**
+        This converts debate data in Cohere ConnectionSet format into D3 treemap
+        data format.
+
+        @param {Object} cohere_json - The data in Cohere ConnectionSet format
+      */
+    function convertCohereConnectionsetToD3Tree(cohere_json) {
+        // Total number of issues and responses in the debate
+        var num_issues = cohere_json.connectionset[0].num_issues;
+        var num_responses = cohere_json.connectionset[0].num_responses;
+
+        // Pointer to just the array of connections in the ConnectionSet object
+        var connections = cohere_json.connectionset[0].connections;
+
+        // The root of the debate is the 'from' node in the first connection
+        var root_node = connections[0].connection.from[0].cnode;
+
+        // Temporary variables for building treemap data
+        var nodes_hash = {}, from_cnode, to_cnode;
+
+        // The treemap data (initialised with clone of root of the debate)
+        var d3_tree = jQuery.extend(true, {}, root_node);
+
+        // For-loop variables
+        var i, len = connections.length;
+
+        d3_tree.num_issues = num_issues;
+        d3_tree.num_responses = num_responses;
+
+        // For each connection in connections array...
+        for (i = 0; i < len; i += 1) {
+
+            // Clone from and to node
+            from_cnode = jQuery.extend(
+                true, {}, connections[i].connection.from[0].cnode);
+
+            to_cnode = jQuery.extend(
+                true, {}, connections[i].connection.to[0].cnode);
+
+            // Store all the 'to-node' children of a 'from-node' in a hash
+            nodes_hash[from_cnode.nodeid] =
+                nodes_hash[from_cnode.nodeid] || from_cnode;
+
+            nodes_hash[from_cnode.nodeid].children =
+                nodes_hash[from_cnode.nodeid].children || [];
+
+            nodes_hash[from_cnode.nodeid].children.push(to_cnode);
+        }
+
+        // Now build the tree
+        (function buildTree(tree) {
+            var i, len;
+
+            tree.children =
+                nodes_hash[tree.nodeid] && nodes_hash[tree.nodeid].children;
+
+            if (tree.children) {
+                for (i = 0, len = tree.children.length; i < len; i += 1) {
+                    buildTree(tree.children[i]);
+                }
+            }
+
+            return;
+
+        })(d3_tree);
+
+        return d3_tree;
+    }
+
     function drawDebateMap(config) {
         var data = config.data;
         var container = '#' + config.container;
@@ -175,6 +244,8 @@ var ARGVIZ = ARGVIZ || {};
     }
 
     // Expose public API for the module
+    MODULE_NAME.convertCohereConnectionsetToD3Tree =
+        convertCohereConnectionsetToD3Tree;
     MODULE_NAME.convertCohereNodesetJson = convertCohereNodesetJson;
     MODULE_NAME.drawDebateMap = drawDebateMap;
 
