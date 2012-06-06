@@ -26,22 +26,6 @@ var ARGVIZ = ARGVIZ || {};
 
 (function (MODULE_NAME) {
 
-    function convertCohereNodesetJson(cohereJson) {
-        var d3Json = {
-            children: []
-        };
-
-        var nodes = cohereJson.nodeset[0].nodes;
-
-        var i, len = nodes.length;
-        for (i = 0; i < len; i += 1) {
-            var newNode = Object.clone(nodes[i].cnode);
-            d3Json.children.push(newNode);
-        }
-
-        return d3Json;
-    }
-
     /**
         This converts debate data in Cohere ConnectionSet format into D3 treemap
         data format.
@@ -246,7 +230,6 @@ var ARGVIZ = ARGVIZ || {};
     // Expose public API for the module
     MODULE_NAME.convertCohereConnectionsetToD3Tree =
         convertCohereConnectionsetToD3Tree;
-    MODULE_NAME.convertCohereNodesetJson = convertCohereNodesetJson;
     MODULE_NAME.drawDebateMap = drawDebateMap;
 
 })(ARGVIZ);
