@@ -665,7 +665,7 @@ function loadDebateMap(context,args) {
         var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
 
         jQuery.getJSON(reqUrl, args, function (cohereJson) {
-            var d3Json = ARGVIZ.convertCohereNodesetJson(cohereJson);
+            var d3Json = ARGVIZ.convertCohereConnectionsetToD3Tree(cohereJson);
             var config = {
                 data: d3Json,
                 container: 'tab-content-debatemap'
