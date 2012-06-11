@@ -120,6 +120,7 @@ var ARGVIZ = ARGVIZ || {};
 
         var treemap = d3.layout.treemap()
             .size([w, h])
+            .padding([30, 0, 0, 0])
             .sticky(true)
             .value(function (d) {
                 // Make size of region in debate map be determined based on
