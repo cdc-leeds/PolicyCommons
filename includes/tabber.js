@@ -657,7 +657,7 @@ function loadusers(context,args){
  */
 function loadDebateMap(context,args) {
 
-    var scriptUrl = URL_ROOT + 'visualize/debate-treemap.js';
+    var scriptUrl = URL_ROOT + 'visualize/ARGVIZ.map.js';
 
     jQuery.getScript(scriptUrl, load);
 
