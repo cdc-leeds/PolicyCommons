@@ -150,16 +150,13 @@ var ARGVIZ = ARGVIZ || {};
                 .style("width", function (d) { return d.dx - 1 + "px"; })
                 .style("height", function (d) { return d.dy - 1 + "px"; })
                 .style("background", function (d) {
-                    var args = Object.clone(NET_ARGS);
-                    if (d.nodeid !== undefined) {
-                        // Sub-Debates (i.e. sections within a Debate) should
-                        // have a unique background colour in the treemap. But
-                        // Issues in a treemap should have the same background
-                        // colour as the Sub-Debate or section they are
-                        // contained in.
-                        return (d.role[0].role.name === "Issue") ?
-                            color(args.nodeid) : color(d.nodeid);
-                    }
+                    // Sub-Debates (i.e. sections within a Debate) should
+                    // have a unique background colour in the treemap. But
+                    // Issues in a treemap should have the same background
+                    // colour as the Sub-Debate or section they are
+                    // contained in.
+                    return d.nodeid && (d.role[0].role.name === "Issue") ?
+                        color(d.parent.nodeid) : color(d.nodeid);
                 })
                 .html(function (d) {
                     // Make text in each treemap cell be a hyperlink. If cell
