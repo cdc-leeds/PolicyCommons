@@ -1482,7 +1482,7 @@ function loadConnectionNet() {
     // isn't present then (we are probably dealing with IE so) fall back to
     // original Cohere ConnectionNet Java applet.
     var scriptUrl = (document.createElementNS) ? URL_ROOT +
-        "visualize/conn-net-svg.js" : URL_ROOT + "visualize/conn-net.js";
+        "visualize/ARGVIZ.network.js" : URL_ROOT + "visualize/conn-net.js";
 
     jQuery.getScript(scriptUrl, load);
 
