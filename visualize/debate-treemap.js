@@ -163,7 +163,7 @@ var ARGVIZ = ARGVIZ || {};
                     // is a Debate then make hyperlink to Debate URL, else
                     // then assume cell is an Issue and make hyperlink to
                     // Issue URL.
-                    return d.children ? null : cell_html(d, this);
+                    return d.children ? d.name : cell_html(d, this);
                 });
 
             function cell_html(d, current_cell) {
