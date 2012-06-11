@@ -23,6 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 var ARGVIZ = ARGVIZ || {};
+ARGVIZ.map = ARGVIZ.map || {};
 
 (function (MODULE_NAME) {
 
@@ -230,4 +231,4 @@ var ARGVIZ = ARGVIZ || {};
         convertCohereConnectionsetToD3Tree;
     MODULE_NAME.drawDebateMap = drawDebateMap;
 
-})(ARGVIZ);
+})(ARGVIZ.map);
