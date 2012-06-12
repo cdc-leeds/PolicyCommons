@@ -23,6 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 var ARGVIZ = ARGVIZ || {};
+ARGVIZ.network = ARGVIZ || {};
 
 (function (MODULE_NAME) {
 
@@ -713,4 +714,4 @@ var ARGVIZ = ARGVIZ || {};
     MODULE_NAME.convertCohereConnectionsetJson = convertCohereConnectionsetJson;
     MODULE_NAME.drawNetwork = drawNetwork;
 
-})(ARGVIZ);
+})(ARGVIZ.network);

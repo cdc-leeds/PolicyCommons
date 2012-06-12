@@ -1542,13 +1542,13 @@ function loadConnectionNet() {
 				        .css("position", "fixed")
 				        .css("height", "100%");
 
-            var d3Json = ARGVIZ.convertCohereConnectionsetJson(conns);
+            var d3Json = ARGVIZ.network.convertCohereConnectionsetJson(conns);
             var config = {
                 data: d3Json,
                 container: 'tab-content-conn',
                 callback: function () { wait_dialog.dialog("destroy"); }
             }
-            ARGVIZ.drawNetwork(config);
+            ARGVIZ.network.drawNetwork(config);
 
 						// Insert Hint about how to interact with visualisation
 						jQuery("#connmessage").html(
