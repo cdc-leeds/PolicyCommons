@@ -1542,7 +1542,7 @@ function loadConnectionNet() {
 				        .css("position", "fixed")
 				        .css("height", "100%");
 
-            var d3Json = ARGVIZ.network.convertCohereData(conns);
+            var d3Json = ARGVIZ.network.convertCohereData(cohereJson);
             var config = {
                 data: d3Json,
                 container: 'tab-content-conn',

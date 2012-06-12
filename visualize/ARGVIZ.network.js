@@ -27,16 +27,22 @@ ARGVIZ.network = ARGVIZ || {};
 
 (function (MODULE_NAME) {
 
-    function convertCohereData (connections) {
+    function convertCohereData (cohere_json) {
+
+        // Pointer to just the array of connections in the ConnectionSet object
+        var connections = cohere_json.connectionset[0].connections;
+
 		    var d3Json = {
 				    nodes: [],
 				    links: []
 		    };
 
 		    var nodePositions = {};
+        var i, len = connections.length;
 
 		    function nodeExists(theNode) {
-				    for (var i=0, len=d3Json.nodes.length; i<len; i++) {
+            var i, len = d3Json.nodes.length;
+				    for (i = 0; i < len; i++) {
 						    if (theNode.nodeid == d3Json.nodes[i].nodeid) {
 								    return true;
 						    }
@@ -45,7 +51,7 @@ ARGVIZ.network = ARGVIZ || {};
 				    return false;
 		    }
 
-		    for (var i=0, len=connections.length; i<len; i++) {
+		    for (i = 0; i < len; i++) {
 				    // First deal with the nodes
 				    var fromCnode =
 						    Object.clone(connections[i].connection.from[0].cnode);
