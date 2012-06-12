@@ -66,6 +66,10 @@ ARGVIZ.map = ARGVIZ.map || {};
             to_cnode = jQuery.extend(
                 true, {}, connections[i].connection.to[0].cnode);
 
+            // Copy Cohere 'role name' into new attribute called 'nodetype'
+            from_cnode.nodetype = from_cnode.role[0].role.name;
+            to_cnode.nodetype = to_cnode.role[0].role.name;
+
             // Store all the 'to-node' children of a 'from-node' in a hash
             nodes_hash[from_cnode.nodeid] =
                 nodes_hash[from_cnode.nodeid] || from_cnode;
@@ -156,7 +160,7 @@ ARGVIZ.map = ARGVIZ.map || {};
                     // Issues in a treemap should have the same background
                     // colour as the Sub-Debate or section they are
                     // contained in.
-                    return d.nodeid && (d.role[0].role.name === "Issue") ?
+                    return d.nodeid && (d.nodetype === "Issue") ?
                         color(d.parent.nodeid) : color(d.nodeid);
                 })
                 .html(function (d) {
@@ -169,7 +173,7 @@ ARGVIZ.map = ARGVIZ.map || {};
 
             function cell_html(d, current_cell) {
                 var html = d.name;
-                var cell_type = d.role[0].role.name;
+                var cell_type = d.nodetype;
 
                 if (cell_type === "Debate") {
                     html = html + "<br /><br />" +
