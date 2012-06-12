@@ -666,6 +666,13 @@ ARGVIZ.network = ARGVIZ || {};
 				    // when nodes are dragged. So this achieves the result of
 				    // removing the "bouncy" effect of the network visualisation
 				    if (e.alpha < 0.009) {
+
+                // Fade in the diagram
+		            vis.style("opacity", 1e-6)
+				            .transition()
+				            .duration(1000)
+				            .style("opacity", 1);
+
 						    node.each(function (d) { d.fixed = true; });
 
 						    // XXX Need to find a better way of positioning the
