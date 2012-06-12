@@ -658,6 +658,37 @@ function loadusers(context,args){
 function loadDebateMap(context,args) {
 
     var scriptUrl = URL_ROOT + 'visualize/ARGVIZ.map.js';
+    var map_container = 'tab-content-debatemap';
+
+    var onClickIssue = function (d) {
+        var req = SERVICE_ROOT +
+            "&method=getconnectionsbyissuenode" +
+            "&nodeid=" + d.nodeid;
+
+        var script = URL_ROOT +
+            "visualize/ARGVIZ.network.js";
+
+        jQuery('#' + map_container)
+            .html('<div class="loading">' +
+                  '<img src='+URL_ROOT+'images/ajax-loader.gif />' +
+                  '</div>');
+
+        jQuery.getScript(script, load);
+
+        function load () {
+            jQuery.getJSON(req, function (json) {
+                var data =
+                    ARGVIZ.network.convertCohereData(json);
+
+                var params = {
+                    data: data,
+                    container: map_container
+                }
+
+                ARGVIZ.network.draw(params);
+            });
+        }
+    }
 
     jQuery.getScript(scriptUrl, load);
 
@@ -668,7 +699,10 @@ function loadDebateMap(context,args) {
             var d3Json = ARGVIZ.map.convertCohereData(cohereJson);
             var config = {
                 data: d3Json,
-                container: 'tab-content-debatemap'
+                container: map_container,
+                onclick_handlers: {
+                    "Issue": onClickIssue
+                }
             }
 
             ARGVIZ.map.draw(config);
