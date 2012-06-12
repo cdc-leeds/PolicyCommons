@@ -203,13 +203,13 @@ ARGVIZ.map = ARGVIZ.map || {};
                                     '</div>');
 
                                 jQuery.getJSON(reqUrl, function (cohereJson) {
-                                    var d3Json = ARGVIZ.convertCohereNodesetJson(cohereJson);
+                                    var d3Json = ARGVIZ.map.convertCohereData(cohereJson);
                                     var params = {
                                         data: d3Json,
                                         container: config.container
                                     }
 
-                                    ARGVIZ.drawDebateMap(params);
+                                    ARGVIZ.map.draw(params);
                                 });
                             });
                     }
@@ -220,9 +220,41 @@ ARGVIZ.map = ARGVIZ.map || {};
                     // Only if the number of responses is more than 0 do we
                     // add a hyperlink to Issue cells.
                     if (d.num_responses > 0) {
-                        html =
-                            "<a href='" + createIssueURL(d.nodeid) + "'>" +
-                            html + "</a>";
+                        d3.select(current_cell)
+                            .attr("class", "debatemap-cell clickable")
+                            .style("cursor", "pointer")
+                        // Add onclick event to Issue cell so that it draws a
+                        // network of arguments responding to the issue
+                        // TODO This shouldn't be hardcoded in ARGVIZ library
+                            .on("click", function (d) {
+                                var reqUrl = SERVICE_ROOT +
+                                    "&method=getconnectionsbyissuenode" +
+                                    "&nodeid=" + d.nodeid;
+
+                                var scriptUrl = URL_ROOT +
+                                    "visualize/ARGVIZ.network.js";
+
+                                jQuery('#'+config.container)
+                                    .html('<div class="loading">' +
+                                          '<img src='+URL_ROOT+'images/ajax-loader.gif />' +
+                                    '</div>');
+
+                                jQuery.getScript(scriptUrl, load);
+
+                                function load () {
+                                    jQuery.getJSON(reqUrl, function (cohereJson) {
+                                        var d3Json =
+                                            ARGVIZ.network.convertCohereData(cohereJson);
+
+                                        var params = {
+                                            data: d3Json,
+                                            container: config.container
+                                        }
+
+                                        ARGVIZ.network.draw(params);
+                                    });
+                                }
+                            });
                     }
                 }
                 return html;
