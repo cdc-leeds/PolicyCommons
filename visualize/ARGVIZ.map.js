@@ -188,30 +188,7 @@ ARGVIZ.map = ARGVIZ.map || {};
                     if (d.num_issues > 0) {
                         d3.select(current_cell)
                             .attr("class", "debatemap-cell clickable")
-                            .style("cursor", "pointer")
-                        // Add onclick event to sub-debate cell so that it
-                        // draws a map of the contents of that sub-debate
-                        // TODO This shouldn't be hardcoded in ARGVIZ library
-                            .on("click", function (d) {
-                                var reqUrl = SERVICE_ROOT +
-                                    "&method=getdebatecontents" +
-                                    "&nodeid=" + d.nodeid;
-
-                                jQuery('#'+config.container)
-                                    .html('<div class="loading">' +
-                                          '<img src='+URL_ROOT+'images/ajax-loader.gif />' +
-                                    '</div>');
-
-                                jQuery.getJSON(reqUrl, function (cohereJson) {
-                                    var d3Json = ARGVIZ.map.convertCohereData(cohereJson);
-                                    var params = {
-                                        data: d3Json,
-                                        container: config.container
-                                    }
-
-                                    ARGVIZ.map.draw(params);
-                                });
-                            });
+                            .style("cursor", "pointer");
                     }
                 } else if (cell_type === "Issue") {
                     html = html + "<br /><br />" +
