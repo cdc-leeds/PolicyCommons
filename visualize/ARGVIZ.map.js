@@ -33,7 +33,7 @@ ARGVIZ.map = ARGVIZ.map || {};
 
         @param {Object} cohere_json - The data in Cohere ConnectionSet format
       */
-    function convertCohereConnectionsetToD3Tree(cohere_json) {
+    function convertCohereData(cohere_json) {
         // Total number of issues and responses in the debate
         var num_issues = cohere_json.connectionset[0].num_issues;
         var num_responses = cohere_json.connectionset[0].num_responses;
@@ -96,7 +96,7 @@ ARGVIZ.map = ARGVIZ.map || {};
         return d3_tree;
     }
 
-    function drawDebateMap(config) {
+    function draw(config) {
         var data = config.data;
         var container = '#' + config.container;
 
@@ -227,8 +227,7 @@ ARGVIZ.map = ARGVIZ.map || {};
     }
 
     // Expose public API for the module
-    MODULE_NAME.convertCohereConnectionsetToD3Tree =
-        convertCohereConnectionsetToD3Tree;
-    MODULE_NAME.drawDebateMap = drawDebateMap;
+    MODULE_NAME.convertCohereData = convertCohereData;
+    MODULE_NAME.draw = draw;
 
 })(ARGVIZ.map);

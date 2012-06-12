@@ -27,7 +27,7 @@ ARGVIZ.network = ARGVIZ || {};
 
 (function (MODULE_NAME) {
 
-    function convertCohereConnectionsetJson (connections) {
+    function convertCohereData (connections) {
 		    var d3Json = {
 				    nodes: [],
 				    links: []
@@ -276,7 +276,7 @@ ARGVIZ.network = ARGVIZ || {};
 				}
 		}
 
-    function drawNetwork(config) {
+    function draw(config) {
         var data = config.data;
         var container = '#' + config.container;
 	      
@@ -711,7 +711,7 @@ ARGVIZ.network = ARGVIZ || {};
     }
 
     // Expose public API for the module
-    MODULE_NAME.convertCohereConnectionsetJson = convertCohereConnectionsetJson;
-    MODULE_NAME.drawNetwork = drawNetwork;
+    MODULE_NAME.convertCohereData = convertCohereData;
+    MODULE_NAME.draw = draw;
 
 })(ARGVIZ.network);

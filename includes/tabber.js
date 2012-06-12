@@ -665,13 +665,13 @@ function loadDebateMap(context,args) {
         var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
 
         jQuery.getJSON(reqUrl, args, function (cohereJson) {
-            var d3Json = ARGVIZ.map.convertCohereConnectionsetToD3Tree(cohereJson);
+            var d3Json = ARGVIZ.map.convertCohereData(cohereJson);
             var config = {
                 data: d3Json,
                 container: 'tab-content-debatemap'
             }
 
-            ARGVIZ.map.drawDebateMap(config);
+            ARGVIZ.map.draw(config);
         });
     }
 }
@@ -1542,13 +1542,13 @@ function loadConnectionNet() {
 				        .css("position", "fixed")
 				        .css("height", "100%");
 
-            var d3Json = ARGVIZ.network.convertCohereConnectionsetJson(conns);
+            var d3Json = ARGVIZ.network.convertCohereData(conns);
             var config = {
                 data: d3Json,
                 container: 'tab-content-conn',
                 callback: function () { wait_dialog.dialog("destroy"); }
             }
-            ARGVIZ.network.drawNetwork(config);
+            ARGVIZ.network.draw(config);
 
 						// Insert Hint about how to interact with visualisation
 						jQuery("#connmessage").html(
