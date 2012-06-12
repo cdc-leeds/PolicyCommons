@@ -53,6 +53,10 @@ ARGVIZ.network = ARGVIZ || {};
 				    var toCnode =
 						    Object.clone(connections[i].connection.to[0].cnode);
 
+            // Copy Cohere 'role name' into new attribute called 'nodetype'
+            fromCnode.nodetype = fromCnode.role[0].role.name;
+            toCnode.nodetype = toCnode.role[0].role.name;
+
 				    if (!nodeExists(fromCnode)) {
 						    var position = d3Json.nodes.push(fromCnode) - 1;
 						    nodePositions[fromCnode.nodeid] = position;
@@ -494,7 +498,7 @@ ARGVIZ.network = ARGVIZ || {};
 
 		    // Give "Issue" nodes a separate styling
 		    node.select(function (d) {
-				    return (d.role[0].role.name === "Issue") ? this : null;	})
+				    return (d.nodetype === "Issue") ? this : null;	})
 				    .attr("class", "issue-node");
 
 		    // For "Argument" nodes, append a small circle that will be used
@@ -502,7 +506,7 @@ ARGVIZ.network = ARGVIZ || {};
 		    node.select(function(d) {
 				    // First select only the "Argument" nodes from the set of all
 				    // nodes
-				    return (d.role[0].role.name === "Argument") ? this : null;})
+				    return (d.nodetype === "Argument") ? this : null;})
 				    .append("svg:circle")
 				    .style("stroke", "steelblue")
 				    .style("cursor", "pointer")
@@ -568,7 +572,7 @@ ARGVIZ.network = ARGVIZ || {};
 						    .select(function (d) {
 								    return !(node.select(function (n) {
 										    return ((n.index === d.target.index) &&
-														    (n.role[0].role.name === "Statement")) ?
+														    (n.nodetype === "Statement")) ?
 												    this : null;} ).empty()) ? this : null;})
 				    // Hide the outgoing links
 						    .each(function (d) {
