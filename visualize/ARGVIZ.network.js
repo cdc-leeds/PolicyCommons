@@ -453,44 +453,27 @@ ARGVIZ.network = ARGVIZ || {};
 						    // adjust the rectangle to suit
 						    var bb = this.getBBox();
 						    this.parentNode.setAttribute("height", bb.height+5);
-						    this.parentNode.setAttribute("width", bb.width+10);	})
+						    this.parentNode.setAttribute("width", bb.width+10);
+            })
 
 				        // Select those text-nodes for which we can find the
 				        // source-document where the text is taken from and make
 				        // those text nodes clickable (such that when user clicks
 				        // he goes straight to the source-document)
-				        .each(function (d) {
-						        // Get the id of the source-document for each node
-
-						        // Make request to Cohere API method "geturlsbynode"
-						        var req =
-								        SERVICE_ROOT + "&method=geturlsbynode&nodeid=" + d.nodeid;
-
-						        var currentNode = this;
-
-						        d3.json(req, function(data) {
-								        // Cohere API returns a list of URLs, but this
-								        // list is likely only ever to contain one URL.
-								        var urls = data.urlset[0].urls;
-
-								        // If list isn't empty (i.e. there is a
-								        // source-document associated with current node) then
-								        // make current node clickable
-								        if (urls.length !== 0) {
-										        d3.select(currentNode)
-												        .each(function (d) {
-														        d.urlid = urls[0].url.urlid;})
-												            .on("mouseover", function (d) {
-														            this.style.textDecoration = "underline";
-														            this.style.fontStyle = "italic";})
-												        .on("mouseout", function (d) {
-														        this.style.textDecoration = "none";
-														        this.style.fontStyle = "normal";})
-												        .on("click", goToSourceDocument)
-												        .style("cursor", "pointer");
-								        }
-						        });
-				        });
+                .each(function (d) {
+                    return d.urls &&
+                        d3.select(this).each(function (d) {
+                            d.urlid = d.urls[0].url.urlid;
+                        })
+                            .on("mouseover", function (d) {
+														    this.style.textDecoration = "underline";
+														    this.style.fontStyle = "italic";})
+												.on("mouseout", function (d) {
+														this.style.textDecoration = "none";
+														this.style.fontStyle = "normal";})
+												.on("click", goToSourceDocument)
+												.style("cursor", "pointer");
+                });
 
 		    // Go to the source-document where the text for the clicked node
 		    // is taken from. Source-Documents are URLs in the Cohere data
