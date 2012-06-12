@@ -291,7 +291,7 @@ ARGVIZ.network = ARGVIZ || {};
         var container = '#' + config.container;
 	      
 		    // Set width & height for div that contains SVG visualisation
-        jQuery(container).append('<div id="network-div"></div>');
+        jQuery(container).html('<div id="network-div"></div>');
 
 		    jQuery("#network-div").css("overflow", "hidden")
 				    .height(jQuery(window).height())
