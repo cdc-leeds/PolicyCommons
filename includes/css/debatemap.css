@@ -21,6 +21,10 @@
 		text-decoration: underline;
 }
 
+.debatemap-cell div {
+		margin: 10px;
+}
+
 .clickable {
 		color: black;
 }

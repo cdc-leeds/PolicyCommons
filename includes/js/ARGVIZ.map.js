@@ -163,6 +163,7 @@ ARGVIZ.map = ARGVIZ.map || {};
                     return d.nodeid && (d.nodetype === "Issue") ?
                         color(d.parent.nodeid) : color(d.nodeid);
                 })
+                .append("div")
                 .html(function (d) {
                     // Make text in each treemap cell be a hyperlink. If cell
                     // is a Debate then make hyperlink to Debate URL, else
@@ -187,7 +188,7 @@ ARGVIZ.map = ARGVIZ.map || {};
                     // modelling the issues within a debate/sub-debate.)
                     if (d.num_issues > 0) {
                         d3.select(current_cell)
-                            .attr("class", "debatemap-cell clickable")
+                            .attr("class", "clickable")
                             .style("cursor", "pointer");
                     }
                 } else if (cell_type === "Issue") {
@@ -198,7 +199,7 @@ ARGVIZ.map = ARGVIZ.map || {};
                     // add a hyperlink to Issue cells.
                     if (d.num_responses > 0) {
                         d3.select(current_cell)
-                            .attr("class", "debatemap-cell clickable")
+                            .attr("class", "clickable")
                             .style("cursor", "pointer")
                         // Add onclick event to Issue cell so that it draws a
                         // network of arguments responding to the issue
