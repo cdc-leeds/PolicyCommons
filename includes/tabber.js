@@ -657,7 +657,7 @@ function loadusers(context,args){
  */
 function loadDebateMap(context,args) {
 
-    var scriptUrl = URL_ROOT + 'visualize/ARGVIZ.map.js';
+    var scriptUrl = URL_ROOT + 'includes/js/ARGVIZ.map.js';
     var map_container = 'tab-content-debatemap';
 
     var onClickIssue = function (d) {
@@ -666,7 +666,7 @@ function loadDebateMap(context,args) {
             "&nodeid=" + d.nodeid;
 
         var script = URL_ROOT +
-            "visualize/ARGVIZ.network.js";
+            "includes/js/ARGVIZ.network.js";
 
         jQuery('#' + map_container)
             .html('<div class="loading">' +
@@ -1546,7 +1546,7 @@ function loadConnectionNet() {
     // isn't present then (we are probably dealing with IE so) fall back to
     // original Cohere ConnectionNet Java applet.
     var scriptUrl = (document.createElementNS) ? URL_ROOT +
-        "visualize/ARGVIZ.network.js" : URL_ROOT + "visualize/conn-net.js";
+        "includes/js/ARGVIZ.network.js" : URL_ROOT + "visualize/conn-net.js";
 
     jQuery.getScript(scriptUrl, load);
 
