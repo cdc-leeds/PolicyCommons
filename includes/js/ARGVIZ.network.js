@@ -457,7 +457,7 @@ ARGVIZ.network = ARGVIZ || {};
             });
 
         // Execute any function that was passed in for nodes
-        node.each(config.node_fn);
+        config.node_fn && node.each(config.node_fn);
 
 		    // Give "Issue" nodes a separate styling
 		    node.select(function (d) {
