@@ -105,7 +105,10 @@ class format_json extends format_base {
                 $str .= '{';
                 for($j=0;$j< sizeof($keys); $j++){
                     
-                    $attr2 = get_object_vars($attr[$keys[$j]]);
+                  $attr2 = (is_object($attr[$keys[$j]])) ?
+                    get_object_vars($attr[$keys[$j]]) :
+                    NULL;
+
                     if(is_array($attr2) || is_array($attr[$keys[$j]])){ 
                         $str .= $this->phpToJSONInner($keys[$j],$attr[$keys[$j]]);
                     } else {
