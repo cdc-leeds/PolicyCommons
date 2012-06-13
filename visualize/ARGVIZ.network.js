@@ -454,36 +454,10 @@ ARGVIZ.network = ARGVIZ || {};
 						    var bb = this.getBBox();
 						    this.parentNode.setAttribute("height", bb.height+5);
 						    this.parentNode.setAttribute("width", bb.width+10);
-            })
+            });
 
-				        // Select those text-nodes for which we can find the
-				        // source-document where the text is taken from and make
-				        // those text nodes clickable (such that when user clicks
-				        // he goes straight to the source-document)
-                .each(function (d) {
-                    return d.urls &&
-                        d3.select(this).each(function (d) {
-                            d.urlid = d.urls[0].url.urlid;
-                        })
-                            .on("mouseover", function (d) {
-														    this.style.textDecoration = "underline";
-														    this.style.fontStyle = "italic";})
-												.on("mouseout", function (d) {
-														this.style.textDecoration = "none";
-														this.style.fontStyle = "normal";})
-												.on("click", goToSourceDocument)
-												.style("cursor", "pointer");
-                });
-
-		    // Go to the source-document where the text for the clicked node
-		    // is taken from. Source-Documents are URLs in the Cohere data
-		    // model
-		    function goToSourceDocument(d) {
-				    var documentURL =
-						    URL_ROOT + "document.php?urlid=" + d.urlid + "#" + d.nodeid;
-
-				    jQuery(location).attr('href', documentURL);
-		    }
+        // Execute any function that was passed in for nodes
+        node.each(config.node_fn);
 
 		    // Give "Issue" nodes a separate styling
 		    node.select(function (d) {

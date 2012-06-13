@@ -680,9 +680,39 @@ function loadDebateMap(context,args) {
                 var data =
                     ARGVIZ.network.convertCohereData(json);
 
+                // Select those nodes for which we can find the
+                // source-document where the text is taken from and make
+                // those nodes clickable (such that when user clicks
+                // he goes straight to the source-document). Source-Documents
+                // are URLs in the Cohere data model
+                var nodeSource = function (n) {
+                    return n.urls &&
+                        d3.select(this).each(function (n) {
+                            n.urlid = n.urls[0].url.urlid;
+                        })
+                            .on("mouseover", function (n) {
+                                this.style.textDecoration = "underline";
+                                this.style.fontStyle = "italic";
+                            })
+                        .on("mouseout", function (n) {
+                            this.style.textDecoration = "none";
+                            this.style.fontStyle = "normal";
+                        })
+                        .on("click", function (n) {
+                            var document_url = URL_ROOT +
+                                "document.php?urlid=" +
+                                n.urlid + "#" + n.nodeid;
+
+                            jQuery(location).attr('href', document_url);
+                        })
+                        .style("cursor", "pointer");
+                    }
+
                 var params = {
                     data: data,
-                    container: map_container
+                    container: map_container,
+                    // Pass any function we want to execute on each node
+                    node_fn: nodeSource
                 }
 
                 ARGVIZ.network.draw(params);
