@@ -43,6 +43,7 @@ ARGVIZ.map = ARGVIZ.map || {};
 
         // The root of the debate is the 'from' node in the first connection
         var root_node = connections[0].connection.from[0].cnode;
+        root_node.nodetype = root_node.role[0].role.name;
 
         // Temporary variables for building treemap data
         var nodes_hash = {}, from_cnode, to_cnode;
