@@ -165,10 +165,6 @@ ARGVIZ.map = ARGVIZ.map || {};
                 })
                 .append("div")
                 .html(function (d) {
-                    // Make text in each treemap cell be a hyperlink. If cell
-                    // is a Debate then make hyperlink to Debate URL, else
-                    // then assume cell is an Issue and make hyperlink to
-                    // Issue URL.
                     return d.children ? d.name : cell_html(d, this);
                 });
 
@@ -196,14 +192,13 @@ ARGVIZ.map = ARGVIZ.map || {};
                         "(Responses: " + d.num_responses + ")";
 
                     // Only if the number of responses is more than 0 do we
-                    // add a hyperlink to Issue cells.
+                    // make Issue cells clickable
                     if (d.num_responses > 0) {
                         d3.select(current_cell)
                             .attr("class", "clickable")
                             .style("cursor", "pointer")
-                        // Add onclick event to Issue cell so that it draws a
-                        // network of arguments responding to the issue
-                        // onclick handler taken from config parameter
+                        // Add any onclick handlers for Issue cells passed in
+                        // with the config parameter
                             .on("click", config.onclick_handlers[cell_type]);
                     }
                 }
