@@ -25,6 +25,11 @@
 		margin: 10px;
 }
 
+.title-cell {
+		font: bold 20px sans-serif;
+		color: black;
+}
+
 .clickable {
 		color: black;
 }
