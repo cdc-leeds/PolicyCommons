@@ -114,40 +114,46 @@ ARGVIZ.map = ARGVIZ.map || {};
         var h = jQuery(window).height();
         var color = d3.scale.category10();
 
-        var vis = d3.select("#debatemap-div")
-            .append("div")
-            .attr("class", "debatemap")
-            .style("width", w + "px")
-            .style("height", h + "px");
+        var vis = d3.select("#debatemap-div");
+        vis = render(vis, root);
 
-        vis.style("opacity", 1e-6)
-            .transition()
-            .duration(1000)
-            .style("opacity", 1);
+        function render(vis, data) {
+            var treemap = d3.layout.treemap()
+                .size([w, h])
+                .padding([30, 0, 0, 0])
+                .sticky(true)
+                .value(function (d) {
+                    // Make size of region in debate map be determined based on
+                    // Log of the number of responses. Use log so that variation
+                    // in size isn't too much. Need to add 2 to num_responses so
+                    // that if number of responses is 0 we still get the cell to
+                    // display (adding 1 would give log(1) which is 0). There
+                    // probably is a more elegant way of doing this.
+                    return Math.log(parseInt(d.num_responses, 10) + 2);
+                })
+                .sort(function (a, b) {
+                    // Sort so largest cell in treemap is top-left rather than
+                    // bottom right
+                    return a.value - b.value;
+                });
 
-        var treemap = d3.layout.treemap()
-            .size([w, h])
-            .padding([30, 0, 0, 0])
-            .sticky(true)
-            .value(function (d) {
-                // Make size of region in debate map be determined based on
-                // Log of the number of responses. Use log so that variation
-                // in size isn't too much. Need to add 2 to num_responses so
-                // that if number of responses is 0 we still get the cell to
-                // display (adding 1 would give log(1) which is 0). There
-                // probably is a more elegant way of doing this.
-                return Math.log(parseInt(d.num_responses, 10) + 2);
-            })
-            .sort(function (a, b) {
-                // Sort so largest cell in treemap is top-left rather than
-                // bottom right
-                return a.value - b.value;
-            });
+            vis.html('')
+                .attr("class", "debatemap")
+                .style("width", w + "px")
+                .style("height", h + "px");
 
-        vis.data([data]).selectAll("div")
-            .data(treemap.nodes)
-            .enter().append("div")
-            .call(cell);
+            vis.style("opacity", 1e-6)
+                .transition()
+                .duration(1000)
+                .style("opacity", 1);
+
+            vis.data([data]).selectAll("div")
+                .data(treemap.nodes)
+                .enter().append("div")
+                .call(cell);
+
+            return vis;
+        }
 
         function cell() {
             this
