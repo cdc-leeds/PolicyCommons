@@ -221,7 +221,7 @@ ARGVIZ.map = ARGVIZ.map || {};
         // Prepare links for navigating back up the tree
         function ancestry_nav(d, up) {
             return (d.parent) ?
-                ancestry_nav(d.parent, up+1) + nav_link(d.parent, up) + ' > ' :
+                ancestry_nav(d.parent, up+1) + nav_link(d.parent, up) + ' / ' :
                 '';
         }
 
