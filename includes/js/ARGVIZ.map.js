@@ -157,6 +157,7 @@ ARGVIZ.map = ARGVIZ.map || {};
 
         function cell() {
             this
+                .attr('id', function (d) { return d.nodeid; })
                 .attr("class", "debatemap-cell")
                 .style("left", function (d) { return d.x + "px"; })
                 .style("top", function (d) { return d.y + "px"; })
