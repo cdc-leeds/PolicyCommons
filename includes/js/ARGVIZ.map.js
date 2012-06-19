@@ -118,6 +118,8 @@ ARGVIZ.map = ARGVIZ.map || {};
         vis = render(vis, root);
 
         function render(vis, data) {
+            // XXX Possible bug: Recalling this function at different points of
+            // tree might mean d.depth is no longer correct for each node.
             var treemap = d3.layout.treemap()
                 .size([w, h])
                 .padding([40, 0, 0, 0])
@@ -208,6 +210,9 @@ ARGVIZ.map = ARGVIZ.map || {};
                         .attr("class", "clickable")
                         .style("cursor", "pointer")
                         .on('click', function (d) {
+                            // Re-render treemap with current node as root
+                            // XXX Possible bug: d.depth might no longer be
+                            // correct
                             current = d;
                             vis = render(vis, current);
                         });
