@@ -102,7 +102,8 @@ ARGVIZ.map = ARGVIZ.map || {};
     }
 
     function draw(config) {
-        var data = config.data;
+        var data = jQuery.extend(true, {}, config.data);
+        var current = root = data;
         var container = '#' + config.container;
 
          // Insert a new <div> for the debate map
