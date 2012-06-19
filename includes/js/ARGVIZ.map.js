@@ -176,21 +176,63 @@ ARGVIZ.map = ARGVIZ.map || {};
                 })
                 .style('display', function (d) {
                     return (d === current) || child_of(d, current) ?
-                        'block' : 'none'; })
+                        'block' : 'none';
+                })
+            // Insert empty div to help with CSS
                 .append("div")
-                .html(function (d) { return cell_html(d, this); });
+                .html(function (d) {
+                    return (d === current) ?
+                        title_html(d, this) :
+                        cell_html(d, this);
+                })
+            // Add onclick handlers to nav_links so user can click link to
+            // render map at desired point in hierarchy.
+                .selectAll('span.nav_link')
+                .on('click', function() {
+                    var i;
+                    up = parseInt(this.getAttribute('up'));
+
+                    for (i = 0; i < up; i += 1) {
+                        current = current.parent;
+                    }
+                    vis = render(vis, current);
+                });
         }
 
-        function child_of(d, current) {
+        // Helper function to check whether node is child of another
+        function child_of(child, parent) {
             var i;
-            for (i = 0; i < current.children.length; i += 1) {
-                if (d.name === current.children[i].name) {
+            for (i = 0; i < parent.children.length; i += 1) {
+                if (child.name === parent.children[i].name) {
                     return true;
                 }
             }
             return false;
         }
 
+        // Prepare HTML for title cell
+        function title_html(d, current_cell) {
+            d3.select(current_cell)
+                .attr('class', 'title-cell');
+
+            return ancestry_nav(d, 1) + d.name;
+        }
+
+        // Prepare links for navigating back up the tree
+        function ancestry_nav(d, up) {
+            return (d.parent) ?
+                ancestry_nav(d.parent, up+1) + nav_link(d.parent, up) + ' > ' :
+                '';
+        }
+
+        // Prepare single nav link. Include attribute 'up 'so we know how far
+        // back up to navigate in the treemap when link is clicked
+        function nav_link(d, up) {
+            return '<span class="nav_link" up=' + up +'>' +
+                d.name + '</span>';
+        }
+
+        // Prepare HTML for cells with content
         function cell_html(d, current_cell) {
             var html = d.name;
             var cell_type = d.nodetype;
