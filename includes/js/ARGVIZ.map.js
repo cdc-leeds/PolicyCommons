@@ -229,7 +229,7 @@ ARGVIZ.map = ARGVIZ.map || {};
         // back up to navigate in the treemap when link is clicked
         function nav_link(d, up) {
             return '<span class="nav_link" up=' + up +'>' +
-                d.name + '</span>';
+                ((up < 2) ? d.name : '..') + '</span>';
         }
 
         // Prepare HTML for cells with content
