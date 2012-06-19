@@ -171,47 +171,62 @@ ARGVIZ.map = ARGVIZ.map || {};
                     return d.nodeid && (d.nodetype === "Issue") ?
                         color(d.parent.nodeid) : color(d.nodeid);
                 })
+                .style('display', function (d) {
+                    return (d === current) || child_of(d, current) ?
+                        'block' : 'none'; })
                 .append("div")
-                .html(function (d) {
-                    return d.children ? d.name : cell_html(d, this);
-                });
+                .html(function (d) { return cell_html(d, this); });
+        }
 
-            function cell_html(d, current_cell) {
-                var html = d.name;
-                var cell_type = d.nodetype;
-
-                if (cell_type === "Debate") {
-                    html = html + "<br /><br />" +
-                        "(Issues: " + d.num_issues + ")" + "<br />" +
-                        "(Responses: " + d.num_responses + ")";
-
-                    // Only if the number of issues is more than 0 do we make
-                    // Sub-Debate cells clickable. (In principle there
-                    // should always be issues in debates/sub-debates, but in
-                    // practice the modeller might not always get around to
-                    // modelling the issues within a debate/sub-debate.)
-                    if (d.num_issues > 0) {
-                        d3.select(current_cell)
-                            .attr("class", "clickable")
-                            .style("cursor", "pointer");
-                    }
-                } else if (cell_type === "Issue") {
-                    html = html + "<br /><br />" +
-                        "(Responses: " + d.num_responses + ")";
-
-                    // Only if the number of responses is more than 0 do we
-                    // make Issue cells clickable
-                    if (d.num_responses > 0) {
-                        d3.select(current_cell)
-                            .attr("class", "clickable")
-                            .style("cursor", "pointer")
-                        // Add any onclick handlers for Issue cells passed in
-                        // with the config parameter
-                            .on("click", config.onclick_handlers[cell_type]);
-                    }
+        function child_of(d, current) {
+            var i;
+            for (i = 0; i < current.children.length; i += 1) {
+                if (d.name === current.children[i].name) {
+                    return true;
                 }
-                return html;
             }
+            return false;
+        }
+
+        function cell_html(d, current_cell) {
+            var html = d.name;
+            var cell_type = d.nodetype;
+
+            if (cell_type === "Debate") {
+                html = html + "<br /><br />" +
+                    "(Issues: " + d.num_issues + ")" + "<br />" +
+                    "(Responses: " + d.num_responses + ")";
+
+                // Only if the number of issues is more than 0 do we make
+                // Sub-Debate cells clickable. (In principle there
+                // should always be issues in debates/sub-debates, but in
+                // practice the modeller might not always get around to
+                // modelling the issues within a debate/sub-debate.)
+                if (d.num_issues > 0) {
+                    d3.select(current_cell)
+                        .attr("class", "clickable")
+                        .style("cursor", "pointer")
+                        .on('click', function (d) {
+                            current = d;
+                            vis = render(vis, current);
+                        });
+                }
+            } else if (cell_type === "Issue") {
+                html = html + "<br /><br />" +
+                    "(Responses: " + d.num_responses + ")";
+
+                // Only if the number of responses is more than 0 do we
+                // make Issue cells clickable
+                if (d.num_responses > 0) {
+                    d3.select(current_cell)
+                        .attr("class", "clickable")
+                        .style("cursor", "pointer")
+                    // Add any onclick handlers for Issue cells passed in
+                    // with the config parameter
+                        .on("click", config.onclick_handlers[cell_type]);
+                }
+            }
+            return html;
         }
     }
 
