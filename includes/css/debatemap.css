@@ -30,6 +30,9 @@
 		color: black;
 }
 
+.nav_link {
+		color: blue;
+}
 .nav_link:hover {
 		text-decoration: underline;
 		cursor: pointer;
