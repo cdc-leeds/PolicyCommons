@@ -462,7 +462,10 @@ ARGVIZ.network = ARGVIZ || {};
 		    // When node is clicked to be dragged, stop the mousedown event
 		    // from propagating to SpryMap event listener attached to parent,
 		    // which is used to allow map as a whole to be draggable.
-				    .on("mousedown", function() {d3.event.stopPropagation();});
+				    .on("mousedown", function() {d3.event.stopPropagation();})
+        // When node is dragged, 'mousemove' triggers force.resume(). Disable
+        // this behavior by calling force.stop() instead.
+            .on('mousemove', function() {force.stop();});
 
 		    node.append("svg:rect")
 				    .attr("rx", 3)
@@ -625,8 +628,6 @@ ARGVIZ.network = ARGVIZ || {};
 						    return "translate(" + d.x + "," + d.y + ")";
 				    });
 
-            vis.style('opacity', 1e-6);
-            jQuery('#loading').show();
 
 				    // Don't wait until force-directed algorithm completely
 				    // finishes (i.e. alpha == 0). Freeze the nodes when network
@@ -635,6 +636,7 @@ ARGVIZ.network = ARGVIZ || {};
 				    // when nodes are dragged. So this achieves the result of
 				    // removing the "bouncy" effect of the network visualisation
 				    if (e.alpha < 0.009) {
+                force.stop();
 
                 jQuery('#loading').hide();
 
