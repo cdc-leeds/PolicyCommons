@@ -271,7 +271,22 @@ ARGVIZ.map = ARGVIZ.map || {};
                         .style("cursor", "pointer")
                     // Add any onclick handlers for Issue cells passed in
                     // with the config parameter
-                        .on("click", config.onclick_handlers[cell_type]);
+                    .on("click", function (d) {
+                        var container;
+                        current = d;
+                        vis = render(vis, current);
+
+                        config.onclick_handlers &&
+                            config.onclick_handlers[cell_type] &&
+                                (function () {
+                                    var container = vis.select('div')
+                                        .append('div')
+                                        .style('border-top',
+                                               'solid 1px white')[0][0];
+                                    config.onclick_handlers[cell_type]
+                                        .apply(container, [d]);
+                                })();
+                    });
                 }
             }
             return html;
