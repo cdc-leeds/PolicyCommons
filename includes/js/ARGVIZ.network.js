@@ -319,6 +319,8 @@ ARGVIZ.network = ARGVIZ || {};
 				    lockEdges: false,
 				    scrolling: false});
 
+        jQuery('#arg-viz').before('<div id ="loading">Loading...</div>');
+
 		    vis.style("opacity", 1e-6)
 				    .transition()
 				    .duration(1000)
@@ -604,6 +606,8 @@ ARGVIZ.network = ARGVIZ || {};
         // Finally define the 'tick' function for force layout
 		    force.on("tick", tick);
 
+
+
 		    function tick(e) {
 				    link.select("path")
 						    .attr("d", function(d) {
@@ -621,6 +625,9 @@ ARGVIZ.network = ARGVIZ || {};
 						    return "translate(" + d.x + "," + d.y + ")";
 				    });
 
+            vis.style('opacity', 1e-6);
+            jQuery('#loading').show();
+
 				    // Don't wait until force-directed algorithm completely
 				    // finishes (i.e. alpha == 0). Freeze the nodes when network
 				    // gets fairly stable (< 0.009 seems to work well). Fixing the
@@ -628,6 +635,8 @@ ARGVIZ.network = ARGVIZ || {};
 				    // when nodes are dragged. So this achieves the result of
 				    // removing the "bouncy" effect of the network visualisation
 				    if (e.alpha < 0.009) {
+
+                jQuery('#loading').hide();
 
                 // Fade in the diagram
 		            vis.style("opacity", 1e-6)
