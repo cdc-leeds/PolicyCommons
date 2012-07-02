@@ -487,6 +487,7 @@ ARGVIZ.network = ARGVIZ || {};
 		    // visualisation
 		    function expand(d) {
 				    d.expand = d.expand ? false : true;
+            d3.event.stopPropagation();
 
 				    update(d);
 		    }
