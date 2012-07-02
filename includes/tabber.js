@@ -704,7 +704,11 @@ function loadDebateMap(context,args) {
                                 "document.php?urlid=" +
                                 n.urlid + "#" + n.nodeid;
 
-                            jQuery(location).attr('href', document_url);
+                            var window_attr = 'width=800,height=600';
+
+                            window.open(
+                                document_url, 'SourceDocument', window_attr);
+
                         })
                         .style("cursor", "pointer");
                     }
