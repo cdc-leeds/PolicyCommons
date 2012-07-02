@@ -288,8 +288,10 @@ ARGVIZ.network = ARGVIZ || {};
 
     function draw(config) {
         var data = config.data;
-        var container = '#' + config.container;
-	      
+        var container = (typeof config.container === 'string') ?
+            '#' + config.container :
+            config.container;
+
 		    // Set width & height for div that contains SVG visualisation
         jQuery(container).html('<div id="network-div"></div>');
 
