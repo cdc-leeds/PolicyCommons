@@ -350,6 +350,41 @@ ARGVIZ.network = ARGVIZ || {};
 
 		    var defs = vis.append("svg:defs");
 
+        // Define arrowheads for links
+		    defs.append("svg:marker")
+				    .attr("id", "arrowhead")
+				    .attr("viewBox","0 0 20 20")
+				    .attr("refX","30")
+				    .attr("refY","10")
+				    .attr("markerUnits","strokeWidth")
+				    .attr("markerWidth","11")
+				    .attr("markerHeight","7")
+				    .attr("orient","auto")
+				    .append("svg:path")
+				    .attr("d","M 0 0 L 20 10 L 0 20 z");
+
+		    // Define dropshadow for nodes
+	      var filter = defs.append("svg:filter")
+				    .attr("id", "drop-shadow")
+				    .attr("filterUnits", "userSpaceOnUse");
+
+
+		    filter.append("svg:feGaussianBlur")
+				    .attr("in", "SourceAlpha")
+				    .attr("stdDeviation", 1)
+				    .attr("result", "blur-output");
+
+		    filter.append("svg:feOffset")
+				    .attr("in", "blur-output")
+				    .attr("result", "the-shadow")
+				    .attr("dx", 1.5)
+				    .attr("dy", 1.5);
+
+		    filter.append("svg:feBlend")
+				    .attr("in", "SourceGraphic")
+				    .attr("in2", "the-shadow")
+				    .attr("mode", "normal");
+
 		    // Run the force directed layout algorithm
 		    // XXX
 		    // Note, with such a large setting for width and height, the
@@ -392,18 +427,6 @@ ARGVIZ.network = ARGVIZ || {};
 									    return moveto(d) + lineto(d);
 							    })
 				    .attr("marker-end", "url(#arrowhead)");
-
-		    defs.append("svg:marker")
-				    .attr("id", "arrowhead")
-				    .attr("viewBox","0 0 20 20")
-				    .attr("refX","30")
-				    .attr("refY","10")
-				    .attr("markerUnits","strokeWidth")
-				    .attr("markerWidth","11")
-				    .attr("markerHeight","7")
-				    .attr("orient","auto")
-				    .append("svg:path")
-				    .attr("d","M 0 0 L 20 10 L 0 20 z");
 
 		    link.append("svg:text")
 				    .attr("font-size", 10)
@@ -578,28 +601,7 @@ ARGVIZ.network = ARGVIZ || {};
 							    function() {
 									    return this.parentNode.getAttribute("width")});
 
-		    // Add a dropshadow to the textbox
-	      var filter = defs.append("svg:filter")
-				    .attr("id", "drop-shadow")
-				    .attr("filterUnits", "userSpaceOnUse");
-
-
-		    filter.append("svg:feGaussianBlur")
-				    .attr("in", "SourceAlpha")
-				    .attr("stdDeviation", 1)
-				    .attr("result", "blur-output");
-
-		    filter.append("svg:feOffset")
-				    .attr("in", "blur-output")
-				    .attr("result", "the-shadow")
-				    .attr("dx", 1.5)
-				    .attr("dy", 1.5);
-
-		    filter.append("svg:feBlend")
-				    .attr("in", "SourceGraphic")
-				    .attr("in2", "the-shadow")
-				    .attr("mode", "normal");
-
+        // Finally define the 'tick' function for force layout
 		    force.on("tick", tick);
 
 		    function tick(e) {
