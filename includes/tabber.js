@@ -661,6 +661,7 @@ function loadDebateMap(context,args) {
     var map_container = 'tab-content-debatemap';
 
     var onClickIssue = function (d) {
+        var container = this;
         var req = SERVICE_ROOT +
             "&method=getconnectionsbyissuenode" +
             "&nodeid=" + d.nodeid;
@@ -668,7 +669,7 @@ function loadDebateMap(context,args) {
         var script = URL_ROOT +
             "includes/js/ARGVIZ.network.js";
 
-        jQuery('#' + map_container)
+        jQuery(container)
             .html('<div class="loading">' +
                   '<img src='+URL_ROOT+'images/ajax-loader.gif />' +
                   '</div>');
@@ -710,7 +711,7 @@ function loadDebateMap(context,args) {
 
                 var params = {
                     data: data,
-                    container: map_container,
+                    container: container,
                     // Pass any function we want to execute on each node
                     node_fn: nodeSource
                 }
