@@ -165,7 +165,7 @@ var AVT = AVT || {};
        */
     var stop = function (toolbox_state) {
         var div_id = toolbox_state.avt.div;
-        jQuery('#'+div_id).hide();
+        jQuery('#'+div_id).html('');
         return toolbox_state;
     }
 
