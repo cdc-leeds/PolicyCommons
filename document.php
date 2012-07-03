@@ -23,11 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 include_once("config.php");
-array_push($HEADER,
-					 '<script src="'
-					 . $CFG->homeAddress . 'includes/tabber.js"></script>');
 include_once("includes/header.php");
-include_once("phplib/tabberlib.php");
 
 global $USER;
 $urlid = required_param("urlid",PARAM_TEXT);
@@ -61,25 +57,6 @@ if ($url instanceof Error) {
     include_once("includes/footer.php");
     die;
 }
-?>
-
-<div id="context">
-    <div id="contextinfo">
-        <h1><?php print $url->title; ?></h1>
-        <a href="<?php print $url->url;?>" target="_blank">
-            [External link]
-        </a>
-        <?php
-
-        if ($url->description != "") {
-            echo "<p>".$url->description."</p>";
-        }
-        ?>
-    </div>
-</div>
-<div style="clear:both;"></div>
-
-<?php
 
 $args = array();
 $args["url"] = $url->url;
@@ -106,8 +83,53 @@ $args["agentlastrun"] = $agentlastrun;
 
 $args["title"] = $url->url;
 
-$context = 'document';
-display_tabber($context, $args);
-
-include_once("includes/footer.php");
 ?>
+
+<div id="context">
+  <div id="contextinfo">
+    <h1><?php print $url->title; ?></h1>
+    <a href="<?php print $url->url;?>" target="_blank">
+      [External link]
+    </a>
+
+    <?php if ($url->description != "") { ?>
+    <div id="desc_text">
+       <?php echo $url->description; ?>
+    </div>
+    <?php } ?>
+  </div>
+</div>
+
+<div style="clear:both;"></div>
+
+<div id="tabber">
+  <ul id="tabs" class="tab">
+    <li class="tab">
+      <a class="tab" id="tab-docview" href="#docview">
+        <span class="tab">Document</span>
+      </a>
+    </li>
+  </ul>
+  <div id="tabs-content">
+    <div id='tab-content-docview' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading document...)
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+
+  var CONTEXT = 'document';
+  var NODE_ARGS = CONN_ARGS = NEIGHBOURHOOD_ARGS = NET_ARGS =
+      URL_ARGS = USER_ARGS = <?php echo json_encode($args); ?>;
+
+</script>
+
+<script type='text/javascript'
+        src='<?php echo $CFG->homeAddress?>includes/tabber.js' />
+
+<?php include_once("includes/footer.php"); ?>
