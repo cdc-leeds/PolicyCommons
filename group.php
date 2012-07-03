@@ -23,9 +23,8 @@
  *                                                                              *
  ********************************************************************************/
     include_once("config.php");
-    array_push($HEADER,'<script src="'.$CFG->homeAddress.'includes/tabber.js" type="text/javascript"></script>');
     include_once("includes/header.php");
-    include_once("phplib/tabberlib.php");
+
     global $USER;
     $groupid = required_param("groupid",PARAM_TEXT);
 
@@ -61,28 +60,6 @@
         include_once("includes/footer.php");
         die;
     }
-?>
-    <div id="context">
-        <div id="contextimage">
-            <img src="<?php print $group->photo;?>"/></div>
-        <div id="contextinfo">
-            <h1>Group: <?php print $group->name; ?></h1>
-            <?php
-				if($USER->getIsAdmin() == "Y"){
-					echo "<a title='stats' href='".$CFG->homeAddress."admin/groupContextStats.php?groupid=".$groupid."'> (stats) </a>";
-					echo "&nbsp;&nbsp;<a title='stats-new' href='".$CFG->homeAddress."admin/groupContextStats2.php?groupid=".$groupid."'> (tag stats) </a>";
-				}
-                if($group->description != ""){
-                    echo "<p>".$group->description."</p>";
-                }
-                if($group->website != ""){
-                    echo "<p><a href='".$group->website."'>".$group->website."</a></p>";
-                }
-            ?>
-        </div>
-    </div>
-    <div style="clear:both;"></div>
-<?php
 
     $args = array();
     $args["groupid"] = $groupid;
@@ -109,8 +86,158 @@
     $args["agentlastrun"] = $agentlastrun;
 
     $args["title"] = $group->name;
-
-    display_tabber($CFG->GROUP_CONTEXT,$args);
-
-    include_once("includes/footer.php");
 ?>
+
+<div id="context">
+  <div id="contextinfo">
+    <h1>Group: <?php print $group->name; ?></h1>
+    <?php if ($USER->getIsAdmin() == "Y") { ?>
+    <a title="stats"
+       href="<?php echo $CFG->homeAddress.'admin/groupContextStats.php?groupid='.$groupid; ?>">
+      (stats)
+    </a>
+    <a title="stats-new"
+       href="<?php echo $CFG->homeAddress.'admin/groupContextStats2.php?groupid='.$groupid; ?>">
+      (tag stats)
+    </a>
+		<?php	} ?>
+    <?php if ($group->description != "") { ?>
+    <div id="desc_text">
+      <?php echo $group->description; ?>
+    </div>
+    <?php } ?>
+    <?php if ($group->website != "") { ?>
+    <a href="<?php echo $group->website; ?>">
+      <?php echo $group->website; ?>
+    </a>
+    <?php } ?>
+  </div>
+</div>
+
+<div style="clear:both;"></div>
+
+<div id="tabber">
+  <ul id="tabs" class="tab">
+    <li class="tab"><a class="tab" id="tab-node" href="#node-list"><span class="tab">Ideas (<span id="node-list-count">0</span>)</span></a></li>
+    <li class="tab"><a class="tab" id="tab-web" href="#web-list"><span class="tab">Websites (<span id="web-list-count">0</span>)</span></a></li>
+    <li class="tab"><a class="tab" id="tab-conn" href="#conn-list"><span class="tab">Connections (<span id="conn-list-count">0</span>)</span></a></li>
+    <li class="tab"><a class="tab" id="tab-user" href="#user-list"><span class="tab">People (<span id="user-list-count">0</span>)</span></a></li>
+    <li class="tab"><a class="tab" id="tab-tags" href="#tags-list"><span class="tab">Tags (<span id="tags-list-count">0</span>)</span></a></li>
+  </ul>
+  <div id="tabs-content">
+    <div id='tab-content-node' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading group ideas...)
+      </div>
+    </div>
+    <div id='tab-content-web' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading group websites...)
+      </div>
+    </div>
+    <div id='tab-content-conn' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading group connections...)
+      </div>
+    </div>
+    <div id='tab-content-user' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading people in group...)
+      </div>
+    </div>
+    <div id='tab-content-tags' class='tabcontent'>
+			<div id="tagcloud" style="clear:both; float:left;width:100%">
+				<ul>
+					<?php
+					  $tags = getGroupTagsForCloud($args["groupid"], -1);
+						if ($tags != null) {
+							$count = count($tags);
+          ?>
+          <script>
+            $('tags-list-count').innerHTML = <?php echo $count; ?>;
+          </script>
+					<?php
+							// get the count range first
+							$minCount = -1;
+							$maxCount = -1;
+							foreach($tags as $tag) {
+								$count = $tag['UseCount'];
+								if ($count > $maxCount) {
+									$maxCount = $count;
+								}
+								if ($minCount == -1) {
+									$minCount = $count;
+								} else if ($count < $minCount) {
+									$minCount = $count;
+								}
+							}
+
+							if ($maxCount < 10) {
+								$range = 1;
+							} else {
+								$range = round(($maxCount - $minCount) / 10);
+							}
+
+							$i = 0;
+							foreach($tags as $tag) {
+
+								$cloudlistcolour = "";
+								if ($i % 2) {
+									$cloudlistcolour = "#40b5b2";
+								} else {
+									$cloudlistcolour = "#e80074";
+								}
+								$i++;
+
+								$count = $tag['UseCount'];
+
+								if ($count >= $minCount && $count < $minCount+$range) {
+									echo '<li class="tag1" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*1) && $count < $minCount+($range*2)) {
+									echo '<li class="tag2" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*2) && $count < $minCount+($range*3)) {
+									echo '<li class="tag3" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*3) && $count < $minCount+($range*4)) {
+									echo '<li class="tag4" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*4) && $count < $minCount+($range*5)) {
+									echo '<li class="tag5" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*5) && $count < $minCount+($range*6)) {
+									echo '<li class="tag6" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*6) && $count < $minCount+($range*7)) {
+									echo '<li class="tag7" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*7) && $count < $minCount+($range*8)) {
+									echo '<li class="tag8" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*8) && $count < $minCount+($range*9)) {
+									echo '<li class="tag9" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								} else if ($count >= $minCount+($range*9))  {
+									echo '<li class="tag10" title="'.$count.'"><a href="'.$CFG->homeAddress.'tagsearch.php?q='.$tag['Name'].'&scope=all&tagsonly=true&groupid='.$args["groupid"].'" style="color: '.$cloudlistcolour.';">'.$tag['Name'].'</a></li>';
+								}
+							}
+						}
+					?>
+			  </ul>
+		  </div>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+
+  var CONTEXT = 'group';
+  var NODE_ARGS = CONN_ARGS = NEIGHBOURHOOD_ARGS = NET_ARGS =
+      URL_ARGS = USER_ARGS = <?php echo json_encode($args); ?>;
+
+</script>
+
+<script type='text/javascript'
+        src='<?php echo $CFG->homeAddress?>includes/tabber.js' />
+
+<?php include_once("includes/footer.php"); ?>
