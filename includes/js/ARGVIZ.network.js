@@ -53,11 +53,11 @@ ARGVIZ.network = ARGVIZ || {};
 
 		    for (i = 0; i < len; i++) {
 				    // First deal with the nodes
-				    var fromCnode =
-						    Object.clone(connections[i].connection.from[0].cnode);
+				    var fromCnode = jQuery.extend(
+						    true, {}, connections[i].connection.from[0].cnode);
 
-				    var toCnode =
-						    Object.clone(connections[i].connection.to[0].cnode);
+				    var toCnode = jQuery.extend(
+						    true, {}, connections[i].connection.to[0].cnode);
 
             // Copy Cohere 'role name' into new attribute called 'nodetype'
             fromCnode.nodetype = fromCnode.role[0].role.name;
