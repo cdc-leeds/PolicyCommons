@@ -170,31 +170,21 @@
 							$maxCount = -1;
 							foreach($tags as $tag) {
 								$count = $tag['UseCount'];
-								if ($count > $maxCount) {
-									$maxCount = $count;
-								}
-								if ($minCount == -1) {
-									$minCount = $count;
-								} else if ($count < $minCount) {
-									$minCount = $count;
-								}
+
+                $maxCount = ($count > $maxCount) ? $count : $maxCount;
+                $minCount = ($minCount === -1 || $count < $minCount) ?
+                  $count :
+                  $minCount;
 							}
 
-							if ($maxCount < 10) {
-								$range = 1;
-							} else {
-								$range = round(($maxCount - $minCount) / 10);
-							}
+              $range = ($maxCount < 10) ?
+                1 :
+                round(($maxCount - $minCount) / 10);
 
 							$i = 0;
 							foreach($tags as $tag) {
 
-								$cloudlistcolour = "";
-								if ($i % 2) {
-									$cloudlistcolour = "#40b5b2";
-								} else {
-									$cloudlistcolour = "#e80074";
-								}
+                $cloudlistcolour = ($i % 2) ? "#40b5b2" : "#e80074";
 								$i++;
 
 								$count = $tag['UseCount'];
