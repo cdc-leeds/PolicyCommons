@@ -60,36 +60,6 @@
         include_once("includes/footer.php");
         die;
     }
-?>
-    <div id="context">
-        <div id="contextinfo">
-            <h1><?php print $node->name; ?></h1>
-            <?php
-                if($node->description != ""){
-            ?>
-                    <div id="desc_display" class="active" onClick="desctoggle()">Show Description</div>
-                    <div id="desc_text"><?php echo $node->description; ?></div>
-                    <script type="text/javascript">
-                        $('desc_text').toggle();
-
-                        function desctoggle(){
-                            $('desc_text').toggle();
-
-                            if($('desc_text').visible()){
-                                $('desc_display').update("Hide Description");
-                            } else {
-                                $('desc_display').update("Show Description");
-                            }
-                        }
-                    </script>
-            <?php
-                }
-            ?>
-        </div>
-    </div>
-    <div style="clear:both;"></div>
-<?php
-
 
     $args = array();
     $args["nodeid"] = $nodeid;
@@ -116,6 +86,38 @@
     $args["agentlastrun"] = $agentlastrun;
 
     $args["title"] = $node->name;
+?>
+
+<div id="context">
+  <div id="contextinfo">
+    <h1><?php print $node->name; ?></h1>
+
+    <?php if ($node->description != "") { ?>
+
+    <div id="desc_display" class="active" onClick="desctoggle()">
+      Show Description
+    </div>
+    <div id="desc_text"><?php echo $node->description; ?></div>
+
+    <script type="text/javascript">
+      $('desc_text').toggle();
+
+      function desctoggle () {
+          $('desc_text').toggle();
+
+          if ($('desc_text').visible()) {
+              $('desc_display').update("Hide Description");
+          } else {
+              $('desc_display').update("Show Description");
+          }
+      }
+    </script>
+    <?php } ?>
+  </div>
+</div>
+<div style="clear:both;"></div>
+
+<?php
 
     display_tabber('debate',$args);
 
