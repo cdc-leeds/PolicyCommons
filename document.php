@@ -130,6 +130,7 @@ $args["title"] = $url->url;
 </script>
 
 <script type='text/javascript'
-        src='<?php echo $CFG->homeAddress?>includes/tabber.js' />
+        src='<?php echo $CFG->homeAddress; ?>includes/tabber.js'>
+</script>
 
 <?php include_once("includes/footer.php"); ?>
