@@ -44,8 +44,6 @@ function display_tabber($context,$args){
             <li class="tab"><a class="tab" id="tab-web" href="#web-list"><span class="tab">Websites (<span id="web-list-count">0</span>)</span></a></li>
             <li class="tab"><a class="tab" id="tab-conn" href="#conn-list"><span class="tab">Connections (<span id="conn-list-count">0</span>)</span></a></li>
             <li class="tab"><a class="tab" id="tab-user" href="#user-list"><span class="tab">People (<span id="user-list-count">0</span>)</span></a></li>
-            <!-- li class="tab"><a class="tab" id="tab-svn" href="#svn-list"><span class="tab">Social Network</span></a></li -->
-            <!-- li class="tab"><a class="tab" id="tab-stats" href="#stats-list"><span class="tab">Stats</span></a></li -->
             <li class="tab"><a class="tab" id="tab-tags" href="#tags-list"><span class="tab">Tags (<span id="tags-list-count">0</span>)</span></a></li>
         </ul>
         <div id="tabs-content">
@@ -53,22 +51,6 @@ function display_tabber($context,$args){
             <div id='tab-content-web' class='tabcontent'><div class="loading"><img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/><br/>(Loading group websites...)</div></div>
             <div id='tab-content-conn' class='tabcontent'><div class="loading"><img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/><br/>(Loading group connections...)</div></div>
             <div id='tab-content-user' class='tabcontent'><div class="loading"><img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/><br/>(Loading people in group...)</div></div>
-            <!-- div id='tab-content-svn' class='tabcontent'></div -->
-
-            <!-- div id='tab-content-stats' class='tabcontent' style="display:none">
-				<div id='tab-content-toolbar-stats' style='clear:both; float:left; width: 100%; height: 100%'>
-					<div id="tabber">
-						<ul id="tabs" class="tab">
-							<li class="tab"><a class="tab" id="tab-stats-list" href="#stats-list"><span class="tab">Ideas</span></a></li>
-							<li class="tab"><a class="tab" id="tab-stats-userstats" href="#stats-userstats"><span class="tab">Users</span></a></li>
-						</ul>
-						<div id="tab-content-stats-inner" class="tabcontent" style="width:99%; height: 100%">
-							<div id='tab-content-stats-list' style='background: white; clear:both; float:left; width:100%'></div>
-							<div id='tab-content-stats-userstats' style='background: white; clear:both; float:left; width:100%'></div>
-						</div>
-					</div>
-				</div>
-			</div -->
 
             <div id='tab-content-tags' class='tabcontent'>
 				<div id="tagcloud" style="clear:both; float:left;width:100%">
