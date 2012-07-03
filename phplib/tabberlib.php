@@ -127,27 +127,6 @@ function display_tabber($context,$args){
         </div>
     </div>
     <?php
-    } else if ($context == 'document'){
-    ?>
-    <div id="tabber">
-        <ul id="tabs" class="tab">
-            <li class="tab">
-                <a class="tab" id="tab-docview" href="#docview">
-                    <span class="tab">Document</span>
-                </a>
-            </li>
-        </ul>
-        <div id="tabs-content">
-            <div id='tab-content-docview' class='tabcontent'>
-                <div class="loading">
-                    <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
-                    <br/>
-                    (Loading document...)
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
     } else {
     ?>
     <div id="tabber">
