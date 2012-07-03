@@ -23,7 +23,6 @@
  *                                                                              *
  ********************************************************************************/
     include_once("config.php");
-    array_push($HEADER,'<script src="'.$CFG->homeAddress.'includes/tabber.js" type="text/javascript"></script>');
     include_once("includes/header.php");
 
     global $USER;
@@ -156,5 +155,8 @@
       URL_ARGS = USER_ARGS = <?php echo json_encode($args); ?>;
 
 </script>
+
+<script type='text/javascript'
+        src='<?php echo $CFG->homeAddress?>includes/tabber.js' />
 
 <?php include_once("includes/footer.php"); ?>
