@@ -23,9 +23,8 @@
  *                                                                              *
  ********************************************************************************/
     include_once("config.php");
-    array_push($HEADER,'<script src="'.$CFG->homeAddress.'includes/tabber.js" type="text/javascript"></script>');
     include_once("includes/header.php");
-    include_once("phplib/tabberlib.php");
+
     global $USER;
     $nodeid = required_param("nodeid",PARAM_TEXT);
 
@@ -60,36 +59,6 @@
         include_once("includes/footer.php");
         die;
     }
-?>
-    <div id="context">
-        <div id="contextinfo">
-            <h1><?php print $node->name; ?></h1>
-            <?php
-                if($node->description != ""){
-            ?>
-                    <div id="desc_display" class="active" onClick="desctoggle()">Show Description</div>
-                    <div id="desc_text"><?php echo $node->description; ?></div>
-                    <script type="text/javascript">
-                        $('desc_text').toggle();
-
-                        function desctoggle(){
-                            $('desc_text').toggle();
-
-                            if($('desc_text').visible()){
-                                $('desc_display').update("Hide Description");
-                            } else {
-                                $('desc_display').update("Show Description");
-                            }
-                        }
-                    </script>
-            <?php
-                }
-            ?>
-        </div>
-    </div>
-    <div style="clear:both;"></div>
-<?php
-
 
     $args = array();
     $args["nodeid"] = $nodeid;
@@ -116,8 +85,68 @@
     $args["agentlastrun"] = $agentlastrun;
 
     $args["title"] = $node->name;
-    $context = "issuenode";
-    display_tabber($context,$args);
-
-    include_once("includes/footer.php");
 ?>
+
+<div id="context">
+  <div id="contextinfo">
+    <h1><?php print $node->name; ?></h1>
+
+    <?php if ($node->description != "") { ?>
+
+    <div id="desc_display" class="active" onClick="desctoggle()">
+      Show Description
+    </div>
+    <div id="desc_text"><?php echo $node->description; ?></div>
+
+    <script type="text/javascript">
+      $('desc_text').toggle();
+
+      function desctoggle () {
+          $('desc_text').toggle();
+
+          if ($('desc_text').visible()) {
+              $('desc_display').update("Hide Description");
+          } else {
+              $('desc_display').update("Show Description");
+          }
+      }
+    </script>
+    <?php } ?>
+  </div>
+</div>
+
+<div style="clear:both;"></div>
+
+<div id="tabber">
+  <ul id="tabs" class="tab">
+    <li class="tab">
+      <a class="tab" id="tab-conn" href="#conn-net">
+        <span class="tab">
+          Arguments (<span id="conn-list-count">0</span>)
+        </span>
+      </a>
+    </li>
+  </ul>
+  <div id="tabs-content">
+    <div id='tab-content-conn' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading arguments...)
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
+
+  var CONTEXT = 'issuenode';
+  var NODE_ARGS = CONN_ARGS = NEIGHBOURHOOD_ARGS = NET_ARGS =
+      URL_ARGS = USER_ARGS = <?php echo json_encode($args); ?>;
+
+</script>
+
+<script type='text/javascript'
+        src='<?php echo $CFG->homeAddress?>includes/tabber.js' />
+
+<?php include_once("includes/footer.php"); ?>
