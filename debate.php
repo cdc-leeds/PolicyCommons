@@ -115,11 +115,46 @@
     <?php } ?>
   </div>
 </div>
+
 <div style="clear:both;"></div>
 
-<?php
+<div id="tabber">
+  <ul id="tabs" class="tab">
+    <li class="tab">
+      <a class="tab" id="tab-debatemap" href="#debatemap">
+        <span class="tab">Debate Map</span>
+      </a>
+    </li>
+    <li class="tab">
+      <a class="tab" id="tab-documents" href="#documents">
+        <span class="tab">Documents (<span id="document-count">0</span>)</span>
+      </a>
+    </li>
+  </ul>
+  <div id="tabs-content">
+    <div id='tab-content-debatemap' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading debate map...)
+      </div>
+    </div>
+    <div id='tab-content-documents' class='tabcontent'>
+      <div class="loading">
+        <img src='<?php echo $CFG->homeAddress; ?>images/ajax-loader.gif'/>
+        <br/>
+        (Loading debate documents...)
+      </div>
+    </div>
+  </div>
+</div>
 
-    display_tabber('debate',$args);
+<script type='text/javascript'>
 
-    include_once("includes/footer.php");
-?>
+  var CONTEXT = 'debate';
+  var NODE_ARGS = CONN_ARGS = NEIGHBOURHOOD_ARGS = NET_ARGS =
+      URL_ARGS = USER_ARGS = <?php echo json_encode($args); ?>;
+
+</script>
+
+<?php include_once("includes/footer.php"); ?>
