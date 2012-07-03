@@ -25,7 +25,7 @@
     include_once("config.php");
     array_push($HEADER,'<script src="'.$CFG->homeAddress.'includes/tabber.js" type="text/javascript"></script>');
     include_once("includes/header.php");
-    include_once("phplib/tabberlib.php");
+
     global $USER;
     $nodeid = required_param("nodeid",PARAM_TEXT);
 
