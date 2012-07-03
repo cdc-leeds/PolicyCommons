@@ -112,7 +112,8 @@ var AVT = AVT || {};
         var debate_id = toolbox_state.currentDebateId;
         var req_params = {
             method: 'getdebatecontents',
-            nodeid: debate_id
+            nodeid: debate_id,
+            format: 'json'
         };
 
         var req_url = path + '/api/service.php';
@@ -130,16 +131,22 @@ var AVT = AVT || {};
         }
 
         var onClickIssue = function (issue) {
+
+            // Handler will be called with 'this' set to current DOM element
+            // Use this DOM element as container
+            var container = this;
+
             var req_params = {
                 method: 'getconnectionsbyissuenode',
-                nodeid: issue.nodeid
+                nodeid: issue.nodeid,
+                format: 'json'
             };
 
             var drawNetwork = function (raw_data) {
                 var data = ARGVIZ.network.convertCohereData(raw_data);
                 var config = {
                     data: data,
-                    container: div_id
+                    container: container
                 }
                 ARGVIZ.network.draw(config);
             }
