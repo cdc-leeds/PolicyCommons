@@ -75,7 +75,9 @@ var AVT = AVT || {};
         ];
         var css_root = path + '/includes/css/';
         var styles = [
-            'tipTip.css'
+            'tipTip.css',
+            'ARGVIZ.map.css',
+            'ARGVIZ.network.css'
         ];
 
         var loadScript = function (script) {
