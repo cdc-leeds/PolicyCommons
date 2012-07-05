@@ -365,7 +365,6 @@ function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",
  * @return Node or Error
  */
 function updateNodeStartDate($nodeid,$startdatetime){
-    global $USER;
     $n = new CNode($nodeid);
     $n->load();
     $node = $n->updateStartDate($startdatetime);
@@ -380,7 +379,6 @@ function updateNodeStartDate($nodeid,$startdatetime){
  * @return Node or Error
  */
 function updateNodeEndDate($nodeid,$enddatetime){
-    global $USER;
     $n = new CNode($nodeid);
     $n->load();
     $node = $n->updateEndDate($enddatetime);
@@ -396,7 +394,6 @@ function updateNodeEndDate($nodeid,$enddatetime){
  * @return Node or Error
  */
 function updateNodeLocation($nodeid,$location,$loccountry){
-    global $USER;
     $n = new CNode($nodeid);
     $n->load();
     $node = $n->updateLocation($location,$loccountry);
@@ -444,9 +441,7 @@ function deleteNodes($nodeids){
  * @return NodeSet or Error
  */
 function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long'){
-    global $CFG,$USER;
-
-
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -499,7 +494,7 @@ function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='
  * @return NodeSet or Error
  */
 function getNodesByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
 	$list = getAggregatedNodeIDs($nodeid);
     if ($list != "") {
@@ -557,7 +552,7 @@ function getNodesByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='
  * @return NodeSet or Error
  */
 function getNodesByDate($date,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -589,7 +584,7 @@ function getNodesByDate($date,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
  * @return NodeSet or Error
  */
 function getNodesByName($name,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -623,7 +618,7 @@ function getNodesByName($name,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
  * @return NodeSet or Error
  */
 function getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filterusers='', $filternodetypes='', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -696,7 +691,7 @@ function getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @return NodeSet or Error
  */
 function getNodesBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="",$style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -759,7 +754,7 @@ function getNodesBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sor
  * @return NodeSet or Error
  */
 function getNodesByFirstCharacters($q,$scope,$start = 0,$max = 20 ,$orderby = 'name',$sort ='ASC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
     $sql = "SELECT t.Name, MAX(t.NodeID) AS NodeID  FROM Node t
             WHERE t.Name LIKE '".mysql_escape_string($q)."%'";
     if($scope == 'my'){
@@ -793,7 +788,7 @@ function getNodesByFirstCharacters($q,$scope,$start = 0,$max = 20 ,$orderby = 'n
  * @return NodeSet or Error
  */
 function getNodesByURL($url,$start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $filternodetypes="", $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToID=t.NodeID) AS connectedness
@@ -858,7 +853,7 @@ function getNodesByURL($url,$start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC
  * @return NodeSet or Error
  */
 function getNodesByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes='', $groupid='', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT t.NodeID,
         (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -933,7 +928,7 @@ function getNodesByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$
  * @return NodeSet or Error
  */
 function getNodesByURLID($urlid,$start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToID=t.NodeID) AS connectedness
@@ -967,7 +962,7 @@ function getNodesByURLID($urlid,$start = 0,$max = 20 ,$orderby = 'date', $sort =
  * @return NodeSet or Error
  */
 function getNodesByTag($tagid, $start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToID=t.NodeID) AS connectedness
@@ -1000,7 +995,7 @@ function getNodesByTag($tagid, $start = 0,$max = 20 ,$orderby = 'date', $sort ='
  * @return NodeSet or Error
  */
 function getNodesByTagName($tagname, $start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
                 (SELECT COUNT(ToID) FROM Triple WHERE ToID=t.NodeID) AS connectedness
@@ -1032,7 +1027,7 @@ function getNodesByTagName($tagname, $start = 0,$max = 20 ,$orderby = 'date', $s
  * @return NodeSet or Error
  */
 function getUnconnectedNodes($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID FROM Node t
             WHERE t.NodeID NOT IN (SELECT FromID FROM Triple)
@@ -1061,7 +1056,7 @@ function getUnconnectedNodes($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC
  * @return NodeSet or Error
  */
 function getConnectedNodes($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID FROM Node t
             WHERE (t.NodeID IN (SELECT FromID FROM Triple)
@@ -1091,7 +1086,7 @@ function getConnectedNodes($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',
  * @return NodeSet or Error
  */
 function getMostConnectedNodes($scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -1129,7 +1124,7 @@ function getMostConnectedNodes($scope='all', $groupid='', $start = 0,$max = 20, 
  * @return NodeSet or Error
  */
 function getPopularNodes($scope='all', $groupid='', $start = 0,$max = 20,$style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     if($scope == "my"){
         $sql = "SELECT t.Name, COUNT(t.NodeID) AS connectedness, t2.NodeID FROM Node t
@@ -1169,7 +1164,7 @@ function getPopularNodes($scope='all', $groupid='', $start = 0,$max = 20,$style=
  * @return NodeSet or Error
  */
 function getPopularNodesByVote($scope='all', $groupid='', $start = 0,$max = 20,$style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID, COUNT(v.ItemID) AS connectedness FROM Node t left join Voting v on t.NodeID = v.ItemID";
     $sql .= " WHERE v.VoteType='Y' AND ";
@@ -1270,6 +1265,7 @@ function getGroupLinkTypeUsage($groupid, $scope='all') {
 		return $ls;
 	} else {
 		$err .= "<error>SQL error: ".mysql_error()."</error>";
+    return $err;
 	}
 }
 
@@ -1401,7 +1397,7 @@ function deleteURL($urlid){
  * @return URLSet or Error
  */
 function getURLsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.URLID, COUNT(ut.NodeID) AS connectedness FROM URL t
             LEFT JOIN URLNode ut ON t.URLID = ut.URLID
             LEFT JOIN Node ON Node.NodeID = ut.NodeID
@@ -1432,7 +1428,7 @@ function getURLsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='A
  * @return URLSet or Error
  */
 function getURLsByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filterusers='',$style='long'){
-    global $USER,$CFG;
+    global $USER;
 
     $sql = "SELECT t.URLID, COUNT(t.URLID) AS connectedness FROM URL t
             INNER JOIN URLGroup ug ON ug.URLID = t.URLID
@@ -1482,7 +1478,7 @@ function getURLsByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort =
  * @return URLSet or Error
  */
 function getURLsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $USER,$CFG;
+    global $USER;
 
 	$list = getAggregatedNodeIDs($nodeid);
     if ($list != "") {
@@ -1519,7 +1515,7 @@ function getURLsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='A
  * @return URLSet or Error
  */
 function getURLsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT t.URLID, COUNT(ut.NodeID) AS connectedness FROM URL t
             LEFT OUTER JOIN URLNode ut ON t.URLID = ut.URLID
@@ -1558,7 +1554,7 @@ function getURLsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort
  * @return URLSet or Error
  */
 function getURLsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.URLID, COUNT(Node.NodeID) AS connectedness FROM URL t
             LEFT JOIN URLNode ut ON t.URLID = ut.URLID
             LEFT JOIN Node ON Node.NodeID = ut.NodeID
@@ -1589,7 +1585,7 @@ function getURLsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',
  * @return URLSet or Error
  */
 function getClipsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.URLID FROM URL t
     	WHERE t.URL = '".$url."'
     		AND ((t.Private = 'N')
@@ -1619,7 +1615,7 @@ function getClipsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC'
  * @return URLSet or Error
  */
 function getClipsByURLNoIdea($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.URLID FROM URL t
     	WHERE t.URL = '".$url."' and t.Clip IS NOT NULL and t.Clip != ''
     		AND ((t.Private = 'N')
@@ -1649,7 +1645,7 @@ function getClipsByURLNoIdea($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @return URLSet or Error
  */
 function getClipsByNodeAndURL($url, $nodeid ,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $USER,$CFG;
+    global $USER;
 
 	$list = getAggregatedNodeIDs($nodeid);
     if ($list != "") {
@@ -1820,22 +1816,16 @@ function deleteConnection($connid){
  * @return Connection or Error
  */
 function copyConnection($connid){
-    global $USER;
 
-    $private = $USER->privatedata;
     $cobj = new Connection($connid);
     $cobj->load();
 
     //check user has the roles
     $fr = addRole($cobj->fromrole->name, $cobj->fromrole->image);
-    $fromroleid = $fr->roleid;
-
     $tr = addRole($cobj->torole->name, $cobj->torole->image);
-    $toroleid = $tr->roleid;
 
     //check user has the linktype
     $lt = addLinkType($cobj->linktype->label,$cobj->linktype->grouplabel);
-    $linktypeid = $lt->linktypeid;
 
     return $cobj;
 }
@@ -1870,7 +1860,7 @@ function deleteConnections($connids){
  * @return ConnectionSet or Error
  */
 function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.TripleID FROM Triple t
     		    INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID WHERE t.UserID = '".$userid."' ";
 
@@ -1942,7 +1932,7 @@ function getConnectionsByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$s
  * @return ConnectionSet or Error
  */
 function getConnectionsByGroup($groupid, $start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filterusers='', $filternodetypes='', $style='long'){
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT t.TripleID FROM Triple t
     			INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
                 INNER JOIN TripleGroup tg ON tg.TripleID = t.TripleID
@@ -2030,7 +2020,7 @@ function getConnectionsByGroup($groupid, $start = 0,$max = 20 ,$orderby = 'date'
  * @return ConnectionSet or Error
  */
 function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long'){
-    global $USER,$CFG;
+    global $USER;
 
     $list =  getAggregatedNodeIDs($nodeid);
 	if ($list != "") {
@@ -2107,7 +2097,7 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
  * @return ConnectionSet or Error
  */
 function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long'){
-    global $USER,$CFG;
+    global $USER;
 
     $sql = "SELECT t.TripleID FROM Triple t
                     INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
@@ -2205,7 +2195,7 @@ function getConnectionsByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort 
  * @return ConnectionSet or Error
  */
 function getConnectionsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long'){
-    global $DB, $USER,$CFG;
+    global $DB, $USER;
 
 	$sql = "SELECT DISTINCT t.NodeID from Node t
         LEFT JOIN TagNode tn ON t.NodeID = tn.NodeID
@@ -2323,7 +2313,7 @@ function getConnectionsBySearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date
  * @return ConnectionSet or Error
  */
 function getConnectionsByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $groupid='', $style='long'){
-    global $DB, $USER,$CFG;
+    global $USER;
 
     $q = trim($q);
    	$pieces = explode(",", $q);
@@ -2417,7 +2407,7 @@ function getConnectionsByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'd
  * @return ConnectionSet or Error
  */
 function getMultiConnections($connectionids, $start = 0,$max = -1 ,$orderby = 'date',$sort ='ASC', $style='long') {
-    global $USER,$CFG;
+    global $USER;
 
 	$sql = "SELECT t.TripleID FROM Triple t
 				INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
@@ -2469,7 +2459,7 @@ function getMultiConnections($connectionids, $start = 0,$max = -1 ,$orderby = 'd
  * @return ConnectionSet or Error
  */
 function getConnectionsByFromLabel($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $style='long'){
-    global $USER,$CFG;
+    global $USER;
 
     $list =  getAggregatedNodeIDs($nodeid);
     if ($list != "") {
@@ -2539,7 +2529,7 @@ function getConnectionsByFromLabel($nodeid,$start = 0,$max = 20 ,$orderby = 'dat
  * @return ConnectionSet or Error
  */
 function getConnectionsByToLabel($nodeid ,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $style='long'){
-    global $USER,$CFG;
+    global $USER;
 
     $list =  getAggregatedNodeIDs($nodeid);
 	if ($list != "") {
@@ -2607,7 +2597,7 @@ function getConnectionsByToLabel($nodeid ,$start = 0,$max = 20 ,$orderby = 'date
  * @return ConnectionSet or Error
  */
 function getConnectionsByLinkTypeLabel($linktypelabel,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $style='long'){
-    global $DB, $USER,$CFG;
+    global $USER;
 
     $sql = "SELECT t.TripleID FROM Triple t
         INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
@@ -2662,7 +2652,7 @@ function getConnectionsByLinkTypeLabel($linktypelabel,$scope,$start = 0,$max = 2
  * @return ConnectionSet or Error
  */
 function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $linkgroup='', $depth=7, $direction="both", $labelmatch='false', $style='long'){
-    global $DB,$USER,$CFG;
+    global $DB;
 
 	$searchLinkLabels = "";
 
@@ -2723,7 +2713,7 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
  * @return ConnectionSet or Error
  */
 function getConnectionsByPathByDepth($scope='all', $labelmatch='false', $nodeid, $depth=1, $linklabels, $linkgroups, $directions, $nodetypes, $style='long'){
-    global $DB,$USER,$CFG;
+    global $DB;
 
 	// GET TEXT FOR PASSED IDEA ID IF REQUIRED
 	$text = "";
@@ -2764,7 +2754,7 @@ function getConnectionsByPathByDepth($scope='all', $labelmatch='false', $nodeid,
  * @return SearchSet or Error
  */
 function getUserSearches(){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT SearchID FROM Search WHERE UserID = '".$USER->userid."' ORDER BY CreationDate ASC";
     $ss = new SearchSet();
@@ -2875,7 +2865,7 @@ function getRoleByName($rolename){
  * @return RoleSet or Error
  */
 function getAllRoles(){
-    global $CFG,$USER;
+    global $USER;
     $sql = "SELECT cnt.NodeTypeID FROM NodeType cnt
             INNER JOIN NodeTypeGrouping cntg On cntg.NodeTypeID = cnt.NodeTypeID
             WHERE cnt.UserID='".$USER->userid."' ORDER BY Name ASC";
@@ -2889,7 +2879,7 @@ function getAllRoles(){
  * @return RoleSet or Error
  */
 function getUserRoles(){
-    global $CFG,$USER;
+    global $USER;
     $sql = "SELECT cnt.NodeTypeID FROM NodeType cnt
         	INNER JOIN NodeTypeGrouping cntg On cntg.NodeTypeID = cnt.NodeTypeID
             WHERE cnt.UserID='".$USER->userid."' ORDER BY Name ASC";
@@ -2942,7 +2932,7 @@ function deleteRole($roleid){
  * @return RoleSet or Error
  */
 function getNodeRolesByUser($userid){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT nt.Name, nt.Image
             FROM Node t LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID
@@ -2968,7 +2958,7 @@ function getNodeRolesByUser($userid){
  * @return RoleSet or Error
  */
 function getNodeRolesByNode($nodeid) {
-    global $CFG,$USER;
+    global $USER;
 
 	$list = getAggregatedNodeIDs($nodeid);
     if ($list != "") {
@@ -2999,7 +2989,7 @@ function getNodeRolesByNode($nodeid) {
  * @return RoleSet or Error
  */
 function getNodeRolesByGroup($groupid) {
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT nt.Name, nt.Image
     		FROM Node t LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID
@@ -3028,7 +3018,7 @@ function getNodeRolesByGroup($groupid) {
  * @return RoleSet or Error
  */
 function getNodeRolesByURL($url) {
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT nt.Name, nt.Image
 			FROM Node t LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID
             INNER JOIN URLNode ut ON t.NodeID = ut.NodeID
@@ -3064,7 +3054,7 @@ function getNodeRolesByURL($url) {
  * @return RoleSet or Error
  */
 function getNodeRolesBySearch($q,$scope) {
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT nt.Name, nt.Image
 		FROM Node t LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID
@@ -3101,7 +3091,7 @@ function getNodeRolesBySearch($q,$scope) {
  * @return RoleSet or Error
  */
 function getNodeRolesByTagSearch($q,$scope,$groupid='') {
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT DISTINCT nt.Name, nt.Image
 		FROM Node t LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID
@@ -3152,7 +3142,7 @@ function getNodeRolesByTagSearch($q,$scope,$groupid='') {
  * @return RoleSet or Error
  */
 function getConnectionRolesByUser($userid) {
-    global $USER,$CFG;
+    global $USER;
 
     $sql = "SELECT DISTINCT Name, Image FROM (";
     $sql .= "(SELECT DISTINCT nt.Name as Name, nt.Image as Image FROM Triple t
@@ -3228,7 +3218,7 @@ function getConnectionRolesByUser($userid) {
  */
 function getConnectionRolesByGroup($groupid) {
 
-    global $USER,$CFG;
+    global $USER;
     $sql = "SELECT DISTINCT Name, Image FROM (";
     $sql .= "(SELECT DISTINCT nt.Name as Name, nt.Image as Image FROM Triple t
 	    INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
@@ -3312,7 +3302,7 @@ function getConnectionRolesByGroup($groupid) {
  * @return RoleSet or Error
  */
 function getConnectionRolesByNode($nodeid) {
-    global $USER,$CFG;
+    global $USER;
 
     $list =  getAggregatedNodeIDs($nodeid);
 	if ($list != "") {
@@ -3395,7 +3385,7 @@ function getConnectionRolesByNode($nodeid) {
  * @return ConnectionSet or Error
  */
 function getConnectionRolesByURL($url) {
-    global $USER,$CFG;
+    global $USER;
 
     $sql = "SELECT DISTINCT Name, Image FROM (";
     $sql .= "(SELECT DISTINCT nt.Name as Name, nt.Image as Image FROM Triple t
@@ -3517,7 +3507,7 @@ function getConnectionRolesByURL($url) {
  * @return RoleSet or Error
  */
 function getConnectionRolesBySearch($q,$scope) {
-    global $DB, $USER,$CFG;
+    global $DB, $USER;
 
 	$sql = "SELECT DISTINCT t.NodeID from Node t
         LEFT JOIN TagNode tn ON t.NodeID = tn.NodeID
@@ -3647,7 +3637,7 @@ function getConnectionRolesBySearch($q,$scope) {
  * @return RoleSet or Error
  */
 function getConnectionRolesByTagSearch($q,$scope,$groupid='') {
-    global $DB, $USER,$CFG;
+    global $USER;
 
     $q = trim($q);
    	$pieces = explode(",", $q);
@@ -3790,7 +3780,7 @@ function getAllLinkTypes(){
  * @return LinkTypeSet or Error
  */
 function getUserLinkTypes(){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT lt.LinkTypeID FROM LinkTypeGroup ltg
             INNER JOIN LinkTypeGrouping ltgg ON ltgg.LinkTypeGroupID = ltg.LinkTypeGroupID
@@ -3870,7 +3860,7 @@ function getTagByName($tagname){
 * @return TagSet or Error
 */
 function getUserTags(){
-	global $CFG,$USER;
+	global $USER;
 	$sql = "SELECT Tag.TagID FROM Tag
          WHERE Tag.UserID='".$USER->userid."' ORDER BY Name ASC";
          $ts = new TagSet();
@@ -3883,7 +3873,6 @@ function getUserTags(){
 * @return TagSet or Error
 */
 function getTagsByNode(){
-	global $CFG,$USER;
 
     $sql = "SELECT t.TagID FROM TagNode tn INNER JOIN Tag t ON t.TagID = tn.TagID
     		WHERE tn.NodeID='".$this->nodeid."' ORDER BY Name ASC";
@@ -3908,7 +3897,7 @@ function getTagsByNode(){
  * @return NodeSet or Error
  */
 function getURLsByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$groupid='',$style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $q = trim($q);
 	$pieces = explode(",", $q);
@@ -3990,7 +3979,7 @@ function getURLsByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$s
  * @return NodeSet or Error
  */
 function getUsersByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$groupid='', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $q = trim($q);
    	$pieces = explode(",", $q);
@@ -4115,7 +4104,7 @@ function getUsersByTagSearch($q,$scope,$start = 0,$max = 20 ,$orderby = 'date',$
  * @return TagSet or Error
  */
 function getTagsByFirstCharacters($q, $scope){
-    global $CFG,$USER;
+    global $USER;
     $sql = "SELECT t.Name, MAX(t.TagID) AS TagID  FROM Tag t
             WHERE t.Name LIKE '".mysql_escape_string($q)."%'";
     if($scope == 'my'){
@@ -4262,7 +4251,7 @@ function deleteTag($tagid){
  * @return NodeSet or Error
  */
 function getRecentNodes($scope = 'all',$groupid='', $start = 0,$max = 20, $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.NodeID,
                 (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
@@ -4301,7 +4290,6 @@ function getRecentNodes($scope = 'all',$groupid='', $start = 0,$max = 20, $style
  * @return UserSet or Error
  */
 function getRecentUsers($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$style='long'){
-    global $CFG;
     $sql = "SELECT UserID FROM Users t
             WHERE UserID NOT IN (SELECT GroupID FROM UserGroup)
             AND Name != ''";
@@ -4320,7 +4308,7 @@ function getRecentUsers($start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC',$st
  * @return UserSet or Error
  */
 function getMostConnectedUsers($start = 0,$max = 20,$style='long',$groupid='') {
-	global $CFG,$USER, $DB;
+	global $USER, $DB;
 
 	$qry = "SELECT UserID, sum(num) as bignum FROM ( ";
 
@@ -4425,7 +4413,7 @@ function getMostConnectedUsers($start = 0,$max = 20,$style='long',$groupid='') {
  * @return UserSet or Error
  */
 function getActiveConnectionUsers($start = 0,$max = 20,$style='long',$groupid='') {
-    global $CFG,$USER, $DB;
+    global $USER, $DB;
 
     $sql = "SELECT t.UserID, count(t.UserID) as num FROM Triple t left join Users on t.UserID = Users.UserID
             WHERE ";
@@ -4501,7 +4489,7 @@ function getActiveConnectionUsers($start = 0,$max = 20,$style='long',$groupid=''
  * @return UserSet or Error
  */
 function getActiveIdeaUsers($start = 0,$max = 20,$style='long',$groupid) {
-    global $CFG,$USER,$DB;
+    global $USER,$DB;
 
     $sql = "SELECT Node.UserID, count(Node.UserID) as num FROM Node left join Users on Node.UserID = Users.UserID
             WHERE Node.UserID NOT IN (SELECT GroupID FROM UserGroup)";
@@ -4555,7 +4543,7 @@ function getActiveIdeaUsers($start = 0,$max = 20,$style='long',$groupid) {
  * @return ConnectionSet or Error
  */
 function getRecentConnections($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT t.TripleID FROM Triple t
     			INNER JOIN LinkType lt ON lt.LinkTypeID = t.LinkTypeID
@@ -4690,7 +4678,7 @@ function removeAllGroupsFromNode($nodeid){
  * @return Result or Error
  */
 function setGroupPrivacy($groupid,$private){
-    global $DB,$CFG,$USER;
+    global $DB,$USER;
 
     // set the nodes
     $sql = "SELECT t.NodeID FROM Node t
@@ -5003,7 +4991,7 @@ function getUsersByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='
  * @return UserSet or Error
  */
 function getUsersByURL($url,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',$style='long'){
-
+    global $USER;
     $sql = "SELECT t.UserID FROM URL t
             WHERE t.URL = '".$url."'
             AND (t.Private='N' OR t.UserID = '".$USER->userid."')";
@@ -5088,7 +5076,7 @@ function addFeed($url, $name, $regular='N'){
  */
 function refreshFeed($feedid){
     $f = new Feed($feedid);
-    $feed->load();
+    $f->load();
     $errors = array();
     $log = array();
     return $f->refresh($errors,$log);
@@ -5152,7 +5140,7 @@ function deleteFeed($feedid){
  * @return NodeSet or Error
  */
 function getUserCacheNodes($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
     $sql = "SELECT g.NodeID FROM Node g LEFT JOIN UsersCache t ON g.NodeID = t.NodeID ".
             "WHERE t.UserId='".$USER->userid.
@@ -5210,7 +5198,7 @@ function clearUserCache(){
  * @param $nodeid the id of the idea to tweet.
  */
 function tweetUserIdea($nodeid) {
-    global $DB, $USER,$CFG;
+    global $USER,$CFG;
 
     $key = $USER->getTwitterKey();
     $secret = $USER->getTwitterSecret();
@@ -5269,7 +5257,7 @@ function addToLog($action,$type,$id){
  * @return NodeSet or Error
  */
 function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='long'){
-    global $CFG,$USER;
+    global $USER;
 
 		// SQL for retrieving the debates in the system (i.e. all the
     // nodes that are of type 'Debate'
@@ -5315,8 +5303,6 @@ function getDebates($scope='all', $groupid='', $start = 0,$max = 20, $style='lon
  */
 function getDebateContents(
   $nodeid, $scope='all', $groupid='', $start = 0,$max = 20, $style='long') {
-
-    global $CFG,$USER;
 
 	// Only retrieve a certain select group of connections, namely
 	// connections that show Debate <contains> {Debate or Issue}
