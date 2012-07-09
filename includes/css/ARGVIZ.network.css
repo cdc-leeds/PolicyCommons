@@ -6,6 +6,6 @@
 
 .issue-node rect {
 		stroke: black;
-		fill: dodgerblue;
+		fill: lightslategray;
 		cursor: move;
 }
