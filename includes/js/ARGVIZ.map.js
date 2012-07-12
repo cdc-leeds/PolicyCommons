@@ -101,6 +101,41 @@ ARGVIZ.map = ARGVIZ.map || {};
         return d3_tree;
     }
 
+    /**
+     * This produces the colour pallete for the map cells
+     *
+     * @param {Object} theme - Object with CSS class and color_count properties
+     * @return {Array} - An array of RGB colours
+     */
+    function pallete(theme) {
+
+        theme = theme || {};
+        theme.css_class = (theme && theme.css_class) || 'ARGVIZ-default-theme';
+        theme.color_count = (theme && theme.color_count) || 10;
+
+        var i,
+            colors = [];
+
+        // Easiest way to get colors for theme is to add hidden DOM element,
+        // attach CSS class and get value of CSS 'fill' property
+        var div = jQuery('<div id="map-pallete"></div>').hide()
+            .appendTo('body')
+            .addClass(theme.css_class);
+
+        var getCSSFill = function (val, i) {
+            return jQuery('<div></div>').appendTo(div)
+                .addClass('q' + i + '-' + theme.color_count)
+                .css('fill');
+        };
+
+        // Need to initialise array for Array.map to work
+        for (i = 0; i < theme.color_count; i += 1) {
+            colors.push(null);
+        }
+
+        return colors.map(getCSSFill);
+    }
+
     function draw(config) {
         var data = jQuery.extend(true, {}, config.data);
         var current = root = data;
@@ -112,7 +147,8 @@ ARGVIZ.map = ARGVIZ.map || {};
         // Set width & height for SVG
         var w = jQuery(container).get(0).offsetWidth - 30;
         var h = jQuery(window).height();
-        var color = d3.scale.category10();
+        var color = d3.scale.ordinal()
+            .range(pallete(config.theme));
 
         var vis = d3.select("#debatemap-div");
         vis = render(vis, root);
