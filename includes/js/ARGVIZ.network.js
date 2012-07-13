@@ -406,12 +406,6 @@ ARGVIZ.network = ARGVIZ || {};
 				    .start();
 
 		    // First draw the links
-        var linkColors = {
-            positive: "#2ca02c",
-            negative: "#d62728",
-            neutral: "#c7c7c7"
-        };
-
 		    var link = vis.selectAll("g.link")
 				    .data(data.links)
 				    .enter().append("svg:g")
@@ -423,7 +417,7 @@ ARGVIZ.network = ARGVIZ || {};
 									    return "path"+d.source.index+"_"+d.target.index;
 							    })
 				    .attr("label", function(d) { return d.label; })
-				    .attr("stroke", function(d) {return linkColors[d.polarity]; })
+            .attr("class", function (d) { return d.polarity; })
 				    .attr("d",
 							    function(d) {
 									    return moveto(d) + lineto(d);
@@ -601,10 +595,10 @@ ARGVIZ.network = ARGVIZ || {};
 		    node.selectAll("rect")
 				    .attr("height",
 							    function() {
-									    return this.parentNode.getAttribute("height")})
+									    return this.parentNode.getAttribute("height"); })
 				    .attr("width",
 							    function() {
-									    return this.parentNode.getAttribute("width")});
+									    return this.parentNode.getAttribute("width"); });
 
         // Finally define the 'tick' function for force layout
 		    force.on("tick", tick);
@@ -615,14 +609,13 @@ ARGVIZ.network = ARGVIZ || {};
 				    link.select("path")
 						    .attr("d", function(d) {
 								    return moveto(d) + lineto(d); })
-						    .attr("stroke", function(d) {
-								    return linkColors[d.polarity]; });
+                .attr("class", function (d) { return d.polarity; });
 
 				    link.select("text")
 						    .attr("x", function(d){
 								    return (d.target.newX + d.source.newX) / 2; })
 						    .attr("y", function(d){
-								    return (d.target.newY + d.source.newY) / 2; })
+								    return (d.target.newY + d.source.newY) / 2; });
 
 				    node.attr("transform", function(d) {
 						    return "translate(" + d.x + "," + d.y + ")";
