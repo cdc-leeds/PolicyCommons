@@ -9,3 +9,15 @@
 		fill: lightslategray;
 		cursor: move;
 }
+
+.link .positive {
+		stroke: #2ca02c;
+}
+
+.link .negative {
+		stroke: #d62728;
+}
+
+.link .neutral {
+		stroke: #c7c7c7;
+}
