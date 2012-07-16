@@ -353,41 +353,8 @@ ARGVIZ.network = ARGVIZ || {};
 		    }
 
 		    var defs = vis.append("svg:defs");
-
-        // Define arrowheads for links
-		    defs.append("svg:marker")
-				    .attr("id", "arrowhead")
-				    .attr("viewBox","0 0 20 20")
-				    .attr("refX","30")
-				    .attr("refY","10")
-				    .attr("markerUnits","strokeWidth")
-				    .attr("markerWidth","11")
-				    .attr("markerHeight","7")
-				    .attr("orient","auto")
-				    .append("svg:path")
-				    .attr("d","M 0 0 L 20 10 L 0 20 z");
-
-		    // Define dropshadow for nodes
-	      var filter = defs.append("svg:filter")
-				    .attr("id", "drop-shadow")
-				    .attr("filterUnits", "userSpaceOnUse");
-
-
-		    filter.append("svg:feGaussianBlur")
-				    .attr("in", "SourceAlpha")
-				    .attr("stdDeviation", 1)
-				    .attr("result", "blur-output");
-
-		    filter.append("svg:feOffset")
-				    .attr("in", "blur-output")
-				    .attr("result", "the-shadow")
-				    .attr("dx", 1.5)
-				    .attr("dy", 1.5);
-
-		    filter.append("svg:feBlend")
-				    .attr("in", "SourceGraphic")
-				    .attr("in2", "the-shadow")
-				    .attr("mode", "normal");
+        defs = link_arrowheads(defs);
+        defs = node_shadows(defs);
 
 		    // Run the force directed layout algorithm
 		    // XXX
@@ -632,6 +599,51 @@ ARGVIZ.network = ARGVIZ || {};
                 config.callback && config.callback();
 				    }
 		    }
+    }
+
+    function link_arrowheads(defs) {
+
+        // Define arrowheads for links
+        defs.append("svg:marker")
+            .attr("id", "arrowhead")
+            .attr("viewBox","0 0 20 20")
+            .attr("refX","30")
+            .attr("refY","10")
+            .attr("markerUnits","strokeWidth")
+            .attr("markerWidth","11")
+            .attr("markerHeight","7")
+            .attr("orient","auto")
+            .append("svg:path")
+            .attr("d","M 0 0 L 20 10 L 0 20 z");
+
+        return defs;
+    }
+
+    function node_shadows(defs) {
+
+        // Define dropshadow for nodes
+        var filter = defs.append("svg:filter")
+            .attr("id", "drop-shadow")
+            .attr("filterUnits", "userSpaceOnUse");
+
+
+        filter.append("svg:feGaussianBlur")
+            .attr("in", "SourceAlpha")
+            .attr("stdDeviation", 1)
+            .attr("result", "blur-output");
+
+        filter.append("svg:feOffset")
+            .attr("in", "blur-output")
+            .attr("result", "the-shadow")
+            .attr("dx", 1.5)
+            .attr("dy", 1.5);
+
+        filter.append("svg:feBlend")
+            .attr("in", "SourceGraphic")
+            .attr("in2", "the-shadow")
+            .attr("mode", "normal");
+
+        return defs;
     }
 
     function draw_links(l) {
