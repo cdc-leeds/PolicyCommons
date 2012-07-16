@@ -561,8 +561,7 @@ ARGVIZ.network = ARGVIZ || {};
 		    function tick(e) {
 				    link.select("path")
 						    .attr("d", function(d) {
-								    return moveto(d) + lineto(d); })
-                .attr("class", function (d) { return d.polarity; });
+								    return moveto(d) + lineto(d); });
 
 				    link.select("text")
 						    .attr("x", function(d){
