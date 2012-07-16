@@ -413,48 +413,18 @@ ARGVIZ.network = ARGVIZ || {};
 				    .enter().append("svg:g")
 				    .attr("class", "link");
 
-		    link.append("svg:path")
-				    .attr("id",
-							    function(d) {
-									    return "path"+d.source.index+"_"+d.target.index;
-							    })
-				    .attr("label", function(d) { return d.label; })
-            .attr("class", function (d) { return d.polarity; })
-				    .attr("d",
-							    function(d) {
-									    return moveto(d) + lineto(d);
-							    })
-				    .attr("marker-end", "url(#arrowhead)");
-
-		    link.append("svg:text")
-				    .attr("font-size", 10)
-		    
-		    //Put label in the middle of the line
-				    .attr("x",
-							    function(d){
-									    return (d.target.newX + d.source.newX) / 2;
-							    })
-				    .attr("y",
-							    function(d){
-									    return (d.target.newY + d.source.newY) / 2;
-							    })
-				    .text(function(d){return d.label;});
+        link = draw_links(link);
 
 		    // Now draw the nodes
 		    var node = vis.selectAll("g.node")
 				    .data(data.nodes)
 				    .enter().append("svg:g")
-				    .attr("class", "node")
-				    .attr("id",
-							    function(d) {
-									    return "node"+d.index;
-							    })
-				    .attr("transform",
-							    function(d) {
-									    return "translate(" + d.x + "," + d.y + ")";
-							    })
+				    .attr("class", "node");
+
+        node = draw_nodes(node);
+
 		    // Make nodes draggable
-				    .call(force.drag)
+				node.call(force.drag)
 		    // When node is clicked to be dragged, stop the mousedown event
 		    // from propagating to SpryMap event listener attached to parent,
 		    // which is used to allow map as a whole to be draggable.
@@ -462,25 +432,6 @@ ARGVIZ.network = ARGVIZ || {};
         // When node is dragged, 'mousemove' triggers force.resume(). Disable
         // this behavior by calling force.stop() instead.
             .on('mousemove', function() {force.stop();});
-
-		    node.append("svg:rect")
-				    .attr("rx", 3)
-				    .attr("filter", "url(#drop-shadow)");
-
-		    node.append("svg:text")
-				    .attr("font-size", 10)
-				    .attr("y", 10)
-				    .attr("text-anchor", "start")
-				    .each(function(d) {
-						    // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
-						    var dy = textFlow(d.name, this, 225, 5, 10, false);
-
-						    // Get the bounding box of the text element so that we can
-						    // adjust the rectangle to suit
-						    var bb = this.getBBox();
-						    this.parentNode.setAttribute("height", bb.height+5);
-						    this.parentNode.setAttribute("width", bb.width+10);
-            });
 
         // Execute any function that was passed in for nodes
         config.node_fn && node.each(config.node_fn);
@@ -693,6 +644,62 @@ ARGVIZ.network = ARGVIZ || {};
                 config.callback && config.callback();
 				    }
 		    }
+    }
+
+    function draw_links(l) {
+
+        l.append("svg:path")
+            .attr("id", function (d) {
+               return "path" + d.source.index + "_" + d.target.index;
+            })
+            .attr("label", function (d) { return d.label; })
+            .attr("class", function (d) { return d.polarity; })
+            .attr("d", function (d) {
+               return moveto(d) + lineto(d);
+            })
+            .attr("marker-end", "url(#arrowhead)");
+
+        l.append("svg:text")
+            .attr("font-size", 10)
+
+        //Put label in the middle of the line
+            .attr("x", function (d) {
+               return (d.target.newX + d.source.newX) / 2;
+            })
+            .attr("y", function(d){
+               return (d.target.newY + d.source.newY) / 2;
+            })
+            .text(function (d) { return d.label; });
+
+        return l;
+    }
+
+    function draw_nodes(n) {
+        n.attr("id", function (d) { return "node" + d.index; })
+            .attr("transform", function (d) {
+               return "translate(" + d.x + "," + d.y + ")";
+            });
+
+        n.append("svg:rect")
+            .attr("rx", 3)
+            .attr("filter", "url(#drop-shadow)");
+
+        n.append("svg:text")
+            .attr("font-size", 10)
+            .attr("y", 10)
+            .attr("text-anchor", "start")
+            .each(function (d) {
+                // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
+                var dy = textFlow(d.name, this, 225, 5, 10, false);
+
+                // Get the bounding box of the text element so that we can
+                // adjust the rectangle to suit
+                var bb = this.getBBox();
+                this.parentNode.setAttribute("height", bb.height+5);
+                this.parentNode.setAttribute("width", bb.width+10);
+            });
+
+        return n;
     }
 
     // Expose public API for the module
