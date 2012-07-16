@@ -471,45 +471,50 @@ ARGVIZ.network = ARGVIZ || {};
 				    // time user hovers over
 				    jQuery("#tiptip_holder").hide();
 
-				    // For this source node, get all the outgoing links where the
-				    // target node is a Statement
-				    link.select(function (d) {
-						    // First get the links where 'source' is the source node
-						    return (source.index === d.source.index) ? this : null;})
-				    // Then further filter those links to just those with
-				    // 'Statement' as target node
-						    .select(function (d) {
-								    return !(node.select(function (n) {
-										    return ((n.index === d.target.index) &&
-														    (n.nodetype === "Statement")) ?
-												    this : null;} ).empty()) ? this : null;})
-				    // Hide the outgoing links
-						    .each(function (d) {
-								    d.hidden = source.expand ? false : true;})
-						        .style("display", function (d) {
-								        return d.hidden ? "none" : "";})
-				    // Find if they are any nodes left isolated and hide them
-						    .each(function(d) {
-								    node.select(function (n) {
-										    return (n.index === d.target.index) ?	this : null;})
-										    .each(function (n) {
-												    // If link connecting a node is hidden then
-												    // reduce the 'numlinks' count for that node
-												    // by 1. If link is displayed again then
-												    // increase 'numlinks' count for that node by
-												    // 1.
+            expand_node(source, node, link);
+
+		    }
+
+        function expand_node(source, node, link) {
+
+            // For this source node, get all the outgoing links where the
+            // target node is a Statement
+            link.select(function (d) {
+                // First get the links where 'source' is the source node
+                return (source.index === d.source.index) ? this : null;})
+            // Then further filter those links to just those with
+            // 'Statement' as target node
+                .select(function (d) {
+                    return !(node.select(function (n) {
+                        return ((n.index === d.target.index) &&
+                                (n.nodetype === "Statement")) ?
+                            this : null;} ).empty()) ? this : null;})
+            // Hide the outgoing links
+                .each(function (d) {
+                    d.hidden = source.expand ? false : true;})
+                    .style("display", function (d) {
+                        return d.hidden ? "none" : "";})
+            // Find if they are any nodes left isolated and hide them
+                .each(function(d) {
+                    node.select(function (n) {
+                        return (n.index === d.target.index) ? this : null;})
+                        .each(function (n) {
+                            // If link connecting a node is hidden then
+                            // reduce the 'numlinks' count for that node
+                            // by 1. If link is displayed again then
+                            // increase 'numlinks' count for that node by
+                            // 1.
                             n.numlinks = d.hidden ?
                                       n.numlinks - 1 :
                                       n.numlinks + 1;
-										    })
-												    // If 'numlinks' count for a node is 0 then
-												    // hide that node.
-										        .style("display", function (n) {
-												        return (n.numlinks === 0) ? "none" : "";
-										        });
-						    });
-
-		    }
+                        })
+                        // If 'numlinks' count for a node is 0 then
+                        // hide that node.
+                        .style("display", function (n) {
+                            return (n.numlinks === 0) ? "none" : "";
+                         });
+                });
+        }
 
         /*
          * The 'tick' function for the force layout
