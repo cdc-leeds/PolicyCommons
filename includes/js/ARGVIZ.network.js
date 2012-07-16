@@ -559,19 +559,8 @@ ARGVIZ.network = ARGVIZ || {};
 
 
 		    function tick(e) {
-				    link.select("path")
-						    .attr("d", function(d) {
-								    return moveto(d) + lineto(d); });
-
-				    link.select("text")
-						    .attr("x", function(d){
-								    return (d.target.newX + d.source.newX) / 2; })
-						    .attr("y", function(d){
-								    return (d.target.newY + d.source.newY) / 2; });
-
-				    node.attr("transform", function(d) {
-						    return "translate(" + d.x + "," + d.y + ")";
-				    });
+            link = transform_links(link);
+            node = transform_nodes(node);
 
 
 				    // Don't wait until force-directed algorithm completely
@@ -653,31 +642,19 @@ ARGVIZ.network = ARGVIZ || {};
             })
             .attr("label", function (d) { return d.label; })
             .attr("class", function (d) { return d.polarity; })
-            .attr("d", function (d) {
-               return moveto(d) + lineto(d);
-            })
             .attr("marker-end", "url(#arrowhead)");
 
         l.append("svg:text")
             .attr("font-size", 10)
-
-        //Put label in the middle of the line
-            .attr("x", function (d) {
-               return (d.target.newX + d.source.newX) / 2;
-            })
-            .attr("y", function(d){
-               return (d.target.newY + d.source.newY) / 2;
-            })
             .text(function (d) { return d.label; });
+
+        l = transform_links(l);
 
         return l;
     }
 
     function draw_nodes(n) {
-        n.attr("id", function (d) { return "node" + d.index; })
-            .attr("transform", function (d) {
-               return "translate(" + d.x + "," + d.y + ")";
-            });
+        n.attr("id", function (d) { return "node" + d.index; });
 
         n.append("svg:rect")
             .attr("rx", 3)
@@ -698,7 +675,31 @@ ARGVIZ.network = ARGVIZ || {};
                 this.parentNode.setAttribute("width", bb.width+10);
             });
 
+        n = transform_nodes(n);
+
         return n;
+    }
+
+     function transform_links(l) {
+         l.select("path")
+             .attr("d", function (d) { return moveto(d) + lineto(d); });
+
+         // Put link-label in middle of line
+         l.select("text")
+             .attr("x", function (d) {
+                 return (d.target.newX + d.source.newX) / 2;
+             })
+             .attr("y", function (d) {
+                 return (d.target.newY + d.source.newY) / 2;
+             });
+
+         return l;
+    }
+
+    function transform_nodes(n) {
+        return n.attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
     }
 
     // Expose public API for the module
