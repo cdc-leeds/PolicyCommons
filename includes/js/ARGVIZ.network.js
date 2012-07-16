@@ -670,20 +670,22 @@ ARGVIZ.network = ARGVIZ || {};
             .attr("font-size", 10)
             .attr("y", 10)
             .attr("text-anchor", "start")
-            .each(function (d) {
-                // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
-                var dy = textFlow(d.name, this, 225, 5, 10, false);
-
-                // Get the bounding box of the text element so that we can
-                // adjust the rectangle to suit
-                var bb = this.getBBox();
-                this.parentNode.setAttribute("height", bb.height+5);
-                this.parentNode.setAttribute("width", bb.width+10);
-            });
+            .each(function (d) { insert_text(d.name, this); });
 
         n = transform_nodes(n);
 
         return n;
+    }
+
+    function insert_text(text, textbox) {
+        // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
+        var dy = textFlow(text, textbox, 225, 5, 10, false);
+
+        // Get the bounding box of the text element so that we can
+        // adjust the rectangle to suit
+        var bb = textbox.getBBox();
+        textbox.parentNode.setAttribute("height", bb.height + 5);
+        textbox.parentNode.setAttribute("width", bb.width + 10);
     }
 
      function transform_links(l) {
