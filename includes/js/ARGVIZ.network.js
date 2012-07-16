@@ -329,8 +329,11 @@ ARGVIZ.network = ARGVIZ || {};
 				    .style("opacity", 1);
 
 		    // Add zoom behaviour to the visualisation
-		    vis.call(d3.behavior.zoom()
-						     .on("zoom", zoom))
+        vis.call(d3.behavior.zoom().on("zoom", function () {
+            vis.attr("transform", "translate(" + d3.event.translate + ")" +
+                     "scale(" + d3.event.scale + ")");
+        }))
+
 		    // Intercept the "mousedown" event attached to the zoom behaviour
 		    // so it doesn't interfere with the SpryMap dragging behaviour
 				    .on("mousedown.zoom", function(){ return false;})
@@ -345,12 +348,6 @@ ARGVIZ.network = ARGVIZ || {};
 		    // the visualisation together in an "<svg:g>" element so we can
 		    // apply the scaling transformation to that containing element.
 		    vis = vis.append("svg:g");
-
-		    function zoom() {
-			      vis
-						    .attr("transform", "translate(" + d3.event.translate + ")"
-									    + "scale(" + d3.event.scale + ")");
-		    }
 
 		    var defs = vis.append("svg:defs");
         defs = link_arrowheads(defs);
