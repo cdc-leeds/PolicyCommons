@@ -440,10 +440,9 @@ ARGVIZ.network = ARGVIZ || {};
 				    node.select(function(d) {
 						    return (source.index === d.index) ? this : null;})
 						    .select("circle")
-						    .classed("collapsed", function (d) {return !d.expand;})
-						    .classed("expanded", function (d) {return d.expand;})
-						    .style("fill", function(d){
-								    return d.expand ?	"white" : "lightsteelblue"});
+                .attr("class", function (d) { return d.expand ?
+                    "expanded" : "collapsed";
+                });
 
 				    // Display a tooltip whenever user hovers over the circle for
 				    // toggling expansion. Tooltip prompts user to view or hide

@@ -21,3 +21,11 @@
 .link .neutral {
 		stroke: #c7c7c7;
 }
+
+circle.expanded {
+    fill: white;
+}
+
+circle.collapsed {
+    fill: lightsteelblue;
+}
