@@ -369,7 +369,8 @@ ARGVIZ.network = ARGVIZ || {};
 				    .nodes(data.nodes)
 				    .links(data.links)
 				    .size([w, h])
-				    .start();
+				    .start()
+            .on("tick", tick);
 
 		    // First draw the links
 		    var link = vis.selectAll("g.link")
@@ -386,6 +387,14 @@ ARGVIZ.network = ARGVIZ || {};
 				    .attr("class", "node");
 
         node = draw_nodes(node);
+
+		    node.selectAll("rect")
+				    .attr("height",
+							    function() {
+									    return this.parentNode.getAttribute("height"); })
+				    .attr("width",
+							    function() {
+									    return this.parentNode.getAttribute("width"); });
 
 		    // Make nodes draggable
 				node.call(force.drag)
@@ -415,21 +424,17 @@ ARGVIZ.network = ARGVIZ || {};
 				    .style("stroke", "steelblue")
 				    .style("cursor", "pointer")
 				    .attr("r", 5)
-				    .on("click", expand)
 		    // By default the Argument nodes are not expanded
 				    .each(function(d) {
 						    d.expand = false;
 						    update(d);
-				    });
-
-		    // Toggle expansion of the clicked Argument node and update the
-		    // visualisation
-		    function expand(d) {
-				    d.expand = d.expand ? false : true;
-            d3.event.stopPropagation();
-
-				    update(d);
-		    }
+				    })
+            .on("click", function (d) {
+            // Toggle expansion of clicked node and update visualisation
+                d.expand = d.expand ? false : true;
+                d3.event.stopPropagation();
+                update(d);
+            });
 
 		    // Update the visualisation when user clicks to toggle expansion
 		    // of Argument node. Currently the function only hides the links
@@ -493,11 +498,9 @@ ARGVIZ.network = ARGVIZ || {};
 												    // by 1. If link is displayed again then
 												    // increase 'numlinks' count for that node by
 												    // 1.
-												    if (d.hidden) {
-														    n.numlinks -= 1;
-												    } else {
-														    n.numlinks += 1;
-												    }
+                            n.numlinks = d.hidden ?
+                                      n.numlinks - 1 :
+                                      n.numlinks + 1;
 										    })
 												    // If 'numlinks' count for a node is 0 then
 												    // hide that node.
@@ -508,19 +511,9 @@ ARGVIZ.network = ARGVIZ || {};
 
 		    }
 
-		    node.selectAll("rect")
-				    .attr("height",
-							    function() {
-									    return this.parentNode.getAttribute("height"); })
-				    .attr("width",
-							    function() {
-									    return this.parentNode.getAttribute("width"); });
-
-        // Finally define the 'tick' function for force layout
-		    force.on("tick", tick);
-
-
-
+        /*
+         * The 'tick' function for the force layout
+         */
 		    function tick(e) {
             link = transform_links(link);
             node = transform_nodes(node);
