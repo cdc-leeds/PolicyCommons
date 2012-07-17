@@ -660,8 +660,8 @@ ARGVIZ.network = ARGVIZ || {};
             .attr("filter", "url(#drop-shadow)");
 
         var text = n.append("svg:text")
-            .attr("font-size", 10)
-            .attr("y", 10)
+            .attr("font-size", 12)
+            .attr("y", 20)
             .attr("text-anchor", "start")
             .each(function (d) { insert_text(d.name, this); });
 
@@ -678,13 +678,13 @@ ARGVIZ.network = ARGVIZ || {};
 
     function insert_text(text, textbox) {
         // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
-        var dy = textFlow(text, textbox, 225, 5, 10, false);
+        var dy = textFlow(text, textbox, 225, 10, 10, false);
 
         // Get the bounding box of the text element so that we can
         // adjust the rectangle to suit
         var bb = textbox.getBBox();
-        textbox.parentNode.setAttribute("height", bb.height + 5);
-        textbox.parentNode.setAttribute("width", bb.width + 10);
+        textbox.parentNode.setAttribute("height", bb.height + 20);
+        textbox.parentNode.setAttribute("width", bb.width + 20);
     }
 
      function transform_links(l) {
