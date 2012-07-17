@@ -464,9 +464,52 @@ ARGVIZ.network = ARGVIZ.network || {};
 				    // time user hovers over
 				    jQuery("#tiptip_holder").hide();
 
-            expand_node(source, node, link);
+            expand_as_container(source, node, link);
 
 		    }
+
+        function expand_as_container(source, node, link) {
+            var expanded_text = source.name;
+
+            var outlinks = link.select(function (d) {
+                    return (source.index === d.source.index) ? this : null;
+                })
+                .select(function (d) {
+                    return (! node.select(function (n) {
+                        return ((n.index === d.target.index) &&
+                                (n.nodetype === "Statement")) ? this : null;
+                    }).empty()) ? this : null;
+                });
+
+            outlinks.style("display", "none");
+
+            var outnodes = node.select(function (d) {
+                    return (! outlinks.select(function (l) {
+                        return (l.target.index === d.index) ? this : null;
+                    }).empty()) ? this : null;
+                });
+            outnodes.style("display", "none");
+            outnodes.each(function (d) { expanded_text += ' ' + d.name; });
+
+            node.select(function (d) {
+                    return (d.index === source.index) ? this : null;
+                })
+                .select('text')
+                .text('')
+                .each(function (d) {
+                    var text = source.expand ? expanded_text : d.name;
+                    insert_text(text, this);
+                 });
+
+            node.select(function (d) {
+                    return (d.index === source.index) ? this : null;
+                })
+                .select('rect')
+                .attr("height", function () {
+                          return this.parentNode.getAttribute("height"); })
+                .attr("width", function () {
+                          return this.parentNode.getAttribute("width"); });
+        }
 
         function expand_node(source, node, link) {
 
