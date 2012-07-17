@@ -388,13 +388,6 @@ ARGVIZ.network = ARGVIZ || {};
 
         node = draw_nodes(node);
 
-		    node.selectAll("rect")
-				    .attr("height",
-							    function() {
-									    return this.parentNode.getAttribute("height"); })
-				    .attr("width",
-							    function() {
-									    return this.parentNode.getAttribute("width"); });
 
 		    // Make nodes draggable
 				node.call(force.drag)
@@ -662,15 +655,21 @@ ARGVIZ.network = ARGVIZ || {};
     function draw_nodes(n) {
         n.attr("id", function (d) { return "node" + d.index; });
 
-        n.append("svg:rect")
+        var rect = n.append("svg:rect")
             .attr("rx", 3)
             .attr("filter", "url(#drop-shadow)");
 
-        n.append("svg:text")
+        var text = n.append("svg:text")
             .attr("font-size", 10)
             .attr("y", 10)
             .attr("text-anchor", "start")
             .each(function (d) { insert_text(d.name, this); });
+
+        // Adjust size of rect after text has been inserted
+        rect.attr("height", function () {
+            return this.parentNode.getAttribute("height"); })
+            .attr("width", function () {
+                return this.parentNode.getAttribute("width"); });
 
         n = transform_nodes(n);
 
