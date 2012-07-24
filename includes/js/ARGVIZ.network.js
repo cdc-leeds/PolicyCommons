@@ -23,7 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 var ARGVIZ = ARGVIZ || {};
-ARGVIZ.network = ARGVIZ || {};
+ARGVIZ.network = ARGVIZ.network || {};
 
 (function (MODULE_NAME) {
 
