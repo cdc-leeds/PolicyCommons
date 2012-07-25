@@ -1,6 +1,15 @@
 var AVT = AVT || {};
 (function (MODULE_NAME) {
 
+     // Augment Array type for older browsers
+     if ( !Array.prototype.forEach ) {
+         Array.prototype.forEach = function(fn, scope) {
+             for(var i = 0, len = this.length; i < len; ++i) {
+                 fn.call(scope || this, this[i], i, this);
+             }
+         };
+     }
+
     /**
      * Replace the normal jQuery getScript function with one that supports
      * debugging and which references the script files as external resources
