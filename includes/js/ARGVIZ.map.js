@@ -146,7 +146,7 @@ ARGVIZ.map = ARGVIZ.map || {};
 
         // Set width & height for SVG
         var w = config.width || jQuery(container).get(0).offsetWidth;
-        var h = config.height || jQuery(window).height();
+        var h = config.height || jQuery(container).height() || jQuery(window).height();
         var color = d3.scale.ordinal()
             .range(pallete(config.theme));
 
