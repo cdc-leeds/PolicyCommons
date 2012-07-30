@@ -2,6 +2,7 @@ var AVT = AVT || {};
 (function (MODULE_NAME) {
 
      // Augment Array type for older browsers
+		 // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
      if ( !Array.prototype.forEach ) {
          Array.prototype.forEach = function(fn, scope) {
              for(var i = 0, len = this.length; i < len; ++i) {
@@ -50,7 +51,7 @@ var AVT = AVT || {};
 
         // We handle everything using the script element injection
         return undefined;
-    }
+    };
 
     /**
        Function for loading scripts that depend on each other
@@ -64,9 +65,9 @@ var AVT = AVT || {};
             var scripts = scripts || [];
             return (!scripts.length) ? callback : function () {
                 lazyLoadScriptResource(scripts[0], lds(scripts.slice(1)));
-            }
+            };
         })(scripts)();
-    }
+    };
 
     /**
        Initialise component and load dependencies (JS, CSS, etc.)
@@ -92,7 +93,7 @@ var AVT = AVT || {};
         var loadScript = function (script) {
             var url = script_root + script;
             lazyLoadScriptResource(url);
-        }
+        };
 
         var loadCSS = function (css) {
             var url = css_root + css;
@@ -101,7 +102,7 @@ var AVT = AVT || {};
                 type: 'text/css',
                 href: url
             }).appendTo('head');
-        }
+        };
 
         // Load all script dependencies
         scripts.forEach(loadScript);
@@ -110,7 +111,7 @@ var AVT = AVT || {};
         styles.forEach(loadCSS);
 
         return toolbox_state;
-    }
+    };
 
     /**
        Called every time the component is shown in toolbox
@@ -135,9 +136,9 @@ var AVT = AVT || {};
                 onclick_handlers: {
                     "Issue": onClickIssue
                 }
-            }
+            };
             ARGVIZ.map.draw(config);
-        }
+        };
 
         var onClickIssue = function (issue) {
 
@@ -156,17 +157,17 @@ var AVT = AVT || {};
                 var config = {
                     data: data,
                     container: container
-                }
+                };
                 ARGVIZ.network.draw(config);
-            }
+            };
 
             jQuery.getJSON(req_url, req_params, drawNetwork);
-        }
+        };
 
         jQuery.getJSON(req_url, req_params, drawMap);
 
         return toolbox_state;
-    }
+    };
 
 
     /**
@@ -176,7 +177,7 @@ var AVT = AVT || {};
         var div_id = toolbox_state.avt.div;
         jQuery('#'+div_id).html('');
         return toolbox_state;
-    }
+    };
 
     /**
        Called to check whether the tool can be stopped
@@ -184,7 +185,7 @@ var AVT = AVT || {};
        */
     var canBeStopped = function () {
         return true;
-    }
+    };
 
     /**
        Called when the toolbox language changes
@@ -192,7 +193,7 @@ var AVT = AVT || {};
     var languageChanged = function (lang) {
         // TODO Currently no other languages
         return false;
-    }
+    };
 
     // Expose public API for component
     MODULE_NAME.init = init;
@@ -200,4 +201,4 @@ var AVT = AVT || {};
     MODULE_NAME.stop = stop;
     MODULE_NAME.canBeStopped = canBeStopped;
     MODULE_NAME.languageChanged = languageChanged;
-})(AVT)
+})(AVT);
