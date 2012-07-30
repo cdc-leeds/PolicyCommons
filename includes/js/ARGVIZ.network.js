@@ -298,8 +298,8 @@ ARGVIZ.network = ARGVIZ.network || {};
         jQuery(container).html('<div id="network-div"></div>');
 
 		    jQuery("#network-div").css("overflow", "hidden")
-				    .height(jQuery(window).height())
-				    .width(jQuery(container).width());
+						.height(config.height || jQuery(window).height())
+						.width(config.width || jQuery(container).width());
 
 		    // Calculate desired width and height for the SVG visualisation.
 		    // Make quite large so text nodes aren't cropped.
@@ -547,7 +547,8 @@ ARGVIZ.network = ARGVIZ.network || {};
 						    // Get center of the containing div
 						    var container_div_center = {
 								    x: jQuery("#network-div").width() / 2,
-								    y: jQuery("#network-div").height() / 2};
+								    y: jQuery("#network-div").height() / 2
+								};
 
 						    // Get the max and min x,y coordinates of the
 						    // visualisation so we can calculate the center.

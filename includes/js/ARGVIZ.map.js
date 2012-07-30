@@ -145,8 +145,8 @@ ARGVIZ.map = ARGVIZ.map || {};
         jQuery(container).html('<div id="debatemap-div"></div>');
 
         // Set width & height for SVG
-        var w = jQuery(container).get(0).offsetWidth - 30;
-        var h = jQuery(window).height();
+        var w = config.width || jQuery(container).get(0).offsetWidth;
+        var h = config.height || jQuery(window).height();
         var color = d3.scale.ordinal()
             .range(pallete(config.theme));
 
