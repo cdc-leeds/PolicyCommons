@@ -212,7 +212,7 @@ class user {
         while ($array = mysql_fetch_array($res, MYSQL_ASSOC)) {
             $this->userid =  trim($array['UserID']);
         }
-        $this->load();
+
         return $this->load();
     }
 
