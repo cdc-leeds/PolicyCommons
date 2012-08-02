@@ -76,18 +76,5 @@
 </form>
 
 <?php
-/*<p>Or login with your <a href="http://openid.net" target="_blank">OpenID</a>:</p>
-<form name="openidlogin" action="openid-go-auth.php" method="post">
-    <div class="formrow">
-        <label class="formlabel" for="openid_url">OpenID URL:</label>
-        <input class="forminput" id="openid_url" name="openid_url" type="text" size="30">
-    </div>
-    <div class="formrow">
-        <input class="formsubmit" type="submit" value="login" id="login" name="login">
-    </div>
-</form>
-*/
-?>
-<?php
     include_once("includes/footer.php");
 ?>
