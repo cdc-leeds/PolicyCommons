@@ -117,11 +117,8 @@ function startSession($time = 99999999, $ses = 'Cohere') {
  *
  */
  function clearSession() {
-    //clear user cache
-    //clearUserCache();
     $_SESSION["session_userid"] = "";
     setcookie("user","",time()-3600, "/");
-    //setcookie("Cohere","",time()-3600, "/");
  }
 
  /**
