@@ -5470,5 +5470,32 @@ function getIssuePositions(
 
   return $issue_conn_set_obj;
 }
+
+/**
+ * Function to import argumentation data from IMPACT ART tool
+ *
+ * Function instantiates ArtImporter class to import JSON string of
+ * argumentation data. Import requires that a valid user be logged in. As a hack
+ * for IMPACT project, as long as a valid user email is supplied then no need to
+ * supply a password.
+ *
+ * @todo XXX Hacked solution for IMPACT project. Remove from core API.
+ * @param $data string JSON string of argumentation data
+ * @param $user string Email address of valid Cohere user
+ */
+function artImport($data, $user) {
+  global $USER;
+  require_once('user.class.php');
+
+  $u = new User();
+  $u->setEmail($user);
+  $USER = $u->getByEmail();
+
+  if ($USER instanceof error) {
+    return $USER;
+  }
+
+  return new Result('ART Import', 'Success');
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>

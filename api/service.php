@@ -816,6 +816,12 @@ switch($method){
         $nodeid = required_param('nodeid',PARAM_TEXT);
 				$response = getResponsesToIssue($nodeid);
         break;
+    case 'artimport':
+      global $USER;
+      $data = required_param('data');
+      $user = required_param('user');
+      $response = artImport($data, $user);
+      break;
     default:
         //error as method not defined.
         global $ERROR;
