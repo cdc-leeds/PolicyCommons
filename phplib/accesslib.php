@@ -26,14 +26,13 @@
 /**
  * Logs the into the site
  *
- * @uses $DB
  * @uses $CFG
  * @param string $username
  * @param string $password
  * @return boolean whether login successful or not
  */
 function userLogin($username,$password){
-    global $DB,$CFG;
+    global $CFG;
     clearSession();
 
     if($password == ""){
@@ -199,8 +198,6 @@ function parseOpenLearnResponse($data){
         xml_parse_into_struct($xml_parser, $data, $values, $index);
         xml_parser_free($xml_parser);
 
-        $email = "";
-        $name = "";
         foreach ($index as $key=>$val) {
             if ($key == "EMAIL") {
                 $retdata['email'] = $values[$val[0]]['value'];
