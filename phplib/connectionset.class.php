@@ -1,6 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
+ *  (c) Copyright 2012 University of Leeds, UK
  *  (c) Copyright 2010 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
@@ -34,12 +35,9 @@ class ConnectionSet {
     public $count = 0;
     public $connections;
 
-    /**
-     * Constructor
-     *
-     */
-    function ConnectionSet() {
-        $this->connections = array();
+    public function __construct(array $connections = array()) {
+      $this->connections = $connections;
+      $this->totalno = $this->count = count($connections);
     }
 
     /**
