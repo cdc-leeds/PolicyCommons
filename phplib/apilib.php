@@ -5485,7 +5485,7 @@ function getIssuePositions(
  */
 function artImport($data, $user) {
   global $USER;
-  require_once('user.class.php');
+  require_once('art_importer.class.php');
 
   $u = new User();
   $u->setEmail($user);
@@ -5495,7 +5495,13 @@ function artImport($data, $user) {
     return $USER;
   }
 
-  return new Result('ART Import', 'Success');
+  try {
+    $importer = new ArtImporter();
+    $response = $importer->import($data);;
+  } catch (Exception $e) {
+    $response = $e;
+  }
+  return $response;
 }
 // ensure there are no spaces or blank lines after this closing tag
 ?>
