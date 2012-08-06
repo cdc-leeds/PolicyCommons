@@ -84,6 +84,8 @@ class ArtImporter {
       $statement->text, $statement->quote, $this->privatedata,
       $this->argument_node_type->roleid);
 
+    $this->storeIdMapping($argument->id, $argument_node->nodeid);
+
     $connections[] = addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
       $this->addresses_link_type->linktypeid, $issue->id,
@@ -136,6 +138,40 @@ class ArtImporter {
     return (isset($premise_role_to_link_type_id[$premise_role])) ?
       $premise_role_to_link_type_id[$premise_role] :
       $this->premise_link_type;
+  }
+
+  /**
+   * Method to persistently store mapping between ART ID and Cohere ID
+   *
+   * Method creates SQLite DB in a flat file
+   *
+   * @private
+   * @param string $art_id ART ID, which is stored as an INTEGER
+   * @param string $cohere_id Cohere ID, which is stored as TEXT
+   */
+  private function storeIdMapping($art_id, $cohere_id) {
+    global $CFG;
+
+    $db_file = $CFG->dirAddress . 'tmp/impact_art_cohere_mappings.sqlite';
+
+    $pdo = new PDO('sqlite:' . $db_file);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  art_id INTEGER,' .
+               '  cohere_id TEXT)');
+
+    $stmnt = $pdo->prepare('INSERT INTO Mappings' .
+                           '  (art_id, cohere_id)' .
+                           '  VALUES' .
+                           '  (:art_id, :cohere_id)');
+
+    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_INT);
+    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    $pdo = null;
   }
 }
 
