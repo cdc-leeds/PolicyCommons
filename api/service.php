@@ -818,8 +818,8 @@ switch($method){
         break;
     case 'artimport':
       global $USER;
-      $data = required_param('data');
-      $user = required_param('user');
+      $data = required_param('data', PARAM_TEXT);
+      $user = required_param('user', PARAM_TEXT);
       $response = artImport($data, $user);
       break;
     default:
