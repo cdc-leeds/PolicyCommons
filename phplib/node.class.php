@@ -38,11 +38,6 @@ class CNode {
     public $otheruserconnections;
     public $isbookmarked;
     public $status = 0;
-
-    /*
-     * The following is commented out to prevent empty properties appearing as
-     * it just uses up more space when getting the node/connection
-     *
     public $description;
     public $startdatetime;
     public $enddatetime;
@@ -60,19 +55,11 @@ class CNode {
     public $positivevotes;
     public $negativevotes;
     public $uservote;
-    */
 
-    /**
-     * Constructor
-     *
-     * @param string $nodeid (optional)
-     * @return Node (this)
-     */
-    function CNode($nodeid = ""){
-        if ($nodeid != ""){
-            $this->nodeid = $nodeid;
-            return $this;
-        }
+    public function __construct($nodeid = "") {
+      if ($nodeid != "") {
+        $this->nodeid = $nodeid;
+      }
     }
 
     /**
@@ -83,7 +70,7 @@ class CNode {
      */
     function load($style = 'long') {
 
-        global $DB,$CFG, $USER;
+        global $DB, $USER;
         try {
             $this->canview();
         } catch (Exception $e){
@@ -186,7 +173,7 @@ class CNode {
 	 * Load Associated vote counts
 	 */
 	function loadVotes() {
-        global $DB,$CFG, $USER;
+        global $DB, $USER;
 
         //load positive votes
         $sql = "Select count(VoteType) as Positive from Voting where ItemID='".$this->nodeid."' AND VoteType='Y'";
@@ -227,7 +214,7 @@ class CNode {
      * @param String $style (optional - default 'long') may be 'short' or 'long'
 	 */
 	function loadWebsites($style = 'long') {
-        global $DB,$CFG, $USER;
+        global $DB;
 
 	    //now add in any websites
         $sql = "SELECT u.URLID FROM URLNode ut INNER JOIN URL u ON u.URLID = ut.URLID WHERE ut.NodeID='".$this->nodeid."' ORDER BY u.Title ASC";
@@ -252,7 +239,7 @@ class CNode {
 	 * Load associated tags
 	 */
 	function loadTags() {
-        global $DB,$CFG, $USER;
+        global $DB;
         $sql = "SELECT u.TagID FROM TagNode ut INNER JOIN Tag u ON u.TagID = ut.TagID WHERE ut.NodeID='".$this->nodeid."' ORDER BY Name ASC";
         $res = mysql_query($sql, $DB->conn);
         if(mysql_num_rows($res) > 0){
@@ -268,7 +255,7 @@ class CNode {
 	 * Load groups
 	 */
 	function loadGroups() {
-        global $DB,$CFG, $USER;
+        global $DB;
         $sql = "SELECT GroupID FROM NodeGroup tg WHERE tg.NodeID='".$this->nodeid."'";
         $res = mysql_query($sql, $DB->conn);
         if(mysql_num_rows($res) > 0){
@@ -356,9 +343,9 @@ class CNode {
         if ($res2) {
             //update labels in Triple Table
             $qry3 = "update Triple set ToLabel='".mysql_escape_string($name)."' where ToID='".$this->nodeid."' and UserID='".$USER->userid."'";
-            $res3 = mysql_query( $qry3,$DB->conn);
+            mysql_query( $qry3,$DB->conn);
             $qry4 = "update Triple set FromLabel='".mysql_escape_string($name)."' where FromID='".$this->nodeid."' and UserID='".$USER->userid."'";
-            $res4 = mysql_query( $qry4, $DB->conn);
+            mysql_query( $qry4, $DB->conn);
         } else {
             return database_error();
         }
@@ -380,8 +367,6 @@ class CNode {
             return access_denied_error();
         }
         $this->load();
-
-        $dt = time();
 
 		$this->load();
 		$xml = format_object('xml',$this);
@@ -535,8 +520,6 @@ class CNode {
             return access_denied_error();
         }
 
-        $dt = time();
-
         $qry = "DELETE FROM URLNode WHERE NodeID='".$this->nodeid."' and URLID='".$urlid."' and UserID='".$USER->userid."'";
         $res = mysql_query( $qry, $DB->conn);
         if ($res) {
@@ -556,14 +539,14 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function removeAllURLs(){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
         } catch (Exception $e){
             return access_denied_error();
         }
-        $dt = time();
+
         $qry = "DELETE FROM URLNode WHERE NodeID='".$this->nodeid."'";
         $res = mysql_query( $qry, $DB->conn );
         if (!$res) {
@@ -580,7 +563,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function addGroup($groupid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
         //check user owns the node
         try {
             $this->canedit();
@@ -614,7 +597,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function removeGroup($groupid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
         //check user owns the node
         try {
             $this->canedit();
@@ -631,7 +614,7 @@ class CNode {
 
         // check group not already in node
         $sql = "DELETE FROM NodeGroup WHERE NodeID='".$this->nodeid."' AND GroupID='".$groupid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -642,7 +625,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function removeAllGroups(){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
@@ -651,7 +634,7 @@ class CNode {
         }
 
         $sql = "DELETE FROM NodeGroup WHERE NodeID='".$this->nodeid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -663,7 +646,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function addTag($tagid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
 
         //check user can edit the node
         try {
@@ -676,7 +659,6 @@ class CNode {
         $tag = new Tag($tagid);
         $tag->load();
         $tag->canedit();
-        $dt = time();
 
         $qry4 = "select TagID from TagNode where NodeID='".$this->nodeid."' and TagID='".$tagid."' and UserID='".$USER->userid."'";
         $res4 = mysql_query( $qry4, $DB->conn);
@@ -701,7 +683,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function removeTag($tagid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
 
         //check user can edit the node
         try {
@@ -714,8 +696,6 @@ class CNode {
         $tag = new Tag($tagid);
         $tag->load();
         $tag->canedit();
-
-        $dt = time();
 
         $qry = "DELETE FROM TagNode WHERE NodeID='".$this->nodeid."' and TagID='".$tagid."' and UserID='".$USER->userid."'";
         $res = mysql_query( $qry, $DB->conn);
@@ -732,7 +712,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function setPrivacy($private){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
@@ -742,7 +722,7 @@ class CNode {
 
         $dt = time();
         $sql = "UPDATE Node SET Private='".$private."', ModificationDate=".$dt." WHERE NodeID='".$this->nodeid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -753,7 +733,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function updateStartDate($startdate){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
@@ -769,7 +749,7 @@ class CNode {
             }
             $dt = time();
             $sql = "UPDATE Node SET StartDate='".$mydate."', ModificationDate=".$dt." WHERE NodeID='".$this->nodeid."'";
-            $res = mysql_query( $sql, $DB->conn );
+            mysql_query( $sql, $DB->conn );
         } catch (Exception $e) {
             //failed
         }
@@ -784,7 +764,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function updateEndDate($enddate){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
@@ -800,7 +780,7 @@ class CNode {
             }
             $dt = time();
             $sql = "UPDATE Node SET EndDate='".$mydate."', ModificationDate=".$dt." WHERE NodeID='".$this->nodeid."'";
-            $res = mysql_query( $sql, $DB->conn );
+            mysql_query( $sql, $DB->conn );
         } catch (Exception $e) {
             //failed
         }
@@ -816,7 +796,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function updateLocation($location,$loccountry){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the node
         try {
             $this->canedit();
@@ -849,7 +829,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function updateStatus($status){
-        global $DB,$CFG,$USER;
+        global $DB;
 
         $dt = time();
         $sql = "UPDATE Node SET CurrentStatus=".$status.", ModificationDate=".$dt." WHERE NodeID='".$this->nodeid."'";
@@ -873,7 +853,7 @@ class CNode {
      */
     function canview(){
         // check whether a user can view a node
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
         $sql = "SELECT t.NodeID FROM Node t
                 WHERE t.NodeID = '".$this->nodeid."'
                 AND (
@@ -948,7 +928,7 @@ class CNode {
      * @return integer
      */
     function getConnectionUsage() {
-        global $DB,$CFG;
+        global $DB;
         $usage = 0;
 
         //one side of connection
@@ -978,7 +958,7 @@ class CNode {
      * @return integer
      */
     function getNodeEntryUsage() {
-        global $DB,$CFG;
+        global $DB;
         $usage = 0;
 
         $qry = "select count(Name) as nodecount from Node where Name='".mysql_escape_string($this->name)."' and UserID='".$this->userid."'";
