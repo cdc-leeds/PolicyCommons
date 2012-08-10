@@ -19,7 +19,6 @@ class ArtImporter {
 	private $premise_link_type;
 	private $conclusion_link_type;
   private $privatedata;
-  private $connection_set;
 
 
   public function __construct() {
