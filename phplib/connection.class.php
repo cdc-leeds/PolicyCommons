@@ -40,29 +40,19 @@ class Connection {
     public $fromrole;
     public $torole;
     public $description;
-    //public $groups;
-    //public $tags;
-    //public $positivevotes;
-    //public $negativevotes;
-    //public $uservote;
-
+    public $groups;
+    public $tags;
+    public $positivevotes;
+    public $negativevotes;
+    public $uservote;
     public $private;
-
     public $fromcontexttypeid;
     public $tocontexttypeid;
     public $linktypeid;
 
-    /**
-     * Constructor
-     *
-     * @param string $connid (optional)
-     * @param String $style (optional - default 'long') may be 'short' or 'long'
-     * @return Connection (this)
-     */
-    function Connection($connid = "", $style='long'){
-        if ($connid != ""){
-            $this->connid= $connid;
-            return $this;
+    function __construct($connid = "") {
+        if ($connid != "") {
+            $this->connid = $connid;
         }
     }
 
@@ -73,7 +63,7 @@ class Connection {
      * @return Connection object (this)
      */
     function load($style = 'long'){
-        global $DB,$CFG;
+        global $DB;
         try {
             $this->canview();
         } catch (Exception $e){
@@ -148,7 +138,7 @@ class Connection {
 	 * Load Associated vote counts
 	 */
 	function loadVotes() {
-        global $DB,$CFG, $USER;
+        global $DB, $USER;
 
         //load positive votes
         $sql = "Select count(VoteType) as Positive from Voting where ItemID='".$this->connid."' AND VoteType='Y'";
@@ -206,40 +196,10 @@ class Connection {
             return access_denied_error();
         }
 
-        //check user owns and can edit the 2 nodes sent.
-        try {
-            $fromnode = new CNode($fromnodeid);
-            $fromnode->load();
-            //$fromnode->canedit();
-        } catch (Exception $e){
-            //return access_denied_error();
-        }
-
-        try {
-            $tonode = new CNode($tonodeid);
-            $tonode->load();
-            //$tonode->canedit();
-        } catch (Exception $e){
-            //return access_denied_error();
-        }
-
-        //ensure roles and linktype exist for the current user
-        // roles can belong to other users
-        /*try {
-            $fr = new Role($fromroleid);
-            $fr->load();
-            $fr->canedit();
-        } catch (Exception $e){
-            $fr->add($fr->name);
-        }
-
-        try {
-            $tr = new Role($toroleid);
-            $tr->load();
-            $tr->canedit();
-        } catch (Exception $e){
-            $tr->add($tr->name);
-        }*/
+        $fromnode = new CNode($fromnodeid);
+        $fromnode->load();
+        $tonode = new CNode($tonodeid);
+        $tonode->load();
 
         try {
             $lt = new LinkType($linktypeid);
@@ -297,97 +257,12 @@ class Connection {
             return database_error();
         }
 
-        //now clear the users cache
-        //clearUserCache();
-
         $this->load();
         if (!auditConnection($USER->userid, $this->connid, "", $fromnodeid, $tonodeid, $linktypeid, $fromroleid, $toroleid, $CFG->actionAdd,format_object('xml',$this))) {
             return database_error();
         }
         return $this;
     }
-
-    /**
-     * copy a connection - NOT USED AT PRESENT
-     *
-     * @param string $fromnodeid
-     * @param string $fromroleid
-     * @param string $linktypeid
-     * @param string $tonodeid
-     * @param string $toroleid
-     * @param string $private
-     * @param string $description
-     * @return Connection object (this) (or Error object)
-     */
-    /*function copy($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$private,$description=""){
-        global $DB,$CFG,$USER;
-        $dt = time();
-        //check user can add connection
-        try {
-            $this->cancopy();
-        } catch (Exception $e){
-            return access_denied_error();
-        }
-
-        //check user owns and can edit the 2 nodes sent.
-        try {
-            $fromnode = new CNode($fromnodeid);
-            $fromnode->load();
-            $fromnode->canedit();
-        } catch (Exception $e){
-            return access_denied_error();
-        }
-
-        try {
-            $tonode = new CNode($tonodeid);
-            $tonode->load();
-            $tonode->canedit();
-        } catch (Exception $e){
-            return access_denied_error();
-        }
-
-        $this->connid = getUniqueID();
-        $qry = "insert into Triple (
-                        TripleID,
-                        UserID,
-                        CreationDate,
-                        ModificationDate,
-                        LinkTypeID,
-                        FromID,
-                        ToID,
-                        FromContextTypeID,
-                        ToContextTypeID,
-                        FromLabel,
-                        ToLabel,
-                        Private,
-                        Description)
-                VALUES (
-                        '".$this->connid."',
-                        '".$USER->userid."',
-                        ".$dt.",
-                        ".$dt.",
-                        '".$linktypeid."',
-                        '".$fromnodeid."',
-                        '".$tonodeid."',
-                        '".$fromroleid."',
-                        '".$toroleid."',
-                        '".mysql_escape_string($fromnode->name)."',
-                        '".mysql_escape_string($tonode->name)."',
-						'".$private."',
-						'".mysql_escape_string($description)."')";
-        $res = mysql_query( $qry, $DB->conn);
-        if (!$res) {
-            return database_error();
-        }
-
-        if (!auditConnection($USER->userid, $this->connid, "", $fromnodeid, $tonodeid, $linktypeid, $fromroleid, $toroleid, $CFG->actionAdd)) {
-             return database_error();
-        }
-        //now clear the users cache
-        clearUserCache();
-        $this->load();
-        return $this;
-    } */
 
     /**
      * Edit a connection
@@ -467,8 +342,6 @@ class Connection {
             return access_denied_error();
         }
 
-        $dt = time();
-
 		$this->load();
 		$xml = format_object('xml',$this);
 
@@ -540,7 +413,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function addGroup($groupid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
         //check user owns the connection
         try {
             $this->canedit();
@@ -579,7 +452,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function removeGroup($groupid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
         //check user owns the connection
         try {
             $this->canedit();
@@ -596,7 +469,7 @@ class Connection {
 
         // check group not already in node
         $sql = "DELETE FROM TripleGroup WHERE TripleID='".$this->connid."' AND GroupID='".$groupid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -607,7 +480,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function removeAllGroups(){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the connection
         try {
             $this->canedit();
@@ -616,7 +489,7 @@ class Connection {
         }
 
         $sql = "DELETE FROM TripleGroup WHERE TripleID='".$this->connid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -629,7 +502,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function addTag($tagid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
 
         //check user can edit the connection
         try {
@@ -642,8 +515,6 @@ class Connection {
         $tag = new Tag($tagid);
         $tag->load();
         $tag->canedit();
-
-        $dt = time();
 
         $qry4 = "select TagID from TagTriple where TripleID='".$this->connid."' and TagID='".$tagid."' and UserID='".$USER->userid."'";
         $res4 = mysql_query( $qry4, $DB->conn);
@@ -668,7 +539,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function removeTag($tagid){
-        global $DB,$CFG,$USER;
+        global $DB, $USER;
 
         //check user can edit the connection
         try {
@@ -681,8 +552,6 @@ class Connection {
         $tag = new Tag($tagid);
         $tag->load();
         $tag->canedit();
-
-        $dt = time();
 
         $qry = "DELETE FROM TagTriple WHERE TripleID='".$this->connid."' and TagID='".$tagid."' and UserID='".$USER->userid."'";
         $res = mysql_query( $qry, $DB->conn);
@@ -699,7 +568,7 @@ class Connection {
      * @return Connection object (this) (or Error object)
      */
     function setPrivacy($private){
-        global $DB,$CFG,$USER;
+        global $DB;
         //check user owns the Connection
         try {
             $this->canedit();
@@ -709,7 +578,7 @@ class Connection {
 
         $dt = time();
         $sql = "UPDATE Triple SET Private='".$private."', ModificationDate=".$dt." WHERE TripleID='".$this->connid."'";
-        $res = mysql_query( $sql, $DB->conn );
+        mysql_query( $sql, $DB->conn );
         $this->load();
         return $this;
     }
@@ -723,7 +592,7 @@ class Connection {
      * @throws Exception
      */
     function canview(){
-        global $DB,$USER,$CFG;
+        global $DB, $USER;
         $sql = "SELECT t.TripleID FROM Triple t
                 WHERE t.TripleID = '".$this->connid."'
                 AND ((t.Private = 'N')
