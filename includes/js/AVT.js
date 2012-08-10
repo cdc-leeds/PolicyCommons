@@ -154,10 +154,47 @@ var AVT = AVT || {};
 
             var drawNetwork = function (raw_data) {
                 var data = ARGVIZ.network.convertCohereData(raw_data);
+
+                // Define callback for when nodes in network are
+                // drawn. This callback selects those nodes for which
+                // we can find the source-document where the text is
+                // taken from. These nodes are made clickable so that
+                // user can click to go straight to the
+                // source-document. Note, source-documents are URLs in
+                // the Cohere data model.
+                var nodeSource = function (n) {
+                    return n.urls &&
+                        d3.select(this).each(function (n) {
+                            n.urlid = n.urls[0].url.urlid;
+                        })
+                            .on("mouseover", function (n) {
+                                this.style.textDecoration = "underline";
+                                this.style.fontStyle = "italic";
+                            })
+                        .on("mouseout", function (n) {
+                            this.style.textDecoration = "none";
+                            this.style.fontStyle = "normal";
+                        })
+                        .on("click", function (n) {
+                            var document_url = path +
+                                "/document.php?urlid=" +
+                                n.urlid + "#" + n.nodeid;
+
+                            var window_attr = 'width=800,height=600';
+
+                            window.open(
+                                document_url, 'SourceDocument', window_attr);
+
+                        })
+                        .style("cursor", "pointer");
+                    };
+
                 var config = {
                     data: data,
-                    container: container
+                    container: container,
+                    node_fn: nodeSource
                 };
+
                 ARGVIZ.network.draw(config);
             };
 
