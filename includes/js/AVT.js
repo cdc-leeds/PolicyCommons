@@ -165,7 +165,7 @@ var AVT = AVT || {};
                 var nodeSource = function (n) {
                     return n.urls &&
                         d3.select(this).each(function (n) {
-                            n.urlid = n.urls[0].url.urlid;
+                            n.url = n.urls[0].url.url;
                         })
                             .on("mouseover", function (n) {
                                 this.style.textDecoration = "underline";
@@ -176,14 +176,11 @@ var AVT = AVT || {};
                             this.style.fontStyle = "normal";
                         })
                         .on("click", function (n) {
-                            var document_url = path +
-                                "/document.php?urlid=" +
-                                n.urlid + "#" + n.nodeid;
 
                             var window_attr = 'width=800,height=600';
 
                             window.open(
-                                document_url, 'SourceDocument', window_attr);
+                                n.url, 'SourceDocument', window_attr);
 
                         })
                         .style("cursor", "pointer");
