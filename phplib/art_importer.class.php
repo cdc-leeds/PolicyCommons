@@ -19,6 +19,7 @@ class ArtImporter {
 	private $premise_link_type;
 	private $conclusion_link_type;
   private $privatedata;
+  private $connectionset;
 
 
   public function __construct() {
@@ -71,7 +72,13 @@ class ArtImporter {
         $connections, $this->importArgument($response->argument, $issue));
     }
 
-    return new ConnectionSet($connections);
+    $this->connectionset = new ConnectionSet($connections);
+
+    // XXX Add new attribute to ConnectionSet that gives count of arguments
+    // imported
+    $this->connectionset->num_imported = count($responses);
+
+    return $this->connectionset;
   }
 
   private function importArgument($argument, $issue) {
