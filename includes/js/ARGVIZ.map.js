@@ -141,6 +141,10 @@ ARGVIZ.map = ARGVIZ.map || {};
         var current = root = data;
         var container = '#' + config.container;
 
+        // Check for before and after callback functions
+        var before = config.before || function () {};
+        var after = config.after || function () {};
+
          // Insert a new <div> for the debate map
         jQuery(container).html('<div id="debatemap-div"></div>');
 
@@ -188,7 +192,9 @@ ARGVIZ.map = ARGVIZ.map || {};
             vis.data([data]).selectAll("div")
                 .data(treemap.nodes)
                 .enter().append("div")
-                .call(cell);
+                .each(before)
+                .call(cell)
+                .each(after);
 
             return vis;
         }
