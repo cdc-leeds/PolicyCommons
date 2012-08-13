@@ -83,7 +83,7 @@ class ArtImporter {
       $statement->text, $statement->quote, $this->privatedata,
       $this->argument_node_type->roleid);
 
-    $this->storeIdMapping($argument->id, $argument_node->nodeid);
+    $this->storeIdMapping($argument->id, $argument_node->nodeid, $issue->id);
 
     $connections[] = addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
@@ -147,8 +147,9 @@ class ArtImporter {
    * @private
    * @param string $art_id ART ID, which is stored as an INTEGER
    * @param string $cohere_id Cohere ID, which is stored as TEXT
+   * @param string $issue_id Cohere ID, which is stored as TEXT
    */
-  private function storeIdMapping($art_id, $cohere_id) {
+  private function storeIdMapping($art_id, $cohere_id, $issue_id) {
     global $CFG;
 
     $db_file = $CFG->dirAddress . 'tmp/impact_art_cohere_mappings.sqlite';
@@ -159,15 +160,17 @@ class ArtImporter {
     $pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
                '  id INTEGER PRIMARY KEY,' .
                '  art_id INTEGER,' .
-               '  cohere_id TEXT)');
+               '  cohere_id TEXT,' .
+               '  issue_id TEXT)');
 
     $stmnt = $pdo->prepare('INSERT INTO Mappings' .
-                           '  (art_id, cohere_id)' .
+                           '  (art_id, cohere_id, issue_id)' .
                            '  VALUES' .
-                           '  (:art_id, :cohere_id)');
+                           '  (:art_id, :cohere_id, :issue_id)');
 
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_INT);
     $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
 
     $pdo = null;
