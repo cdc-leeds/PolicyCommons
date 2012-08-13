@@ -66,17 +66,22 @@ class ArtImporter {
     }
 
     $responses = $json_object->responses;
+    $num_imported = 0;
 
     foreach ($responses as $response) {
-      $connections = array_merge(
-        $connections, $this->importArgument($response->argument, $issue));
+      if ($response->argument->scheme === 'practical_reasoning_as' ||
+          $response->argument->scheme === 'Practical Reasoning') {
+        $connections = array_merge(
+          $connections, $this->importArgument($response->argument, $issue));
+        $num_imported += 1;
+      }
     }
 
     $this->connectionset = new ConnectionSet($connections);
 
     // XXX Add new attribute to ConnectionSet that gives count of arguments
     // imported
-    $this->connectionset->num_imported = count($responses);
+    $this->connectionset->num_imported = $num_imported;
 
     return $this->connectionset;
   }
