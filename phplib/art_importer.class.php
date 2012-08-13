@@ -166,7 +166,7 @@ class ArtImporter {
 
     $pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
                '  id INTEGER PRIMARY KEY,' .
-               '  art_id INTEGER,' .
+               '  art_id TEXT,' .
                '  cohere_id TEXT,' .
                '  issue_id TEXT)');
 
@@ -175,7 +175,7 @@ class ArtImporter {
                            '  VALUES' .
                            '  (:art_id, :cohere_id, :issue_id)');
 
-    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_INT);
+    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
