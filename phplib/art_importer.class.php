@@ -21,10 +21,11 @@ class ArtImporter {
 	private $conclusion_link_type;
   private $privatedata;
   private $connectionset;
+  private $pdo;
 
 
   public function __construct() {
-    global $USER;
+    global $USER, $CFG;
 
     // Add new node-types (i.e. roles) if they don't exist
     $this->issue_node_type = addRole('Issue');
@@ -42,6 +43,16 @@ class ArtImporter {
 
     $this->privatedata = $USER->privatedata;
 
+    // Temp DB file for storing ART ID to Cohere ID mappins
+    $db_file = $CFG->dirAddress . 'tmp/impact_art_cohere_mappings.sqlite';
+
+    $this->pdo = new PDO('sqlite:' . $db_file);
+    $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  }
+
+  public function __destruct() {
+    $this->pdo = null;
   }
 
   /**
@@ -170,20 +181,14 @@ class ArtImporter {
    * @param string $issue_id Cohere ID, which is stored as TEXT
    */
   private function storeIdMapping($art_id, $cohere_id, $issue_id) {
-    global $CFG;
 
-    $db_file = $CFG->dirAddress . 'tmp/impact_art_cohere_mappings.sqlite';
-
-    $pdo = new PDO('sqlite:' . $db_file);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
                '  id INTEGER PRIMARY KEY,' .
                '  art_id TEXT,' .
                '  cohere_id TEXT,' .
                '  issue_id TEXT)');
 
-    $stmnt = $pdo->prepare('INSERT INTO Mappings' .
+    $stmnt = $this->pdo->prepare('INSERT INTO Mappings' .
                            '  (art_id, cohere_id, issue_id)' .
                            '  VALUES' .
                            '  (:art_id, :cohere_id, :issue_id)');
@@ -192,8 +197,6 @@ class ArtImporter {
     $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
-
-    $pdo = null;
   }
 }
 
