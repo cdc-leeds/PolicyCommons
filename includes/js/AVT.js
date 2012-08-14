@@ -165,7 +165,6 @@ var AVT = AVT || {};
             var config = {
                 data: data,
                 container: div_id,
-                before: importArtData,
                 onclick_handlers: {
                     "Issue": onClickIssue
                 }
@@ -173,39 +172,47 @@ var AVT = AVT || {};
             ARGVIZ.map.draw(config);
         };
 
+        var callback = function () {
+            jQuery.getJSON(req_url, req_params, drawMap);
+        };
+
         // XXX ART Import hard-coded with Bernd Groninger user
         // credentials.
         // @todo TODO Integrate with toolbox authentication
-        var importArtData = function (d) {
+        (function importArtData (debate_issues, callback) {
 
-            if (d.nodetype !== "Issue") {
-                return;
-            }
+             var completed = 0;
 
-            var art_api = toolbox_state.art.path +
-                '/php/api.php?/issues/' + d.nodeid;
+             var getIssueArguments = function (issue) {
 
-            var postToCohere = function (data) {
+                 var art_api = toolbox_state.art.path +
+                     '/php/api.php?/issues/' + issue;
 
-                var req_params = {
-                    method: 'artimport',
-                    format: 'json',
-                    data: data,
-                    user: 'berndgroninger@email.com'
-                };
+                 var postToCohere = function (data) {
 
-                var processCohereOutput = function (cohere_json) {
-                    var num_imported = cohere_json.connectionset &&
-                        cohere_json.connectionset[0].num_imported;
-                    d.num_responses = parseInt(d.num_responses, 10) +
-                        parseInt(num_imported, 10);
-                };
+                     var req_params = {
+                         method: 'artimport',
+                         format: 'json',
+                         data: data,
+                         user: 'berndgroninger@email.com'
+                     };
 
-                jQuery.post(req_url, req_params, processCohereOutput, "json");
-            };
+                     var processCohereOutput = function (cohere_json) {
+                         completed += 1;
+                         if (completed === debate_issues.length) {
+                             callback();
+                         }
+                     };
 
-            jQuery.get(art_api, {}, postToCohere, "text");
-        };
+                     jQuery.post(req_url, req_params, processCohereOutput, "json");
+                 };
+
+                 jQuery.get(art_api, {}, postToCohere, "text");
+             };
+
+             debate_issues.forEach(getIssueArguments);
+
+        })(debate_issues, callback);
 
         var onClickIssue = function (issue) {
 
@@ -264,8 +271,6 @@ var AVT = AVT || {};
 
             jQuery.getJSON(req_url, req_params, drawNetwork);
         };
-
-        jQuery.getJSON(req_url, req_params, drawMap);
 
         return toolbox_state;
     };
