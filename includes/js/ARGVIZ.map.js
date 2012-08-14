@@ -104,14 +104,14 @@ ARGVIZ.map = ARGVIZ.map || {};
     /**
      * This produces the colour pallete for the map cells
      *
-     * @param {Object} theme - Object with CSS class and color_count properties
+     * @param {Object} theme - Object with CSS class and range properties
      * @return {Array} - An array of RGB colours
      */
     function pallete(theme) {
 
         theme = theme || {};
-        theme.css_class = (theme && theme.css_class) || 'ARGVIZ-default-theme';
-        theme.color_count = (theme && theme.color_count) || 10;
+        theme.css = (theme && theme.css) || 'ARGVIZ-default-theme';
+        theme.range = (theme && theme.range) || 10;
 
         var i,
             colors = [];
@@ -120,16 +120,16 @@ ARGVIZ.map = ARGVIZ.map || {};
         // attach CSS class and get value of CSS 'fill' property
         var div = jQuery('<div id="map-pallete"></div>').hide()
             .appendTo('body')
-            .addClass(theme.css_class);
+            .addClass(theme.css);
 
         var getCSSFill = function (val, i) {
             return jQuery('<div></div>').appendTo(div)
-                .addClass('q' + i + '-' + theme.color_count)
+                .addClass('q' + i + '-' + theme.range)
                 .css('fill');
         };
 
         // Need to initialise array for Array.map to work
-        for (i = 0; i < theme.color_count; i += 1) {
+        for (i = 0; i < theme.range; i += 1) {
             colors.push(null);
         }
 
