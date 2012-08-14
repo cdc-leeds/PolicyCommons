@@ -193,7 +193,7 @@ class ArtImporter {
    * Method to persistently store mapping between ART ID and Cohere ID
    *
    * @private
-   * @param string $art_id ART ID, which is stored as an INTEGER
+   * @param string $art_id ART ID, which is stored as TEXT
    * @param string $cohere_id Cohere ID, which is stored as TEXT
    * @param string $issue_id Cohere ID, which is stored as TEXT
    */
@@ -213,6 +213,31 @@ class ArtImporter {
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
+  /**
+   * Method to store ART statement ID related to an ART argument ID
+   *
+   * @access private
+   * @param string $argument_id ART argument ID
+   * @param string $statement_id Related ART statement ID
+   */
+  private function storeArtArgumentStatementRelation(
+    $argument_id, $statement_id) {
+
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Arguments_Statements (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  argument_id TEXT,' .
+               '  statement_id TEXT)');
+
+    $stmnt = $this->pdo->prepare('INSERT INTO Arguments_Statements' .
+                           '  (argument_id, statement_id)' .
+                           '  VALUES' .
+                           '  (:argument_id, :statement_id)');
+
+    $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':statement_id', $statement_id, PDO::PARAM_STR);
     $stmnt->execute();
   }
 
