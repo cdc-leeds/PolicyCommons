@@ -116,12 +116,13 @@ class ArtImporter {
       $statement->text, $statement->quote, $this->privatedata,
       $this->argument_node_type->roleid);
 
-    $this->storeIdMapping($argument->id, $argument_node->nodeid, $issue->id);
-
     $connections[] = addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
       $this->addresses_link_type->linktypeid, $issue->id,
       $this->issue_node_type->roleid);
+
+    $this->storeIdMapping($argument->id, $argument_node->nodeid);
+    $this->storeArtIssueArgumentRelation($issue->id, $argument->id);
 
     foreach ($argument->premises as $premise) {
       $connections[] = $this->importPremise($premise, $argument_node);
@@ -196,24 +197,21 @@ class ArtImporter {
    * @private
    * @param string $art_id ART ID, which is stored as TEXT
    * @param string $cohere_id Cohere ID, which is stored as TEXT
-   * @param string $issue_id Cohere ID, which is stored as TEXT
    */
-  private function storeIdMapping($art_id, $cohere_id, $issue_id = null) {
+  private function storeIdMapping($art_id, $cohere_id) {
 
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
                '  id INTEGER PRIMARY KEY,' .
                '  art_id TEXT,' .
-               '  cohere_id TEXT,' .
-               '  issue_id TEXT)');
+               '  cohere_id TEXT)');
 
     $stmnt = $this->pdo->prepare('INSERT INTO Mappings' .
-                           '  (art_id, cohere_id, issue_id)' .
+                           '  (art_id, cohere_id)' .
                            '  VALUES' .
-                           '  (:art_id, :cohere_id, :issue_id)');
+                           '  (:art_id, :cohere_id)');
 
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
-    $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
   }
 
