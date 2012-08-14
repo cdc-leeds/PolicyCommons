@@ -198,6 +198,48 @@ class ArtImporter {
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
   }
+
+  private function findCohereIdByArtId($art_id) {
+    $stmnt = $this->pdo->prepare('SELECT cohere_id FROM Mappings' .
+                                 '  WHERE art_id=:art_id');
+    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    return ($row = $stmnt->fetch()) ? $row['cohere_id'] : null;
+  }
+
+  private function findArtIdsByIssue($issue_id) {
+    $stmnt = $this->pdo->prepare('SELECT art_id FROM Mappings' .
+                                 '  WHERE issue_id=:issue_id');
+    $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
+    $stmnt->execute();
+    $records = $stmnt->fetchAll();
+
+    $art_ids = array();
+    foreach ($records as $row) {
+      $art_ids[] = $row['art_id'];
+    }
+
+    return $art_ids;
+  }
+
+  /**
+   * Method to delete ART ID and Corresponding Cohere argument data
+   *
+   * Method for deleting argument data if it has been removed from ART tool.
+   *
+   * @param string $art_id ID of argument in ART
+   * @todo TODO Need to delete all statements of argument.
+   */
+  private function deleteArtId($art_id) {
+    $cohere_id = $this->findCohereIdByArtId($art_id);
+    deleteNode($cohere_id);
+
+    $stmnt = $this->pdo->prepare('DELETE FROM Mappings' .
+                                 '  WHERE art_id=:art_id');
+    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
 }
 
 ?>
