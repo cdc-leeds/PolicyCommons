@@ -217,6 +217,23 @@ class ArtImporter {
   }
 
   /**
+   * Method to delete a given ART-to-Cohere mapping from DB table
+   *
+   * @access private
+   * @param string $art_id ART ID
+   * @param string $cohere_id Cohere ID
+   */
+  private function deleteIdMapping($art_id, $cohere_id) {
+
+    $stmnt = $this->pdo->prepare('DELETE FROM Mappings' .
+                                 '  WHERE art_id=:art_id' .
+                                 '  AND cohere_id=:cohere_id');
+    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
+  /**
    * Method to store ART statement ID related to an ART argument ID
    *
    * @access private
@@ -263,23 +280,6 @@ class ArtImporter {
     }
 
     return $art_ids;
-  }
-
-  /**
-   * Method to delete a given ART-to-Cohere mapping from DB table
-   *
-   * @access private
-   * @param string $art_id ART ID
-   * @param string $cohere_id Cohere ID
-   */
-  private function deleteIdMapping($art_id, $cohere_id) {
-
-    $stmnt = $this->pdo->prepare('DELETE FROM Mappings' .
-                                 '  WHERE art_id=:art_id' .
-                                 '  AND cohere_id=:cohere_id');
-    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
-    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
-    $stmnt->execute();
   }
 
   /**
