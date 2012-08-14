@@ -319,7 +319,7 @@ class ArtImporter {
   }
 
   private function findCohereIdByArtId($art_id) {
-    $stmnt = $this->pdo->prepare('SELECT cohere_id FROM Mappings' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT cohere_id FROM Mappings' .
                                  '  WHERE art_id=:art_id');
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->execute();
@@ -328,7 +328,7 @@ class ArtImporter {
   }
 
   private function findArtArgumentIdsByIssueId($issue_id) {
-    $stmnt = $this->pdo->prepare('SELECT argument_id FROM Issues_Arguments' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT argument_id FROM Issues_Arguments' .
                                  '  WHERE issue_id=:issue_id');
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
@@ -336,14 +336,14 @@ class ArtImporter {
 
     $argument_ids = array();
     foreach ($records as $row) {
-      $argumentt_ids[] = $row['argument_id'];
+      $argument_ids[] = $row['argument_id'];
     }
 
     return $argument_ids;
   }
 
   private function findArtStatementIdsByArgumentId($argument_id) {
-    $stmnt = $this->pdo->prepare('SELECT statement_id FROM Arguments_Statements' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT statement_id FROM Arguments_Statements' .
                                  '  WHERE argument_id=:argument_id');
     $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
     $stmnt->execute();
