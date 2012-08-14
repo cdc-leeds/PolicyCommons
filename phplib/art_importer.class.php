@@ -326,19 +326,19 @@ class ArtImporter {
     return ($row = $stmnt->fetch()) ? $row['cohere_id'] : null;
   }
 
-  private function findArtIdsByIssue($issue_id) {
-    $stmnt = $this->pdo->prepare('SELECT art_id FROM Mappings' .
+  private function findArtArgumentIdsByIssueId($issue_id) {
+    $stmnt = $this->pdo->prepare('SELECT argument_id FROM Issues_Arguments' .
                                  '  WHERE issue_id=:issue_id');
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
     $records = $stmnt->fetchAll();
 
-    $art_ids = array();
+    $argument_ids = array();
     foreach ($records as $row) {
-      $art_ids[] = $row['art_id'];
+      $argumentt_ids[] = $row['argument_id'];
     }
 
-    return $art_ids;
+    return $argument_ids;
   }
 
   private function findArtStatementIdsByArgumentId($argument_id) {
