@@ -316,21 +316,27 @@ class ArtImporter {
   }
 
   /**
-   * Method to delete ART ID and Corresponding Cohere argument data
+   * Method to delete ART argument and Corresponding Cohere argument data
    *
-   * Method for deleting argument data if it has been removed from ART tool.
+   * Method for deleting argument data if it has been removed from ART
+   * tool. Method also deletes all statements of argument.
    *
    * @param string $art_id ID of argument in ART
    * @todo TODO Need to delete all statements of argument.
    */
-  private function deleteArtId($art_id) {
-    $cohere_id = $this->findCohereIdByArtId($art_id);
+  private function deleteArtArgument($art_argument_id) {
+    $cohere_id = $this->findCohereIdByArtId($art_argument_id);
     deleteNode($cohere_id);
+    $this->deleteIdMapping($art_argument_id, $cohere_id);
 
-    $stmnt = $this->pdo->prepare('DELETE FROM Mappings' .
-                                 '  WHERE art_id=:art_id');
-    $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
-    $stmnt->execute();
+    $statement_ids = $this->findArtStatementIdsByArgumentId($art_argument_id);
+
+    foreach ($statement_ids as $statement_id) {
+      $cohere_id = $this->findCohereIdByArtId($statement_id);
+      deleteNode($cohere_id);
+      $this->deleteIdMapping($statement_id, $cohere_id);
+      $this->deleteArtArgumentStatementRelation($art_argument_id, $statement_id);
+    }
   }
 }
 
