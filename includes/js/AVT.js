@@ -133,11 +133,46 @@ var AVT = AVT || {};
             var config = {
                 data: data,
                 container: div_id,
+                before: importArtData,
                 onclick_handlers: {
                     "Issue": onClickIssue
                 }
             };
             ARGVIZ.map.draw(config);
+        };
+
+        // XXX ART Import hard-coded with Bernd Groninger user
+        // credentials.
+        // @todo TODO Integrate with toolbox authentication
+        var importArtData = function (d) {
+
+            if (d.nodetype !== "Issue") {
+                return;
+            }
+
+            var art_api = toolbox_state.art.path +
+                '/php/api.php?/issues/' + d.nodeid;
+
+            var postToCohere = function (data) {
+
+                var req_params = {
+                    method: 'artimport',
+                    format: 'json',
+                    data: data,
+                    user: 'berndgroninger@email.com'
+                };
+
+                var processCohereOutput = function (cohere_json) {
+                    var num_imported = cohere_json.connectionset &&
+                        cohere_json.connectionset[0].num_imported;
+                    d.num_responses = parseInt(d.num_responses, 10) +
+                        parseInt(num_imported, 10);
+                };
+
+                jQuery.post(req_url, req_params, processCohereOutput, "json");
+            };
+
+            jQuery.get(art_api, {}, postToCohere, "text");
         };
 
         var onClickIssue = function (issue) {
