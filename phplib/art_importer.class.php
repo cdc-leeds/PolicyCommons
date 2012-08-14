@@ -160,8 +160,10 @@ class ArtImporter {
     $this->storeArtIssueArgumentRelation($issue->id, $argument->id);
 
     foreach ($argument->premises as $premise) {
-      $connections[] = $this->importPremise($premise, $argument_node);
-      $this->storeArtArgumentStatementRelation($argument->id, $premise->statement->id);
+      if (! empty($premise->statement->text)) {
+        $connections[] = $this->importPremise($premise, $argument_node);
+        $this->storeArtArgumentStatementRelation($argument->id, $premise->statement->id);
+      }
     }
 
     return $connections;
