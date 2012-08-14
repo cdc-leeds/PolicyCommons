@@ -49,6 +49,22 @@ class ArtImporter {
     $this->pdo = new PDO('sqlite:' . $db_file);
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Create necessary tables
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  art_id TEXT,' .
+               '  cohere_id TEXT)');
+
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Arguments_Statements (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  argument_id TEXT,' .
+               '  statement_id TEXT)');
+
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Issues_Arguments (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  issue_id TEXT,' .
+               '  argument_id TEXT)');
+
   }
 
   public function __destruct() {
@@ -200,11 +216,6 @@ class ArtImporter {
    */
   private function storeIdMapping($art_id, $cohere_id) {
 
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
-               '  id INTEGER PRIMARY KEY,' .
-               '  art_id TEXT,' .
-               '  cohere_id TEXT)');
-
     $stmnt = $this->pdo->prepare('INSERT INTO Mappings' .
                            '  (art_id, cohere_id)' .
                            '  VALUES' .
@@ -242,11 +253,6 @@ class ArtImporter {
   private function storeArtArgumentStatementRelation(
     $argument_id, $statement_id) {
 
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Arguments_Statements (' .
-               '  id INTEGER PRIMARY KEY,' .
-               '  argument_id TEXT,' .
-               '  statement_id TEXT)');
-
     $stmnt = $this->pdo->prepare('INSERT INTO Arguments_Statements' .
                            '  (argument_id, statement_id)' .
                            '  VALUES' .
@@ -283,11 +289,6 @@ class ArtImporter {
    * @param string $argument_id Related ART argument ID
    */
   private function storeArtIssueArgumentRelation($issue_id, $argument_id) {
-
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Issues_Arguments (' .
-               '  id INTEGER PRIMARY KEY,' .
-               '  issue_id TEXT,' .
-               '  argument_id TEXT)');
 
     $stmnt = $this->pdo->prepare('INSERT INTO Issues_Arguments' .
                            '  (issue_id, argument_id)' .
