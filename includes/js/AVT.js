@@ -119,7 +119,8 @@ var AVT = AVT || {};
         var styles = [
             'tipTip.css',
             'ARGVIZ.map.css',
-            'ARGVIZ.network.css'
+            'ARGVIZ.network.css',
+            'AVT.css'
         ];
 
         var loadScript = function (script) {
@@ -167,6 +168,10 @@ var AVT = AVT || {};
                 container: div_id,
                 onclick_handlers: {
                     "Issue": onClickIssue
+                },
+                theme: {
+                    css: "impact-avt",
+                    range: 25
                 }
             };
             ARGVIZ.map.draw(config);
