@@ -300,6 +300,21 @@ class ArtImporter {
     return $art_ids;
   }
 
+  private function findArtStatementIdsByArgumentId($argument_id) {
+    $stmnt = $this->pdo->prepare('SELECT statement_id FROM Arguments_Statements' .
+                                 '  WHERE argument_id=:argument_id');
+    $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
+    $stmnt->execute();
+    $records = $stmnt->fetchAll();
+
+    $statement_ids = array();
+    foreach ($records as $row) {
+      $statement_ids[] = $row['statement_id'];
+    }
+
+    return $statement_ids;
+  }
+
   /**
    * Method to delete ART ID and Corresponding Cohere argument data
    *
