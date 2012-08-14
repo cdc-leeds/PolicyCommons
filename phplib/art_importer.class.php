@@ -104,6 +104,14 @@ class ArtImporter {
     $statement = $conclusion->statement;
     $connections = array();
 
+    // If we have already imported this argument then erase Cohere data and
+    // reimport
+    $cohere_id = $this->findCohereIdByArtId($argument->id);
+    if ($cohere_id) {
+      deleteNode($cohere_id);
+      $this->deleteIdMapping($argument->id, $cohere_id);
+    }
+
     $argument_node = addNode(
       $statement->text, $statement->quote, $this->privatedata,
       $this->argument_node_type->roleid);
@@ -125,9 +133,19 @@ class ArtImporter {
   private function importPremise($premise, $argument_node) {
     $statement = $premise->statement;
 
+    // If we have already imported this argument then erase Cohere data and
+    // reimport
+    $cohere_id = $this->findCohereIdByArtId($statement->id);
+    if ($cohere_id) {
+      deleteNode($cohere_id);
+      $this->deleteIdMapping($statement->id, $cohere_id);
+    }
+
     $node = addNode(
       $statement->text, $statement->quote, $this->privatedata,
       $this->statement_node_type->roleid);
+
+    $this->storeIdMapping($statement->id, $node->nodeid);
 
     $premise_role = $statement->scheme_role;
 
@@ -170,17 +188,16 @@ class ArtImporter {
       $this->premise_link_type;
   }
 
+
   /**
    * Method to persistently store mapping between ART ID and Cohere ID
-   *
-   * Method creates SQLite DB in a flat file
    *
    * @private
    * @param string $art_id ART ID, which is stored as an INTEGER
    * @param string $cohere_id Cohere ID, which is stored as TEXT
    * @param string $issue_id Cohere ID, which is stored as TEXT
    */
-  private function storeIdMapping($art_id, $cohere_id, $issue_id) {
+  private function storeIdMapping($art_id, $cohere_id, $issue_id = null) {
 
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
                '  id INTEGER PRIMARY KEY,' .
