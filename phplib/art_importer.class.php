@@ -277,6 +277,48 @@ class ArtImporter {
     $stmnt->execute();
   }
 
+  /**
+   * Method to store ART argument ID related to an issue ID
+   *
+   * @access private
+   * @param string $issue_id Issue ID
+   * @param string $argument_id Related ART argument ID
+   */
+  private function storeArtIssueArgumentRelation($issue_id, $argument_id) {
+
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Issues_Arguments (' .
+               '  id INTEGER PRIMARY KEY,' .
+               '  issue_id TEXT,' .
+               '  argument_id TEXT)');
+
+    $stmnt = $this->pdo->prepare('INSERT INTO Issues_Arguments' .
+                           '  (issue_id, argument_id)' .
+                           '  VALUES' .
+                           '  (:issue_id, :argument_id)');
+
+    $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
+  /**
+   * Method to delete a given ART issue-to-argument ID relationship
+   *
+   * @access private
+   * @param string $issue_id Issue ID
+   * @param string $argument_id Related ART argument ID
+   */
+  private function deleteArtIssueArgumentRelation(
+    $issue_id, $argument_id) {
+
+    $stmnt = $this->pdo->prepare('DELETE FROM Issues_Arguments' .
+                                 '  WHERE issue_id=:issue_id' .
+                                 '  AND argument_id=:argument_id');
+    $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
   private function findCohereIdByArtId($art_id) {
     $stmnt = $this->pdo->prepare('SELECT cohere_id FROM Mappings' .
                                  '  WHERE art_id=:art_id');
