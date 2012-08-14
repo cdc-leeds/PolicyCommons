@@ -13,6 +13,7 @@ class ArtImporter {
 	private $issue_node_type;
 	private $statement_node_type;
 	private $argument_node_type;
+  private $agent_link_type;
   private $circumstance_link_type;
   private $consequence_link_type;
   private $value_link_type;
@@ -32,6 +33,7 @@ class ArtImporter {
 
     // Add new link-types if they don't exist
     $this->addresses_link_type = addLinkType('addresses', 'Neutral');
+    $this->agent_link_type = addLinkType('agent', 'Neutral');
     $this->circumstance_link_type = addLinkType('circumstance', 'Neutral');
     $this->consequence_link_type = addLinkType('consequence', 'Neutral');
     $this->value_link_type = addLinkType('value', 'Neutral');
@@ -141,10 +143,13 @@ class ArtImporter {
   private function getLinkTypeFromPremiseRole($premise_role) {
     $premise_role = strtolower($premise_role);
 
+    // XXX ART incorrectly has 'agent' as a role type in Practical Reasoning
+    // Argument Scheme
     $premise_role_to_link_type_id = array(
-      'circumstance'=>$this->circumstance_link_type,
-      'consequence'=>$this->consequence_link_type,
-      'value'=>$this->value_link_type);
+      'agent'=>$this->agent_link_type,
+      'circumstances'=>$this->circumstance_link_type,
+      'consequences'=>$this->consequence_link_type,
+      'values'=>$this->value_link_type);
 
     return (isset($premise_role_to_link_type_id[$premise_role])) ?
       $premise_role_to_link_type_id[$premise_role] :
