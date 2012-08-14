@@ -147,8 +147,11 @@ class ArtImporter {
     // Argument Scheme
     $premise_role_to_link_type_id = array(
       'agent'=>$this->agent_link_type,
+      'circumstance'=>$this->circumstance_link_type,
       'circumstances'=>$this->circumstance_link_type,
+      'consequence'=>$this->consequence_link_type,
       'consequences'=>$this->consequence_link_type,
+      'value'=>$this->value_link_type,
       'values'=>$this->value_link_type);
 
     return (isset($premise_role_to_link_type_id[$premise_role])) ?
