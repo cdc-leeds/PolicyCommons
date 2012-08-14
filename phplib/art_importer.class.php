@@ -94,6 +94,12 @@ class ArtImporter {
       throw new Exception('The Issue object is not recognised.');
     }
 
+    // First get a list of previously stored ART argument IDs so we can
+    // compare to argument IDs currently be imported to determine if any
+    // arguments have been removed from ART since last import.
+    $previous_argument_ids = $this->findArtArgumentIdsByIssueId($issue->id);
+    $current_argument_ids = array();
+
     $responses = $json_object->responses;
     $num_imported = 0;
 
@@ -103,9 +109,22 @@ class ArtImporter {
         $connections = array_merge(
           $connections, $this->importArgument($response->argument, $issue));
         $num_imported += 1;
+        $current_argument_ids[] = $response->argument->id;
       }
     }
 
+    // If arguments have been removed from ART then remove them from here as
+    // well
+    $deleted_argument_ids = array_diff(
+      $previous_argument_ids, $current_argument_ids);
+
+    foreach ($deleted_argument_ids as $argument_id) {
+      $this->deleteArtArgument($argument_id);
+      $this->deleteArtIssueArgumentRelation($issue->id, $argument_id);
+    }
+
+
+    // Return imported data as Cohere ConnectionSet object
     $this->connectionset = new ConnectionSet($connections);
 
     // XXX Add new attribute to ConnectionSet that gives count of arguments
