@@ -258,6 +258,24 @@ class ArtImporter {
     $stmnt->execute();
   }
 
+  /**
+   * Method to delete a given ART argument-to-statement ID relationship
+   *
+   * @access private
+   * @param string $argument_id ART argument ID
+   * @param string $statement_id Related ART statement ID
+   */
+  private function deleteArtArgumentStatementRelation(
+    $argument_id, $statement_id) {
+
+    $stmnt = $this->pdo->prepare('DELETE FROM Arguments_Statements' .
+                                 '  WHERE argument_id=:argument_id' .
+                                 '  AND statement_id=:statement_id');
+    $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':statement_id', $statement_id, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
   private function findCohereIdByArtId($art_id) {
     $stmnt = $this->pdo->prepare('SELECT cohere_id FROM Mappings' .
                                  '  WHERE art_id=:art_id');
