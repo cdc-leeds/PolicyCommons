@@ -125,6 +125,7 @@ class ArtImporter {
 
     foreach ($argument->premises as $premise) {
       $connections[] = $this->importPremise($premise, $argument_node);
+      $this->storeArtArgumentStatementRelation($argument->id, $premise->statement->id);
     }
 
     return $connections;
