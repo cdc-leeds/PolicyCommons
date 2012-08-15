@@ -94,7 +94,9 @@ class ArtImporter {
     $issue = $json_object->issue;
 
     if (! getNode($issue->id) instanceof CNode) {
-      throw new Exception('The Issue object is not recognised.');
+      $this->connectionset = new ConnectionSet($connections);
+      $this->connectionset->num_imported = 0;
+      return $this->connectionset;
     }
 
     // First get a list of previously stored ART argument IDs so we can
