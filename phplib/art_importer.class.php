@@ -25,7 +25,7 @@ class ArtImporter {
 
 
   public function __construct() {
-    global $USER, $CFG;
+    global $USER, $CFG, $DB;
 
     // Add new node-types (i.e. roles) if they don't exist
     $this->issue_node_type = addRole('Issue');
@@ -43,25 +43,28 @@ class ArtImporter {
 
     $this->privatedata = $USER->privatedata;
 
-    // Temp DB file for storing ART ID to Cohere ID mappins
-    $db_file = $CFG->dirAddress . 'tmp/impact_art_cohere_mappings.sqlite';
+    // Create temp DB tables for storing ART ID to Cohere ID mappings
+    $dbhost = $CFG->databaseaddress;
+    $dbname = $CFG->databasename;
+    $dbuser = $CFG->databaseuser;
+    $dbpass = $CFG->databasepass;
+    $dsn = "mysql:host={$dbhost};dbname={$dbname}";
 
-    $this->pdo = new PDO('sqlite:' . $db_file);
+    $this->pdo = new PDO($dsn, $dbuser, $dbpass);
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Create necessary tables
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
-               '  id INTEGER PRIMARY KEY,' .
+               '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  art_id TEXT,' .
                '  cohere_id TEXT)');
 
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS Arguments_Statements (' .
-               '  id INTEGER PRIMARY KEY,' .
+               '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  argument_id TEXT,' .
                '  statement_id TEXT)');
 
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS Issues_Arguments (' .
-               '  id INTEGER PRIMARY KEY,' .
+               '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  issue_id TEXT,' .
                '  argument_id TEXT)');
 
