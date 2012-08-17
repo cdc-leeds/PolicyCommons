@@ -171,7 +171,7 @@ var AVT = AVT || {};
                 },
                 theme: {
                     css: "impact-avt",
-                    range: 25
+                    range: 20
                 }
             };
             ARGVIZ.map.draw(config);
