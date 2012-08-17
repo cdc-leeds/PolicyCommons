@@ -256,7 +256,7 @@ var AVT = AVT || {};
                         })
                         .on("click", function (n) {
 
-                            var window_attr = 'width=800,height=600';
+                            var window_attr = 'width=800,height=600,scrollbars=yes';
 
                             window.open(
                                 n.url, 'SourceDocument', window_attr);
