@@ -704,7 +704,7 @@ function loadDebateMap(context,args) {
                                 "document.php?urlid=" +
                                 n.urlid + "#" + n.nodeid;
 
-                            var window_attr = 'width=800,height=600';
+                            var window_attr = 'width=800,height=600,scrollbars=yes';
 
                             window.open(
                                 document_url, 'SourceDocument', window_attr);
