@@ -394,25 +394,21 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    // When node is clicked to be dragged, stop the mousedown event
 		    // from propagating to SpryMap event listener attached to parent,
 		    // which is used to allow map as a whole to be draggable.
-				    .on("mousedown", function() {d3.event.stopPropagation();})
+				    .on("mousedown", function() { d3.event.stopPropagation(); })
         // When node is dragged, 'mousemove' triggers force.resume(). Disable
         // this behavior by calling force.stop() instead.
-            .on('mousemove', function() {force.stop();});
+            .on('mousemove', function() { force.stop(); });
 
         // Execute any function that was passed in for nodes
         config.node_fn && node.each(config.node_fn);
 
 		    // Give "Issue" nodes a separate styling
-		    node.select(function (d) {
-				    return (d.nodetype === "Issue") ? this : null;	})
+		    node.select(function (d) { return (d.nodetype === "Issue") ? this : null; })
 				    .attr("class", "issue-node");
 
 		    // For "Argument" nodes, append a small circle that will be used
 		    // to toggle expansion on the Argument node.
-		    node.select(function(d) {
-				    // First select only the "Argument" nodes from the set of all
-				    // nodes
-				    return (d.nodetype === "Argument") ? this : null;})
+		    node.select(function(d) { return (d.nodetype === "Argument") ? this : null; })
 				    .append("svg:circle")
 				    .style("stroke", "steelblue")
 				    .style("cursor", "pointer")
@@ -435,8 +431,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    // has clicked (i.e. it doesn't update the underlying
 		    // force-directed network drawn on the page)
 		    function update(source) {
-				    node.select(function(d) {
-						    return (source.index === d.index) ? this : null;})
+				    node.select(function(d) { return (source.index === d.index) ? this : null; })
 						    .select("circle")
                 .attr("class", function (d) { return d.expand ?
                     "expanded" : "collapsed";
@@ -449,14 +444,14 @@ ARGVIZ.network = ARGVIZ.network || {};
 						    activation: "hover",
 						    defaultPosition: "top",
 						    delay: 0,
-						    content: "View the justification for this argument"
+						    content: "View the justification for this position"
 				    });
 
 				    jQuery('circle.expanded').tipTip({
 						    activation: "hover",
 						    defaultPosition: "top",
 						    delay: 0,
-						    content: "Hide the justification for this argument"
+						    content: "Hide the justification for this position"
 				    });
 
 				    // Once the user clicks the circle (and the update() function
@@ -468,6 +463,11 @@ ARGVIZ.network = ARGVIZ.network || {};
 
 		    }
 
+				/**
+				 * @param source Argument node being expanded
+				 * @param node Selection-object for nodes
+				 * @param link Selection-object for links
+				 */
         function expand_as_container(source, node, link) {
             var expanded_text = source.name;
 
@@ -481,13 +481,13 @@ ARGVIZ.network = ARGVIZ.network || {};
                     }).empty()) ? this : null;
                 });
 
-            outlinks.style("display", "none");
-
             var outnodes = node.select(function (d) {
                     return (! outlinks.select(function (l) {
                         return (l.target.index === d.index) ? this : null;
                     }).empty()) ? this : null;
                 });
+
+            outlinks.style("display", "none");
             outnodes.style("display", "none");
             outnodes.each(function (d) { expanded_text += ' ' + d.name; });
 
@@ -720,8 +720,13 @@ ARGVIZ.network = ARGVIZ.network || {};
         return n;
     }
 
+		/**
+		 * @param text Text to insert
+		 * @param textbox SVG Text DOM element
+		 */
     function insert_text(text, textbox) {
-        // textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
+				// Insert text using textFlow plugin
+        // Usage: textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
         var dy = textFlow(text, textbox, 225, 10, 10, false);
 
         // Get the bounding box of the text element so that we can
