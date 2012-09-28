@@ -469,7 +469,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 				 * @param link Selection-object for links
 				 */
         function expand_as_container(source, node, link) {
-            var expanded_text = source.name;
+            var expanded_text = '';
 
             var outlinks = link.select(function (d) {
                     return (source.index === d.source.index) ? this : null;
@@ -491,20 +491,34 @@ ARGVIZ.network = ARGVIZ.network || {};
             outnodes.style("display", "none");
             outnodes.each(function (d) { expanded_text += ' ' + d.name; });
 
-            node.select(function (d) {
+            var container = node.select(function (d) {
                     return (d.index === source.index) ? this : null;
-                })
-                .select('text')
-                .text('')
-                .each(function (d) {
-                    var text = source.expand ? expanded_text : d.name;
-                    insert_text(text, this);
-                 });
+                });
 
-            node.select(function (d) {
-                    return (d.index === source.index) ? this : null;
-                })
-                .select('rect')
+						var g, g_height;
+
+						var old_height = parseFloat(container.attr("height"));
+
+						if (source.expand) {
+                g = container.append('svg:g');
+								g.append('svg:text')
+										.attr("font-size", 12)
+										.attr("y", old_height + 10)
+										.attr("text-anchor", "start")
+										.each(function () {	insert_text(expanded_text, this); });
+
+								g_height = parseFloat(g.attr("height"));
+								container.attr("height", old_height + g_height);
+						} else {
+								g = container.select("g");
+								g_height = (g.empty()) ?
+										0 : parseFloat(g.attr("height"));
+
+								container.attr("height", old_height - g_height);
+								g.remove();
+						}
+
+            container.select('rect')
                 .attr("height", function () {
                           return this.parentNode.getAttribute("height"); })
                 .attr("width", function () {
