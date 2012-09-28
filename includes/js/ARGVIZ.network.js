@@ -489,13 +489,13 @@ ARGVIZ.network = ARGVIZ.network || {};
 
             outlinks.style("display", "none");
             outnodes.style("display", "none");
-            outnodes.each(function (d) { expanded_text += ' ' + d.name; });
 
             var container = node.select(function (d) {
                     return (d.index === source.index) ? this : null;
                 });
 
 						var g, g_height;
+						var dy, total_dy = 0;
 
 						var old_height = parseFloat(container.attr("height"));
 
@@ -505,10 +505,27 @@ ARGVIZ.network = ARGVIZ.network || {};
 										.attr("font-size", 12)
 										.attr("y", old_height + 10)
 										.attr("text-anchor", "start")
-										.each(function () {	insert_text(expanded_text, this); });
+										.each(function () {
+															dy = insert_text("Justification", this);
+															dy += 20;
+															container.attr("height", old_height + dy);
+															total_dy += dy;
+													});
 
-								g_height = parseFloat(g.attr("height"));
-								container.attr("height", old_height + g_height);
+								outnodes.each(function (d) {
+										var old_height = parseFloat(container.attr("height"));
+										g.append('svg:text')
+												.attr("font-size", 12)
+												.attr("y", old_height)
+												.attr("text-anchor", "start")
+												.each(function () {
+																	dy = insert_text(d.name, this);
+																	dy += 20;
+																	container.attr("height", old_height	+ dy);
+																	total_dy += dy;
+															});
+										g.attr("height", total_dy);
+								});
 						} else {
 								g = container.select("g");
 								g_height = (g.empty()) ?
