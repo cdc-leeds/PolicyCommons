@@ -721,13 +721,22 @@ ARGVIZ.network = ARGVIZ.network || {};
             .attr("font-size", 12)
             .attr("y", 20)
             .attr("text-anchor", "start")
-            .each(function (d) { insert_text(d.name, this); });
+            .each(function (d) {
+											insert_text(d.name, this);
+
+											// Get dimensions of textbox
+											var tb_height = this.getBBox().height;
+											var tb_width = this.getBBox().width;
+
+											// Adjust dimensions of containing <svg:g> element
+											this.parentNode.setAttribute("height", tb_height + 20);
+											this.parentNode.setAttribute("width", tb_width + 20);
+									});
+
 
         // Adjust size of rect after text has been inserted
-        rect.attr("height", function () {
-            return this.parentNode.getAttribute("height"); })
-            .attr("width", function () {
-                return this.parentNode.getAttribute("width"); });
+        rect.attr("height", n.attr("height"))
+            .attr("width", n.attr("width"));
 
         n = transform_nodes(n);
 
@@ -735,19 +744,16 @@ ARGVIZ.network = ARGVIZ.network || {};
     }
 
 		/**
+		 * Wrapper for textFlow utility function
+		 *
 		 * @param text Text to insert
 		 * @param textbox SVG Text DOM element
 		 */
     function insert_text(text, textbox) {
 				// Insert text using textFlow plugin
         // Usage: textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
-        var dy = textFlow(text, textbox, 225, 10, 10, false);
-
-        // Get the bounding box of the text element so that we can
-        // adjust the rectangle to suit
-        var bb = textbox.getBBox();
-        textbox.parentNode.setAttribute("height", bb.height + 20);
-        textbox.parentNode.setAttribute("width", bb.width + 20);
+				// Returns 'dy'
+        return textFlow(text, textbox, 225, 10, 10, false);
     }
 
      function transform_links(l) {
