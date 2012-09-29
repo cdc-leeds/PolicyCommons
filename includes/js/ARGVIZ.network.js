@@ -349,9 +349,9 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    // apply the scaling transformation to that containing element.
 		    vis = vis.append("svg:g");
 
-		    var defs = vis.append("svg:defs");
-        defs = link_arrowheads(defs);
-        defs = node_shadows(defs);
+		    var defs = vis.append("svg:defs")
+						.call(_defArrowheads)
+						.call(_defDropShadows);
 
 		    // Run the force directed layout algorithm
 		    // XXX
@@ -362,7 +362,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    // margins. This is a temporary solution until a proper way is
 		    // found to display the visualisation in the centre of the
 		    // containing div while at the same time giving room for
-		    // visualisation to be drawn so no text-nodes are cropped.
+		    // visualisation to be drawn so no text-nodes are not cropped.
 		    var force = d3.layout.force()
 				    .charge(-5000)
 				    .linkDistance(175)
@@ -376,17 +376,15 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    var link = vis.selectAll("g.link")
 				    .data(data.links)
 				    .enter().append("svg:g")
-				    .attr("class", "link");
-
-        link = draw_links(link);
+				    .attr("class", "link")
+						.call(_drawLinks);
 
 		    // Now draw the nodes
 		    var node = vis.selectAll("g.node")
 				    .data(data.nodes)
 				    .enter().append("svg:g")
-				    .attr("class", "node");
-
-        node = draw_nodes(node);
+				    .attr("class", "node")
+						.call(_drawNodes);
 
 
 		    // Make nodes draggable
@@ -663,7 +661,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 		    }
     }
 
-    function link_arrowheads(defs) {
+    function _defArrowheads(defs) {
 
         // Define arrowheads for links
         defs.append("svg:marker")
@@ -681,7 +679,7 @@ ARGVIZ.network = ARGVIZ.network || {};
         return defs;
     }
 
-    function node_shadows(defs) {
+    function _defDropShadows(defs) {
 
         // Define dropshadow for nodes
         var filter = defs.append("svg:filter")
@@ -708,7 +706,7 @@ ARGVIZ.network = ARGVIZ.network || {};
         return defs;
     }
 
-    function draw_links(l) {
+    function _drawLinks(l) {
 
         l.append("svg:path")
             .attr("id", function (d) {
@@ -727,7 +725,7 @@ ARGVIZ.network = ARGVIZ.network || {};
         return l;
     }
 
-    function draw_nodes(n) {
+    function _drawNodes(n) {
         n.attr("id", function (d) { return "node" + d.index; });
 
         var rect = n.append("svg:rect")
