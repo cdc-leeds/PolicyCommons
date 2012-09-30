@@ -540,6 +540,8 @@ ARGVIZ.network = ARGVIZ.network || {};
                           return this.parentNode.getAttribute("height"); })
                 .attr("width", function () {
                           return this.parentNode.getAttribute("width"); });
+
+						link.call(_transformLinks);
         }
 
         function expand_node(source, node, link) {
