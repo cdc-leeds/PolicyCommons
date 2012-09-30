@@ -691,6 +691,7 @@ function loadDebateMap(context,args) {
                         d3.select(this).each(function (n) {
                             n.urlid = n.urls[0].url.urlid;
                         })
+												    .select('text')
                             .on("mouseover", function (n) {
                                 this.style.textDecoration = "underline";
                                 this.style.fontStyle = "italic";
