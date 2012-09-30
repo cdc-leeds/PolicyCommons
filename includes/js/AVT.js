@@ -246,6 +246,7 @@ var AVT = AVT || {};
                         d3.select(this).each(function (n) {
                             n.url = n.urls[0].url.url;
                         })
+												    .select('text')
                             .on("mouseover", function (n) {
                                 this.style.textDecoration = "underline";
                                 this.style.fontStyle = "italic";
