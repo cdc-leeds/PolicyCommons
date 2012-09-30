@@ -486,7 +486,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 										.attr("y", old_height + 10)
 										.attr("text-anchor", "start")
 										.each(function () {
-															dy = insert_text("Justification", this);
+															dy = _insertText("Justification", this);
 															dy += 20;
 															container.attr("height", old_height + dy);
 															total_dy += dy;
@@ -499,7 +499,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 												.attr("y", old_height)
 												.attr("text-anchor", "start")
 												.each(function () {
-																	dy = insert_text(d.name, this);
+																	dy = _insertText(d.name, this);
 																	dy += 20;
 																	container.attr("height", old_height	+ dy);
 																	total_dy += dy;
@@ -567,8 +567,8 @@ ARGVIZ.network = ARGVIZ.network || {};
          * The 'tick' function for the force layout
          */
 		    function tick(e) {
-            link = transform_links(link);
-            node = transform_nodes(node);
+            link.call(_transformLinks);
+            node.call(_transformNodes);
 
 
 				    // Don't wait until force-directed algorithm completely
@@ -702,7 +702,7 @@ ARGVIZ.network = ARGVIZ.network || {};
             .attr("font-size", 10)
             .text(function (d) { return d.label; });
 
-        l = transform_links(l);
+        l.call(_transformLinks);
 
         return l;
     }
@@ -719,7 +719,7 @@ ARGVIZ.network = ARGVIZ.network || {};
             .attr("y", 20)
             .attr("text-anchor", "start")
             .each(function (d) {
-											insert_text(d.name, this);
+											_insertText(d.name, this);
 
 											// Get dimensions of textbox
 											var tb_height = this.getBBox().height;
@@ -735,7 +735,7 @@ ARGVIZ.network = ARGVIZ.network || {};
         rect.attr("height", n.attr("height"))
             .attr("width", n.attr("width"));
 
-        n = transform_nodes(n);
+        n.call(_transformNodes);
 
         return n;
     }
@@ -746,14 +746,14 @@ ARGVIZ.network = ARGVIZ.network || {};
 		 * @param text Text to insert
 		 * @param textbox SVG Text DOM element
 		 */
-    function insert_text(text, textbox) {
+    function _insertText(text, textbox) {
 				// Insert text using textFlow plugin
         // Usage: textFlow(myText,textToAppend,maxWidth,x,ddy,justified)
 				// Returns 'dy'
         return textFlow(text, textbox, 225, 10, 10, false);
     }
 
-     function transform_links(l) {
+     function _transformLinks(l) {
          l.select("path")
              .attr("d", function (d) { return moveto(d) + lineto(d); });
 
@@ -769,7 +769,7 @@ ARGVIZ.network = ARGVIZ.network || {};
          return l;
     }
 
-    function transform_nodes(n) {
+    function _transformNodes(n) {
         return n.attr("transform", function (d) {
             return "translate(" + d.x + "," + d.y + ")";
         });
