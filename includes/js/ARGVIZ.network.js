@@ -509,7 +509,15 @@ ARGVIZ.network = ARGVIZ.network || {};
 												.attr("y", old_height)
 												.attr("text-anchor", "start")
 												.each(function () {
-																	dy = _insertText(d.name, this);
+																	var label;
+																	var link = outlinks.select(function (l) {
+																			return (l.target.index === d.index) ?
+																					this : null; })
+																	    .each(function(l) {label = l.label; });
+
+																	var text = label + ": " + d.name;
+
+																	dy = _insertText(text, this);
 																	dy += 20;
 																	container.attr("height", old_height	+ dy);
 																	total_dy += dy;
