@@ -179,7 +179,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 				// target node and the imaginary line connecting the center of
 				// the target node with the top-left corner of the same
 				// node. Of course, this angle is fixed.
-				var tanRatioFixed =
+				var tan_fixed =
 						(d.target.centerY - d.target.y)
 						/
 						(d.target.centerX - d.target.x);
@@ -189,7 +189,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 				// target node and the imaginary line connecting the center of
 				// the target node with the center of the source node. This
 				// angle changes as the nodes move around the screen.
-				var tanRatioMoveable =
+				var tan_moveable =
 						Math.abs(d.target.centerY - d.source.newY)
 						/
 						Math.abs(d.target.centerX - d.source.newX); // Note,
@@ -200,91 +200,73 @@ ARGVIZ.network = ARGVIZ.network || {};
 
 				// Now work out the intersection point
 
-				if (tanRatioMoveable == tanRatioFixed) {
+				if (tan_moveable == tan_fixed) {
 						// Then path is intersecting at corner of textbox so draw
 						// path to that point
 
-						// By default assume path intersects a left-side corner
-						d.target.newX = d.target.x;
+						// If target node is to the left of the source node then
+						// path intersects a right-side corner. Otherwise path
+						// intersects a left-side corner.
+						d.target.newX = (d.target.centerX < d.source.newX) ?
+								d.target.x + w : d.target.x;
 
-						// But...
-						if (d.target.centerX < d.source.newX) {
-								// i.e. if target node is to left of the source node
-								// then path intersects a right-side corner
-								d.target.newX = d.target.x + w;
-						}
+						// If target node is above the source node then path
+						// intersects a bottom corner. Otherwise path intersects a
+						// top corner.
+						d.target.newY = (d.target.centerY < d.source.newY) ?
+								d.target.y + h : d.target.y;
 
-						// By default assume path intersects a top corner
-						d.target.newY = d.target.y;
-
-						// But...
-						if (d.target.centerY < d.source.newY) {
-								// i.e. if target node is above the source node
-								// then path intersects a bottom corner
-								d.target.newY = d.target.y + h;
-						}
+						return;
 				}
 
-				if (tanRatioMoveable < tanRatioFixed) {
+				if (tan_moveable < tan_fixed) {
 						// Then path is intersecting on a vertical side of the
 						// textbox, which means we know the x-coordinate of the
 						// path endpoint but we need to work out the y-coordinate
 
-						// By default assume path intersects left vertical side
-						d.target.newX = d.target.x;
-
-						// But...
-						if (d.target.centerX < d.source.newX) {
-								// i.e. if target node is to left of the source node
-								// then path intersects right vertical side
-								d.target.newX = d.target.x + w;
-						}
+						// If target node is to the left of the source node then
+						// path intersects right side. Otherwise path intersects
+						// left side.
+						d.target.newX = (d.target.centerX < d.source.newX) ?
+								d.target.x + w : d.target.x;
 
 						// Now use a bit of trigonometry to work out the y-coord.
 
-						// By default assume path intersects towards top of node
-						d.target.newY =
-								d.target.centerY - ((d.target.centerX - d.target.x)
-																		*
-																		tanRatioMoveable);
+						// By default assume path intersects towards top of
+						// node. But if target node is above the source node then
+						// path intersects towards bottom of the node
+						d.target.newY = d.target.centerY -
+								((d.target.centerX - d.target.x) * tan_moveable);
 
-						// But...
-						if (d.target.centerY < d.source.newY) {
-								// i.e. if target node is above the source node
-								// then path intersects towards bottom of the node
-								d.target.newY = (2 * d.target.y) - d.target.newY + h;
-						}
+						d.target.newY = (d.target.centerY < d.source.newY) ?
+								(2 * d.target.y) - d.target.newY + h : d.target.newY;
+
+						return;
 				}
 
-				if (tanRatioMoveable > tanRatioFixed) {
+				if (tan_moveable > tan_fixed) {
 						// Then path is intersecting on a horizontal side of the
 						// textbox, which means we know the y-coordinate of the
 						// path endpoint but we need to work out the x-coordinate
 
-						// By default assume path intersects top horizontal side
-						d.target.newY = d.target.y;
-
-						// But...
-						if (d.target.centerY < d.source.newY) {
-								// i.e. if target node is above the source node
-								// then path intersects bottom horizontal side
-								d.target.newY = d.target.y + h;
-						}
+						// If target node is above the source node the path
+						// intersects bottom side. Otherwise path intersects top
+						// side.
+						d.target.newY = (d.target.centerY < d.source.newY) ?
+								d.target.y + h : d.target.y;
 
 						// Now use a bit of trigonometry to work out the x-coord.
 
-						// By default assume path intersects towards lefthand side
-						d.target.newX =
-								d.target.centerX - ((d.target.centerY - d.target.y)
-																		/
-																		tanRatioMoveable);
+						// By default assume path intersects towards left
+						// side. But if target node is to the left of the source
+						// node then path intersects towards the right side.
+						d.target.newX =	d.target.centerX -
+								((d.target.centerY - d.target.y) / tan_moveable);
 
-						// But...
-						if (d.target.centerX < d.source.newX) {
-								// i.e. if target node is to left of the source node
-								// then path intersects towards the righthand side
-								d.target.newX = (2 * d.target.x) - d.target.newX + w;
-						}
+						d.target.newX = (d.target.centerX < d.source.newX) ?
+								(2 * d.target.x) - d.target.newX + w : d.target.newX;
+
+						return;
 				}
 		}
 
