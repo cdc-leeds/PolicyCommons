@@ -474,15 +474,25 @@ ARGVIZ.network = ARGVIZ.network || {};
                     return (d.index === source.index) ? this : null;
                 });
 
-						var g, g_height;
+						var g, g_height, inner_rect;
 						var dy, total_dy = 0;
 
 						var old_height = parseFloat(container.attr("height"));
+						var old_width = parseFloat(container.attr("width"));
 
 						if (source.expand) {
                 g = container.append('svg:g');
+
+								inner_rect = g.append('svg:rect')
+										.attr("width", old_width - 10)
+										.attr("x", 5)
+										.attr("y", old_height - 5)
+										.style("fill", "none")
+										.style("stroke-dasharray", "5 2");
+
 								g.append('svg:text')
 										.attr("font-size", 12)
+										.attr("font-weight", "bold")
 										.attr("y", old_height + 10)
 										.attr("text-anchor", "start")
 										.each(function () {
@@ -504,7 +514,9 @@ ARGVIZ.network = ARGVIZ.network || {};
 																	container.attr("height", old_height	+ dy);
 																	total_dy += dy;
 															});
+
 										g.attr("height", total_dy);
+										inner_rect.attr("height", total_dy - 5);
 								});
 						} else {
 								g = container.select("g");
