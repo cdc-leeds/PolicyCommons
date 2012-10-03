@@ -22,9 +22,6 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-///////////////////////////////////////
-// User Class
-///////////////////////////////////////
 
 class user {
 
@@ -61,13 +58,11 @@ class user {
      * Constructor
      *
      * @param string $userid (optional)
-     * @return User (this)
      */
-    function user($userid = "") {
-        if ($userid != ""){
-            $this->userid = $userid;
-            return $this;
-        }
+    public function __construct($userid = "") {
+      if ($userid != "") {
+        $this->userid = $userid;
+      }
     }
 
     /**

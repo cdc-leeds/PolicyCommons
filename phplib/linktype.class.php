@@ -23,9 +23,6 @@
  *                                                                              *
  ********************************************************************************/
 
-///////////////////////////////////////
-// LinkType Class
-///////////////////////////////////////
 class LinkType {
 
     public $linktypeid;
@@ -38,13 +35,11 @@ class LinkType {
      * Constructor
      *
      * @param string $linktypeid (optional)
-     * @return LinkType (this)
      */
-    function LinkType($linktypeid = ""){
-        if ($linktypeid != ""){
-            $this->linktypeid= $linktypeid;
-            return $this;
-        }
+    public function __construct($linktypeid = "") {
+      if ($linktypeid !== "") {
+        $this->linktypeid = $linktypeid;
+      }
     }
 
     /**

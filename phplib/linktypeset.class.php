@@ -23,12 +23,12 @@
  *                                                                              *
  ********************************************************************************/
 
-///////////////////////////////////////
-// LinkTypeSet Class
-///////////////////////////////////////
-
 class LinkTypeSet {
 
+  /**
+   * @todo These need to be made into constants elsewhere and referenced in
+   * getDefinedLinkSet() below as well as includes/util.php
+   */
 	public $USER_DEFINED_SEARCH = "User-Defined";
 	public $SIMILARITY_SEARCH = "Similarity";
 	public $CONTRAST_SEARCH = "Contrast";
@@ -51,12 +51,9 @@ class LinkTypeSet {
 	
     public $linktypes;
 
-    /**
-     * Constructor
-     * 
-     */
-    function LinkTypeSet() {
-        $this->linktypes = array();
+
+    public function __construct() {
+      $this->linktypes = array();
     }
     
     /**
