@@ -83,6 +83,24 @@ class LinkTypeSet {
          }
          return $this;  
     }
+
+    /**
+     * This function retrieves the set of link-types defined and owned by a
+     * given user.
+     *
+     * @param string $user_id
+     * @returns LinkTypeSet
+     */
+    public function loadByUser($user_id) {
+
+      $sql = "SELECT lt.LinkTypeID FROM LinkTypeGroup ltg
+            INNER JOIN LinkTypeGrouping ltgg ON ltgg.LinkTypeGroupID = ltg.LinkTypeGroupID
+            INNER JOIN LinkType lt ON lt.LinkTypeID = ltgg.LinkTypeID
+            WHERE ltgg.UserID = '".$user_id."' AND lt.UserID = '".$user_id."'
+            ORDER BY ltg.Label DESC, lt.Label ASC";
+
+      return $this->load($sql);
+    }
     
     function getDefinedLinkSet($type) {
 
