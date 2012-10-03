@@ -291,19 +291,12 @@ class user {
                     '".mysql_real_escape_string($photo, $DB->conn)."')";
         //accommodate group as a user, add user from group this will have value Y
 
-         //print $qry;
 
          $res = mysql_query( $qry, $DB->conn );
          if( !$res ) {
-         	//echo "error add new user.". $qry;
             return database_error();
          } else {
             $this->load();
-            // add the default roles for user
-            $r = new Role();
-            $r->setUpDefaultRoles($this->userid);
-            $lt = new LinkType();
-            $lt->setUpDefaultLinkTypes($this->userid);
             return $this;
          }
     }
