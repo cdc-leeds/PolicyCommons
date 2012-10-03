@@ -250,17 +250,6 @@ function deleteNodeVote($nodeid,$vote){
     return $n->deleteVote($vote);
 }
 
-/**
- * Get all the Votes for the object with the given itemid
- *
- * @param string $itemid
- * @return Voting or Error
- */
-/*function getVotes($itemid){
-    $n = new Voting($itemid);
-    return $n->getVotes();
-}*/
-
 
 /**
  * Get a node

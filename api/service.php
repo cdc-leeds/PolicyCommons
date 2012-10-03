@@ -79,10 +79,6 @@ switch($method){
         $connid = required_param('connid',PARAM_TEXT);
         $response = deleteConnectionVote($connid, $vote);
 		break;
-	/*case "getvotes":
-        $itemid = required_param('itemid',PARAM_TEXT);
-        $response = getVotes($nodeid, $vote);
-		break;*/
     case "validatesession":
         $userid = required_param('userid',PARAM_TEXT);
         $response = validateUserSession($userid);
