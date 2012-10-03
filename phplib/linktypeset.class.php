@@ -64,6 +64,33 @@ class LinkTypeSet {
     function add($linktype){
         array_push($this->linktypes,$linktype);   
     }
+
+    /**
+     * This function combines a given LinkTypeSet with the current one, taking
+     * care to remove any duplicates.
+     *
+     * @param LinkTypeSet $other_set Other LinkTypeSet to combine with this one
+     * @returns LinkTypeSet
+     */
+    public function combine(LinkTypeSet $other_set) {
+
+      $this_linktypes_copy = $this->linktypes;
+
+      foreach ($other_set->linktypes as $linktype_other) {
+        $add = true;
+
+        foreach ($this_linktypes_copy as $linktype_this) {
+          if ($linktype_other->linktypeid === $linktype_this->linktypeid) {
+            $add = false;
+            break;
+          }
+        }
+
+        $add and $this->add($linktype_other);
+      }
+
+      return $this;
+    }
     
     /**
      * load in the linktypes for the given SQL statement
