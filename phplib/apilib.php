@@ -3755,30 +3755,32 @@ function getLinkTypeByLabel($label){
 }
 
 /**
- * Get all the linktypes for the current user
+ * Get all the linktypes for the current user plus system-wide types.
  *
  * @return LinkTypeSet or Error
  */
 function getAllLinkTypes(){
-    return getUserLinkTypes();
+  global $CFG, $USER;
+  $system_types = new LinkTypeSet();
+  $user_types = new LinkTypeSet();
+
+  $system_types->loadByUser($CFG->defaultUserID);
+  $user_types->loadByUser($USER->userid);
+
+  return $user_types->combine($system_types);
 }
 
 /**
- * Get all the linktypes for the current user
+ * Get only the linktypes for the current user
  *
  * @return LinkTypeSet or Error
  */
 function getUserLinkTypes(){
     global $USER;
 
-    $sql = "SELECT lt.LinkTypeID FROM LinkTypeGroup ltg
-            INNER JOIN LinkTypeGrouping ltgg ON ltgg.LinkTypeGroupID = ltg.LinkTypeGroupID
-            INNER JOIN LinkType lt ON lt.LinkTypeID = ltgg.LinkTypeID
-            WHERE ltgg.UserID = '".$USER->userid."' AND lt.UserID = '".$USER->userid."'
-            ORDER BY ltg.Label DESC, lt.Label ASC";
-    $lts = new LinkTypeSet();
+    $user_types = new LinkTypeSet();
 
-    return $lts->load($sql);
+    return $user_types->loadByUser($USER->userid);
 }
 
 /**
