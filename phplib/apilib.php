@@ -2849,21 +2849,25 @@ function getRoleByName($rolename){
 }
 
 /**
- * Get all roles
+ * Get all roles (roles for current user plus system-default roles)
  *
  * @return RoleSet or Error
  */
-function getAllRoles(){
-    global $USER;
-    $sql = "SELECT cnt.NodeTypeID FROM NodeType cnt
-            INNER JOIN NodeTypeGrouping cntg On cntg.NodeTypeID = cnt.NodeTypeID
-            WHERE cnt.UserID='".$USER->userid."' ORDER BY Name ASC";
-    $rs = new RoleSet();
-    return $rs->load($sql);
+function getAllRoles() {
+
+  global $CFG, $USER;
+
+  $system_roles = new RoleSet();
+  $user_roles = new RoleSet();
+
+  $system_roles->loadByUser($CFG->defaultUserID);
+  $user_roles->loadByUser($USER->userid);
+
+  return $user_roles->combine($system_roles);
 }
 
 /**
- * Get the current user's roles. Login required.
+ * Get only the current user's roles. Login required.
  *
  * @return RoleSet or Error
  */
