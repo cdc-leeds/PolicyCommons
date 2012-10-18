@@ -2869,11 +2869,10 @@ function getAllRoles(){
  */
 function getUserRoles(){
     global $USER;
-    $sql = "SELECT cnt.NodeTypeID FROM NodeType cnt
-        	INNER JOIN NodeTypeGrouping cntg On cntg.NodeTypeID = cnt.NodeTypeID
-            WHERE cnt.UserID='".$USER->userid."' ORDER BY Name ASC";
-    $rs = new RoleSet();
-    return $rs->load($sql);
+
+    $user_roles = new RoleSet();
+
+    return $user_roles->loadByUser($USER->userid);
 }
 
 /**
