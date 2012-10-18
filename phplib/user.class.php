@@ -867,6 +867,24 @@ class user {
 	    $this->load();
 	    return $this;
 	}
+
+  /**
+   * Retrieve user-defined link-types
+   * @returns LinkTypeSet
+   */
+  public function getLinkTypes() {
+    $link_types = new LinkTypeSet();
+    return $link_types->loadByUser($this->userid);
+  }
+
+  /**
+   * Retrieve user-defined node-types
+   * @returns NodeTypeSet
+   */
+  public function getNodeTypes() {
+    $node_types = new NodeTypeSet();
+    return $node_types->loadByUser($this->userid);
+  }
 }
 
 ?>
