@@ -39,6 +39,33 @@ class RoleSet {
     function add($role){
         array_push($this->roles,$role);   
     }
+
+    /**
+     * This function combines a given RoleSet with the current one, taking
+     * care to remove any duplicates.
+     *
+     * @param RoleSet $other_set Other RoleSet to combine with this one
+     * @returns RoleSet
+     */
+    public function combine(RoleSet $other_set) {
+
+      $this_roles_copy = $this->roles;
+
+      foreach ($other_set->roles as $role_other) {
+        $add = true;
+
+        foreach ($this_roles_copy as $role_this) {
+          if ($role_other->roleid === $role_this->roleid) {
+            $add = false;
+            break;
+          }
+        }
+
+        $add and $this->add($role_other);
+      }
+
+      return $this;
+    }
     
     /**
      * load in the roles for the given SQL statement
