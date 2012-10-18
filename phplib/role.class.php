@@ -23,10 +23,6 @@
  *                                                                              *
  ********************************************************************************/
 
-///////////////////////////////////////
-// Role Class
-///////////////////////////////////////
-
 class Role {
     public $roleid;
     public $name;
@@ -38,13 +34,11 @@ class Role {
      * Constructor
      *
      * @param string $roleid (optional)
-     * @return Role (this)
      */
-    function Role($roleid = ""){
-        if ($roleid != ""){
-            $this->roleid= $roleid;
-            return $this;
-        }
+    public function __construct($roleid = "") {
+      if ($roleid != "") {
+        $this->roleid = $roleid;
+      }
     }
 
     /**

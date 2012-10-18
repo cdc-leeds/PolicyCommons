@@ -23,20 +23,12 @@
  *                                                                              *
  ********************************************************************************/
 
-///////////////////////////////////////
-// RoleSet Class
-///////////////////////////////////////
-
 class RoleSet {
 
     public $roles;
 
-    /**
-     * Constructor
-     * 
-     */
-    function RoleSet() {
-        $this->roles = array();
+    public function __construct() {
+      $this->roles = array();
     }
     
     /**
