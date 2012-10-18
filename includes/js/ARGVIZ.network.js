@@ -754,8 +754,10 @@ ARGVIZ.network = ARGVIZ.network || {};
 
 
         // Adjust size of rect after text has been inserted
-        rect.attr("height", n.attr("height"))
-            .attr("width", n.attr("width"));
+				rect.attr("height", function () {
+											return this.parentNode.getAttribute("height"); })
+						.attr("width", function () {
+											return this.parentNode.getAttribute("width"); });
 
         n.call(_transformNodes);
 
