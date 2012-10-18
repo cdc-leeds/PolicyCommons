@@ -77,6 +77,21 @@ class RoleSet {
         } 
         return $this;  
     }
+
+    /**
+     * This function retrieves the set of node-types (roles) defined and owned
+     * by a given user.
+     *
+     * @param string $user_id
+     * @returns RoleSet
+     */
+    public function loadByUser($user_id) {
+      $sql = "SELECT cnt.NodeTypeID FROM NodeType cnt
+              INNER JOIN NodeTypeGrouping cntg On cntg.NodeTypeID = cnt.NodeTypeID
+              WHERE cnt.UserID='". $user_id ."' ORDER BY Name ASC";
+
+      return $this->load($sql);
+    }
     
 }
 ?>
