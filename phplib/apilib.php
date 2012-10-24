@@ -432,42 +432,9 @@ function deleteNodes($nodeids){
 function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long'){
     global $USER;
 
-    $sql = "SELECT t.NodeID,
-                (SELECT COUNT(FromID) FROM Triple WHERE FromID=t.NodeID)+
-                (SELECT COUNT(ToID) FROM Triple WHERE ToID=t.NodeID) AS connectedness
-            FROM Node t ";
+    $user_nodes = new NodeSet();
 
-    if ($filternodetypes != "") {
-        $pieces = explode(",", $filternodetypes);
-        $loopCount = 0;
-        $searchNodeTypes = "";
-        foreach ($pieces as $value) {
-            if ($loopCount == 0) {
-            	$searchNodeTypes .= "'".$value."'";
-            } else {
-            	$searchNodeTypes .= ",'".$value."'";
-            }
-            $loopCount++;
-        }
-
-        $sql .= "LEFT JOIN NodeType nt ON t.NodeTypeID = nt.NodeTypeID ";
-	    $sql .= "WHERE nt.Name IN (".$searchNodeTypes.") AND ";
-    } else {
-        $sql .= "WHERE ";
-    }
-
-    $sql .= "t.UserID = '".$userid."' AND (
-            (t.Private = 'N')
-             OR
-            (t.UserID = '".$USER->userid."') ". // the current user
-            " OR
-            (t.NodeID IN (SELECT tg.NodeID FROM NodeGroup tg
-                         INNER JOIN UserGroup ug ON ug.GroupID=tg.GroupID
-                         WHERE ug.UserID = '".$USER->userid."')". // the current user
-            "))";
-
-    $ns = new NodeSet();
-    return $ns->load($sql,$start,$max,$orderby,$sort,$style);
+    return $user_nodes->loadByUser($userid, $start, $max, $orderby, $sort, $style);
 }
 
 /**
