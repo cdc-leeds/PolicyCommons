@@ -240,6 +240,29 @@ var AVT = AVT || {};
             jQuery.getJSON(req_url, req_params, drawMap);
         };
 
+        // XXX SCT Import hard-coded with Bernd Groninger user
+        // credentials.
+        // @todo TODO Integrate with toolbox authentication
+        function importSctData (callback) {
+
+						// XXX Hardcoded request to SCT for argument-ID 1
+						var sct_api = toolbox_state.sct.path +
+								"/index.php?submitid=survey-results/1";
+
+						var postToCohere = function (data) {
+								var req_params = {
+										method: "sctimport",
+										format: "json",
+										data: data,
+										user: "berndgroninger@email.com"
+								};
+
+								jQuery.post(req_url, req_params, callback, "json");
+						};
+
+						jQuery.get(sct_api, {}, postToCohere, "text");
+				}
+
         // XXX ART Import hard-coded with Bernd Groninger user
         // credentials.
         // @todo TODO Integrate with toolbox authentication
@@ -276,7 +299,7 @@ var AVT = AVT || {};
 
              debate_issues.forEach(getIssueArguments);
 
-        })(debate_issues, callback);
+        })(debate_issues, function(){ importSctData(callback); });
 
         return toolbox_state;
     };
