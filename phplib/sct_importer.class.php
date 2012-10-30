@@ -38,8 +38,7 @@ class SctImporter {
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_SCT_Votes (' .
-               '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
-               '  cohere_id TEXT,' .
+               '  cohere_id VARCHAR(255) NOT NULL PRIMARY KEY,' .
                '  agree_votes INTEGER,' .
                '  disagree_votes INTEGER)');
 
@@ -77,13 +76,13 @@ class SctImporter {
       }
     }
 
-    return new Result('Import SCT data', 'success');
+    return new Result('sctimport', true);
   }
 
   private function _storeStatementVotes(
     $cohere_id, $agree_votes, $disagree_votes) {
     
-    $stmnt = $this->pdo->prepare('INSERT INTO IMPACT_SCT_Votes' .
+    $stmnt = $this->pdo->prepare('REPLACE INTO IMPACT_SCT_Votes' .
                            '  (cohere_id, agree_votes, disagree_votes)' .
                            '  VALUES' .
                            '  (:cohere_id, :agree_votes, :disagree_votes)');
