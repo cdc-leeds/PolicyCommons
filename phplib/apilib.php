@@ -5464,5 +5464,38 @@ function artImport($data, $user) {
   }
   return $response;
 }
+
+/**
+ * Function to import survey-results data from IMPACT SCT tool
+ *
+ * Function instantiates SctImporter class to import JSON string of
+ * survey-results data. Import requires that a valid user be logged in. As a hack
+ * for IMPACT project, as long as a valid user email is supplied then no need to
+ * supply a password.
+ *
+ * @todo XXX Hacked solution for IMPACT project. Remove from core API.
+ * @param $data string JSON string of argumentation data
+ * @param $user string Email address of valid Cohere user
+ */
+function sctImport($data, $user) {
+  global $USER;
+  require_once('sct_importer.class.php');
+
+  $u = new User();
+  $u->setEmail($user);
+  $USER = $u->getByEmail();
+
+  if ($USER instanceof error) {
+    return $USER;
+  }
+
+  try {
+    $importer = new SctImporter();
+    $response = $importer->import($data);;
+  } catch (Exception $e) {
+    $response = $e;
+  }
+  return $response;
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>

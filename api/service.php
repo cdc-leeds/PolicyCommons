@@ -813,10 +813,14 @@ switch($method){
 				$response = getResponsesToIssue($nodeid);
         break;
     case 'artimport':
-      global $USER;
       $data = required_param('data', PARAM_TEXT);
       $user = required_param('user', PARAM_TEXT);
       $response = artImport($data, $user);
+      break;
+    case 'sctimport':
+      $data = required_param('data', PARAM_TEXT);
+      $user = required_param('user', PARAM_TEXT);
+      $response = sctImport($data, $user);
       break;
     default:
         //error as method not defined.
