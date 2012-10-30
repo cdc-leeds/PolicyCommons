@@ -5491,7 +5491,7 @@ function sctImport($data, $user) {
 
   try {
     $importer = new SctImporter();
-    $response = $importer->import($data);;
+    $response = $importer->import($data);
   } catch (Exception $e) {
     $response = $e;
   }
