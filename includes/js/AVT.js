@@ -177,48 +177,6 @@ var AVT = AVT || {};
             ARGVIZ.map.draw(config);
         };
 
-        var callback = function () {
-            jQuery.getJSON(req_url, req_params, drawMap);
-        };
-
-        // XXX ART Import hard-coded with Bernd Groninger user
-        // credentials.
-        // @todo TODO Integrate with toolbox authentication
-        (function importArtData (debate_issues, callback) {
-
-             var completed = 0;
-
-             var getIssueArguments = function (issue) {
-
-                 var art_api = toolbox_state.art.path +
-                     '/php/api.php?/issues/' + issue;
-
-                 var postToCohere = function (data) {
-
-                     var req_params = {
-                         method: 'artimport',
-                         format: 'json',
-                         data: data,
-                         user: 'berndgroninger@email.com'
-                     };
-
-                     var processCohereOutput = function (cohere_json) {
-                         completed += 1;
-                         if (completed === debate_issues.length) {
-                             callback();
-                         }
-                     };
-
-                     jQuery.post(req_url, req_params, processCohereOutput, "json");
-                 };
-
-                 jQuery.get(art_api, {}, postToCohere, "text");
-             };
-
-             debate_issues.forEach(getIssueArguments);
-
-        })(debate_issues, callback);
-
         var onClickIssue = function (issue) {
 
             // Handler will be called with 'this' set to current DOM element
@@ -277,6 +235,48 @@ var AVT = AVT || {};
 
             jQuery.getJSON(req_url, req_params, drawNetwork);
         };
+
+        var callback = function () {
+            jQuery.getJSON(req_url, req_params, drawMap);
+        };
+
+        // XXX ART Import hard-coded with Bernd Groninger user
+        // credentials.
+        // @todo TODO Integrate with toolbox authentication
+        (function importArtData (debate_issues, callback) {
+
+             var completed = 0;
+
+             var getIssueArguments = function (issue) {
+
+                 var art_api = toolbox_state.art.path +
+                     '/php/api.php?/issues/' + issue;
+
+                 var postToCohere = function (data) {
+
+                     var req_params = {
+                         method: 'artimport',
+                         format: 'json',
+                         data: data,
+                         user: 'berndgroninger@email.com'
+                     };
+
+                     var processCohereOutput = function (cohere_json) {
+                         completed += 1;
+                         if (completed === debate_issues.length) {
+                             callback();
+                         }
+                     };
+
+                     jQuery.post(req_url, req_params, processCohereOutput, "json");
+                 };
+
+                 jQuery.get(art_api, {}, postToCohere, "text");
+             };
+
+             debate_issues.forEach(getIssueArguments);
+
+        })(debate_issues, callback);
 
         return toolbox_state;
     };
