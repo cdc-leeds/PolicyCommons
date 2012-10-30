@@ -822,6 +822,11 @@ switch($method){
       $user = required_param('user', PARAM_TEXT);
       $response = sctImport($data, $user);
       break;
+    case 'sctvotesbystatement':
+      $nodeid = required_param('nodeid', PARAM_TEXT);
+      $user = required_param('user', PARAM_TEXT);
+      $response = sctVotesByStatement($nodeid, $user);
+      break;
     default:
         //error as method not defined.
         global $ERROR;

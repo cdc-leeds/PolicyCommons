@@ -5497,5 +5497,26 @@ function sctImport($data, $user) {
   }
   return $response;
 }
+
+function sctVotesByStatement($nodeid, $user) {
+  global $USER;
+  require_once('sct_importer.class.php');
+
+  $u = new User();
+  $u->setEmail($user);
+  $USER = $u->getByEmail();
+
+  if ($USER instanceof error) {
+    return $USER;
+  }
+
+  try {
+    $importer = new SctImporter();
+    $response = $importer->getVotesByStatement($nodeid);
+  } catch (Exception $e) {
+    $response = $e;
+  }
+  return $response;
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>

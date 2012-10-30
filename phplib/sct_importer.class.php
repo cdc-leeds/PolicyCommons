@@ -79,6 +79,19 @@ class SctImporter {
     return new Result('sctimport', true);
   }
 
+  public function getVotesByStatement($cohere_id) {
+    $row = $this->_findVotesByStatement($cohere_id);
+
+    if (empty($row)) {
+      return new stdClass();
+    }
+
+    $votes = new stdClass();
+    $votes->agree_votes = $row['agree_votes'];
+    $votes->disagree_votes = $row['disagree_votes'];
+    return $votes;
+  }
+
   private function _storeStatementVotes(
     $cohere_id, $agree_votes, $disagree_votes) {
     
@@ -100,6 +113,15 @@ class SctImporter {
     $stmnt->execute();
 
     return ($row = $stmnt->fetch()) ? $row['cohere_id'] : null;
+  }
+
+  private function _findVotesByStatement($cohere_id) {
+    $stmnt = $this->pdo->prepare('SELECT agree_votes, disagree_votes FROM IMPACT_SCT_Votes' .
+                                 '  WHERE cohere_id=:cohere_id');
+    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    return ($row = $stmnt->fetch()) ? $row : null;
   }
 }
 
