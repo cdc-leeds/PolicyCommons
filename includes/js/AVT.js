@@ -257,7 +257,23 @@ var AVT = AVT || {};
 										user: "berndgroninger@email.com"
 								};
 
-								jQuery.post(req_url, req_params, callback, "json");
+								var processCohereOutput = function (cohere_json) {
+										var outcome_obj = cohere_json.result[0].outcome[0];
+										var consultation_arg = {
+												id: outcome_obj.stdclass.argument_id,
+												premises: []
+										};
+
+										outcome_obj.stdclass.premises
+												.forEach(function(p) {
+																		 consultation_arg.premises.push(p.stdclass);
+																 });
+
+										toolbox_state.avt.consultation_arg = consultation_arg;
+										callback();
+								};
+
+								jQuery.post(req_url, req_params, processCohereOutput, "json");
 						};
 
 						jQuery.get(sct_api, {}, postToCohere, "text");
