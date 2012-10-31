@@ -369,14 +369,15 @@ ARGVIZ.network = ARGVIZ.network || {};
 						.call(_drawNodes);
 
 
-		    // Make nodes draggable
+		    // Make nodes draggable. Also:
+				// - Stop the mousedown event from propagating to SpryMap
+				//   event listener attached to parent which is used to allow
+				//   the map as a whole to be draggable.
+				// - When node is dragged, 'mousemove' triggers
+				//   force.resume(). So disable this behaviour by calling
+				//   force.stop() instead.
 				node.call(force.drag)
-		    // When node is clicked to be dragged, stop the mousedown event
-		    // from propagating to SpryMap event listener attached to parent,
-		    // which is used to allow map as a whole to be draggable.
 				    .on("mousedown", function() { d3.event.stopPropagation(); })
-        // When node is dragged, 'mousemove' triggers force.resume(). Disable
-        // this behavior by calling force.stop() instead.
             .on('mousemove', function() { force.stop(); });
 
         // Execute any function that was passed in for nodes
@@ -439,7 +440,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 				    // time user hovers over
 				    jQuery("#tiptip_holder").hide();
 
-            expand_as_container(source, node, link);
+            _expandAsContainer(source, node, link);
 
 		    }
 
@@ -448,7 +449,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 				 * @param node Selection-object for nodes
 				 * @param link Selection-object for links
 				 */
-        function expand_as_container(source, node, link) {
+        function _expandAsContainer(source, node, link) {
             var expanded_text = '';
 
             var outlinks = link.select(function (d) {
@@ -560,7 +561,7 @@ ARGVIZ.network = ARGVIZ.network || {};
 						link.call(_transformLinks);
         }
 
-        function expand_node(source, node, link) {
+        function _expandNode(source, node, link) {
 
             // For this source node, get all the outgoing links where the
             // target node is a Statement
