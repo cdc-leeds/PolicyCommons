@@ -474,8 +474,8 @@ ARGVIZ.network = ARGVIZ.network || {};
                     return (d.index === source.index) ? this : null;
                 });
 
-						var g, g_height, inner_rect;
-						var dy, total_dy = 0;
+						var g, g_height, g_dx, inner_rect;
+						var dx, dy, total_dy = 0;
 
 						var old_height = parseFloat(container.attr("height"));
 						var old_width = parseFloat(container.attr("width"));
@@ -504,6 +504,8 @@ ARGVIZ.network = ARGVIZ.network || {};
 
 								outnodes.each(function (d) {
 										var old_height = parseFloat(container.attr("height"));
+										var width = parseFloat(container.attr("width"));
+
 										g.append('svg:text')
 												.attr("font-size", 12)
 												.attr("y", old_height)
@@ -521,17 +523,31 @@ ARGVIZ.network = ARGVIZ.network || {};
 																	dy += 20;
 																	container.attr("height", old_height	+ dy);
 																	total_dy += dy;
+
+																	width = (width < this.getBBox().width) ?
+																			this.getBBox().width : width;
+																	dx = width - old_width;
+																	container.attr("width", width);
 															});
 
-										g.attr("height", total_dy);
-										inner_rect.attr("height", total_dy - 5);
+										g.attr("height", total_dy)
+												.attr("width", width)
+												.attr("dx", dx);
+
+										inner_rect.attr("height", total_dy - 5)
+																	.attr("width", width - 10);
 								});
 						} else {
 								g = container.select("g");
 								g_height = (g.empty()) ?
 										0 : parseFloat(g.attr("height"));
 
-								container.attr("height", old_height - g_height);
+								g_dx = (g.empty()) ?
+										0 : parseFloat(g.attr("dx"));
+
+								container.attr("height", old_height - g_height)
+										.attr("width", old_width - g_dx);
+
 								g.remove();
 						}
 
