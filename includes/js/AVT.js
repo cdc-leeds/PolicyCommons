@@ -224,10 +224,49 @@ var AVT = AVT || {};
                         .style("cursor", "pointer");
                     };
 
+								var nodeVotes = function (n) {
+										var isConsultationArgument = function (node) {
+												if(node.nodeid === toolbox_state.avt.consultation_arg.id) {
+														return true;
+												}
+												return false;
+										};
+
+										var isConsultationPremise = function (node) {
+												var premises = toolbox_state.avt.consultation_arg.premises;
+												var i;
+												for (i = 0; i < premises.length; i += 1) {
+														if (premises[i].id === node.nodeid) {
+																node.agree_votes = premises[i].agree_votes;
+																node.disagree_votes = premises[i].disagree_votes;
+																return true;
+														}
+												}
+
+												return false;
+										};
+
+										if (isConsultationArgument(n)) {
+												d3.select(this)
+														.select("rect")
+														.attr("stroke-width", "5");
+										}
+
+										if (isConsultationPremise(n)) {
+												n.name += " (Agree: " + n.agree_votes +
+														", Disagree: " +	n.disagree_votes + ")";
+										}
+								};
+
+								var nodeCallback = function(n) {
+										nodeSource.apply(this, [n]);
+										nodeVotes.apply(this, [n]);
+								};
+
                 var config = {
                     data: data,
                     container: container,
-                    node_fn: nodeSource
+                    node_fn: nodeCallback
                 };
 
                 ARGVIZ.network.draw(config);
