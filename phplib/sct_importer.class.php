@@ -60,8 +60,17 @@ class SctImporter {
    */
   public function import($json_string) {
 
-    $connections = array();
     $json_object = json_decode($json_string);
+    $id = $json_object->id;
+    $cohere_id = $this->_findCohereIdByArtId('practical_reasoning_as-'.$id);
+
+    if (empty($cohere_id)) {
+      return new Result('sctimport', false);
+    }
+
+    $result = new stdClass();
+    $result->argument_id = $cohere_id;
+    $result->premises = array();
 
     $premises = $json_object->premises;
 
@@ -73,10 +82,16 @@ class SctImporter {
         $agree_votes = $premise->statement->agree_votes;
         $disagree_votes = $premise->statement->disagree_votes;
         $this->_storeStatementVotes($cohere_id, $agree_votes, $disagree_votes);
+
+        $result_premise = new stdClass();
+        $result_premise->id = $cohere_id;
+        $result_premise->agree_votes = $agree_votes;
+        $result_premise->disagree_votes = $disagree_votes;
+        $result->premises[] = $result_premise;
       }
     }
 
-    return new Result('sctimport', true);
+    return new Result('sctimport', $result);
   }
 
   public function getVotesByStatement($cohere_id) {
