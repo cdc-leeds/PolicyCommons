@@ -827,6 +827,10 @@ switch($method){
       $user = required_param('user', PARAM_TEXT);
       $response = sctVotesByStatement($nodeid, $user);
       break;
+    case 'generatereport':
+      $nodeid = required_param('nodeid', PARAM_TEXT);
+      $response = generateReport($nodeid);
+      break;
     default:
         //error as method not defined.
         global $ERROR;

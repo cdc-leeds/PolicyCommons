@@ -5518,5 +5518,34 @@ function sctVotesByStatement($nodeid, $user) {
   }
   return $response;
 }
+
+/**
+ * Function to generate written report of consultation for IMPACT toolbox
+ *
+ * Function instantiates ReportWriter class, passing it the consultation-debate
+ * contents and a PHPRtfLite instance and then sends the document as an
+ * attachment to the clients browser for download.
+ *
+ * @todo XXX Hacked solution for IMPACT project. Remove from core API.
+ * @param $debate_id string ID (Cohere NodeID) of the consultation-debate
+ */
+function generateReport($debate_id) {
+  require_once('report_writer.class.php');
+  require_once('phprtflite' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'PHPRtfLite.php');
+
+  PHPRtfLite::registerAutoloader();
+
+  $rtf_doc = new PHPRtfLite();
+  $contents = getDebateContents($debate_id);
+
+  $writer = new ReportWriter($rtf_doc);
+  $writer->prepareDocument($contents);
+
+  if($writer->downloadDocument($debate_id . '.rtf')) {
+    return new Result('generatereport', true);
+  } else {
+    return new Result('generatereport', false);
+  }
+}
 // ensure there are no spaces or blank lines after this closing tag
 ?>
