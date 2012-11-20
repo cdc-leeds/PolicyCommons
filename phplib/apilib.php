@@ -5550,7 +5550,6 @@ function generateReport($debate_id) {
 }
 
 function _buildContentTree($connectionset) {
-
   // Get total number of issues and responses
   $num_issues = $connectionset->num_issues;
   $num_responses = $connectionset->num_responses;
@@ -5580,6 +5579,34 @@ function _buildContentTree($connectionset) {
     }
 
     $node_children_index[$from_node->nodeid][] = $to_node->nodeid;
+
+    // Now put responses to Issues into the content tree
+    if ($to_node->role->name === 'Issue') {
+      $responses = getResponsesToIssue($to_node->nodeid);
+
+      foreach ($responses->connections as $r_connection) {
+        $r_from_node = $r_connection->from;
+        $r_to_node = $r_connection->to;
+
+        if (! isset($node_index[$r_from_node->nodeid])) {
+          $node_index[$r_from_node->nodeid] = $r_from_node;
+        }
+
+        if (! isset($node_index[$r_to_node->nodeid])) {
+          $node_index[$r_to_node->nodeid] = $r_to_node;
+        }
+
+        if ($r_connection->linktype->label === 'addresses') {
+          list($r_from_node, $r_to_node) = array($r_to_node, $r_from_node);
+        }
+
+        if (! isset($node_children_index[$r_from_node->nodeid])) {
+          $node_children_index[$r_from_node->nodeid] = array();
+        }
+
+        $node_children_index[$r_from_node->nodeid][] = $r_to_node->nodeid;
+      }
+    }
   }
 
   $tree = new stdClass();
