@@ -5537,15 +5537,57 @@ function generateReport($debate_id) {
 
   $rtf_doc = new PHPRtfLite();
   $contents = getDebateContents($debate_id);
+  $content_tree = _buildContentTree($contents);
 
   $writer = new ReportWriter($rtf_doc);
-  $writer->prepareDocument($contents);
+  $writer->prepareDocument($content_tree);
 
   if($writer->downloadDocument($debate_id . '.rtf')) {
     return new Result('generatereport', true);
   } else {
     return new Result('generatereport', false);
   }
+}
+
+function _buildContentTree($connectionset) {
+
+  // Get total number of issues and responses
+  $num_issues = $connectionset->num_issues;
+  $num_responses = $connectionset->num_responses;
+
+  $connections = $connectionset->connections;
+
+  // The root of the debate is the 'from' node in the first connection
+  $root = $connections[0]->from;
+
+  $node_index = array();
+  $node_children_index = array();
+
+  foreach ($connections as $connection) {
+    $from_node = $connection->from;
+    $to_node = $connection->to;
+
+    if (! isset($node_index[$from_node->nodeid])) {
+      $node_index[$from_node->nodeid] = $from_node;
+    }
+
+    if (! isset($node_index[$to_node->nodeid])) {
+      $node_index[$to_node->nodeid] = $to_node;
+    }
+
+    if (! isset($node_children_index[$from_node->nodeid])) {
+      $node_children_index[$from_node->nodeid] = array();
+    }
+
+    $node_children_index[$from_node->nodeid][] = $to_node->nodeid;
+  }
+
+  $tree = new stdClass();
+  $tree->root = $root;
+  $tree->node_index = $node_index;
+  $tree->node_children_index = $node_children_index;
+
+  return $tree;
 }
 // ensure there are no spaces or blank lines after this closing tag
 ?>

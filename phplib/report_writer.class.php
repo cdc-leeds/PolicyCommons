@@ -18,7 +18,6 @@ class ReportWriter {
    * @var $document PHPRtfLite rtf document instance
    */
   public function __construct(PHPRtfLite $document) {
-    $this->_content = $content;
     $this->_document = $document;
 
     $this->_styles['title']['font'] = new PHPRtfLite_Font(24, Arial);
@@ -59,14 +58,7 @@ class ReportWriter {
    *
    * @var $content ConnectionSet Contents of the consultation-debate
    */
-  public function prepareDocument($content) {
-    $this->_content = $content;
-
-    // Get total number of issues and responses
-    $num_issues = $content->num_issues;
-    $num_responses = $content->num_responses;
-
-    $content_tree = $this->_buildContentTree($content->connections);
+  public function prepareDocument($content_tree) {
     $content_elements = $this->_writeContentTree(
       $content_tree->root, 0, $content_tree);
 
@@ -80,40 +72,6 @@ class ReportWriter {
     $this->_newSection($content_elements);
 
     $this->_writeSections();
-  }
-
-  private function _buildContentTree($connections) {
-    // The root of the debate is the 'from' node in the first connection
-    $root = $connections[0]->from;
-
-    $node_index = array();
-    $node_children_index = array();
-
-    foreach ($connections as $connection) {
-      $from_node = $connection->from;
-      $to_node = $connection->to;
-
-      if (! isset($node_index[$from_node->nodeid])) {
-        $node_index[$from_node->nodeid] = $from_node;
-      }
-
-      if (! isset($node_index[$to_node->nodeid])) {
-        $node_index[$to_node->nodeid] = $to_node;
-      }
-
-      if (! isset($node_children_index[$from_node->nodeid])) {
-        $node_children_index[$from_node->nodeid] = array();
-      }
-
-      $node_children_index[$from_node->nodeid][] = $to_node->nodeid;
-    }
-
-    $tree = new stdClass();
-    $tree->root = $root;
-    $tree->node_index = $node_index;
-    $tree->node_children_index = $node_children_index;
-
-    return $tree;
   }
 
   private function _writeContentTree($root, $level, $tree) {
@@ -141,7 +99,6 @@ class ReportWriter {
   }
 
   private function _newSection(array $elements = array()) {
-
     $section = new PHPRtfLite_Container_Section($this->_document);
 
     foreach ($elements as $element) {
