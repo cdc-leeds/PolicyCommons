@@ -5532,6 +5532,7 @@ function sctVotesByStatement($nodeid, $user) {
 function generateReport($debate_id) {
   require_once('report_writer.class.php');
   require_once('phprtflite' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'PHPRtfLite.php');
+  require_once('sct_importer.class.php');
 
   PHPRtfLite::registerAutoloader();
 
@@ -5605,6 +5606,14 @@ function _buildContentTree($connectionset) {
         if ($r_to_node->role->name === 'Statement') {
           $r_to_node->name =
             ucwords($r_connection->linktype->label) . ': ' . $r_to_node->name;
+
+          $sct_importer = new SctImporter();
+          $sct_results = $sct_importer->getVotesByStatement($r_to_node->nodeid);
+          if (isset($sct_results->agree_votes)) {
+            $r_to_node->name =
+              $r_to_node->name . ' (Agree: ' . $sct_results->agree_votes .
+              ', Disagree: ' . $sct_results->disagree_votes . ')';
+          }
         }
 
         if (! isset($node_children_index[$r_from_node->nodeid])) {
