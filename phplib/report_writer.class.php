@@ -89,16 +89,46 @@ class ReportWriter {
       $style = $this->_styles[$root->role->name];
     }
 
-    $elements[] = $this->_newElement($root->name, $style);
+    if ($root->role->name === 'Argument') {
+      $elements[] = $this->_newElement($root->users[0]->name, $this->_styles['h4']);
+      $elements[] = $this->_newElement(
+        'Position: ' . $root->name, $style);
+      $elements[] = $this->_newElement(
+        'Justification: ', $style);
+    } else {
+      $elements[] = $this->_newElement($root->name, $style);
+    }
 
     $children = $tree->node_children_index[$root->nodeid];
     if (! empty($children)) {
       $next_level = $level + 1;
 
-      foreach ($children as $child_id) {
-        $child_node = $tree->node_index[$child_id];
-        $elements = array_merge(
-          $elements, $this->_writeContentTree($child_node, $next_level, $tree));
+      // XXX Hack to reverse order of issues so they don't appear backwards in
+      // the document. Need a way in the Cohere representation to be able to
+      // enforce order on a set of connections.
+      if ($tree->node_index[$children[0]]->role->name === 'Issue') {
+        $children = array_reverse($children);
+      }
+
+      if ($root->role->name === 'Argument') {
+        $statements = array();
+        foreach ($children as $child_id) {
+          $child_node = $tree->node_index[$child_id];
+          $statements[] = $child_node->name;
+        }
+        $elements[] = $this->_newBulletList($statements, $style);
+      } else {
+        foreach ($children as $child_id) {
+          $child_node = $tree->node_index[$child_id];
+          $elements = array_merge(
+            $elements, $this->_writeContentTree($child_node, $next_level, $tree));
+        }
+      }
+    } else {
+      // If it is an Issue with no responses then print 'no responses'
+      if ($root->role->name === 'Issue') {
+        $elements[] = $this->_newElement(
+          'There are no responses.', $this->_styles['body']);
       }
     }
 
@@ -118,6 +148,17 @@ class ReportWriter {
   private function _newElement($text, $style) {
     return new PHPRtfLite_Element(
       $this->_document, $text, $style['font'], $style['par']);
+  }
+
+  private function _newBulletList(array $items, $style) {
+    $list = new PHPRtfLite_List_Enumeration(
+      $this->_document, PHPRtfLite_List_Enumeration::TYPE_BULLET,
+      $style['font'], $style['par']);
+
+    foreach ($items as $item) {
+      $list->addItem($item);
+    }
+    return $list;
   }
 
   private function _writeSections() {
