@@ -112,6 +112,10 @@ class ReportWriter {
           $child_node = $tree->node_index[$child_id];
           $statements[] = $child_node->name;
         }
+        // XXX Hack to make sure that statements appear in the order
+        // Circumstance, Consequence, Value
+        sort($statements);
+
         $elements[] = $this->_newBulletList($statements, $style);
       } else {
         foreach ($children as $child_id) {
