@@ -38,19 +38,19 @@ class ReportWriter {
     $this->_styles['h2']['par']->setSpaceBefore(8);
     $this->_styles['h2']['par']->setSpaceAfter(4);
 
-    $this->_styles['h3']['font'] = new PHPRtfLite_Font(13, 'Arial');
+    $this->_styles['h3']['font'] = new PHPRtfLite_Font(12, 'Arial');
     $this->_styles['h3']['font']->setBold();
     $this->_styles['h3']['par'] = new PHPRtfLite_ParFormat();
     $this->_styles['h3']['par']->setSpaceBefore(6);
     $this->_styles['h3']['par']->setSpaceAfter(3);
 
-    $this->_styles['h4']['font'] = new PHPRtfLite_Font(12, 'Arial');
+    $this->_styles['h4']['font'] = new PHPRtfLite_Font(11, 'Arial');
     $this->_styles['h4']['font']->setUnderline();
     $this->_styles['h4']['par'] = new PHPRtfLite_ParFormat();
     $this->_styles['h4']['par']->setSpaceBefore(4);
     $this->_styles['h4']['par']->setSpaceAfter(2);
 
-    $this->_styles['body']['font'] = new PHPRtfLite_Font(12, 'Arial');
+    $this->_styles['body']['font'] = new PHPRtfLite_Font(11, 'Arial');
     $this->_styles['body']['par'] = new PHPRtfLite_ParFormat();
     $this->_styles['body']['par']->setSpaceBefore(1);
     $this->_styles['body']['par']->setSpaceAfter(2);
