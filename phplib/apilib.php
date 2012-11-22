@@ -5602,6 +5602,11 @@ function _buildContentTree($connectionset) {
           list($r_from_node, $r_to_node) = array($r_to_node, $r_from_node);
         }
 
+        if ($r_to_node->role->name === 'Statement') {
+          $r_to_node->name =
+            ucwords($r_connection->linktype->label) . ': ' . $r_to_node->name;
+        }
+
         if (! isset($node_children_index[$r_from_node->nodeid])) {
           $node_children_index[$r_from_node->nodeid] = array();
         }
