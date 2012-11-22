@@ -148,7 +148,7 @@ class ReportWriter {
 
   private function _newBulletList(array $items, $style) {
     $list = new PHPRtfLite_List_Enumeration(
-      $this->_document, PHPRtfLite_List_Enumeration::TYPE_BULLET,
+      $this->_document, PHPRtfLite_List_Enumeration::TYPE_CIRCLE,
       $style['font'], $style['par']);
 
     foreach ($items as $item) {
