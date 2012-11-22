@@ -69,9 +69,13 @@ class ReportWriter {
     $content_elements = $this->_writeContentTree(
       $content_tree->root, 0, $content_tree);
 
-    $title_page = array_shift($content_elements);
+    $title_element = array_shift($content_elements);
+    $subtitle_element = $this->_newElement(
+      'A Summary of Responses', $this->_styles['h1']);
 
-    $this->_newSection(array($title_page));
+    $title_page = array($title_element, $subtitle_element);
+
+    $this->_newSection($title_page);
     $this->_newSection($content_elements);
 
     $this->_writeSections();
