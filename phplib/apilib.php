@@ -5613,6 +5613,14 @@ function _buildContentTree($connectionset) {
             $r_to_node->name =
               $r_to_node->name . ' (Agree: ' . $sct_results->agree_votes .
               ', Disagree: ' . $sct_results->disagree_votes . ')';
+
+            $r_from_node->is_sct_argument = true;
+            $r_from_node->name =
+              $r_from_node->name .
+              ' (Surveyed in the Structured Consultation Tool)';
+
+            $node_index[$r_from_node->nodeid] = $r_from_node;
+            $node_index[$r_to_node->nodeid] = $r_to_node;
           }
         }
 

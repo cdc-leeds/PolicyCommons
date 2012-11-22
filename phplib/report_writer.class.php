@@ -55,6 +55,15 @@ class ReportWriter {
     $this->_styles['body']['par']->setSpaceBefore(1);
     $this->_styles['body']['par']->setSpaceAfter(2);
 
+    $this->_styles['bordered']['font'] = $this->_styles['body']['font'];
+    $this->_styles['bordered']['par'] = new PHPRtfLite_ParFormat();
+    $this->_styles['bordered']['par']->setSpaceBefore(1);
+    $this->_styles['bordered']['par']->setSpaceAfter(2);
+    $line = new PHPRtfLite_Border_Format(2, '#000000');
+    $this->_styles['bordered']['par']->setBorder(
+      new PHPRtfLite_Border (
+        $this->_document, $line, $line, $line, $line));
+
     $this->_styles['Issue'] = $this->_styles['h3'];
     $this->_styles['Argument'] = $this->_styles['body'];
     $this->_levels = array('title', 'h1', 'h2', 'h3', 'h4', 'body');
@@ -91,8 +100,15 @@ class ReportWriter {
 
     if ($root->role->name === 'Argument') {
       $elements[] = $this->_newElement($root->users[0]->name, $this->_styles['h4']);
-      $elements[] = $this->_newElement(
-        'Position: ' . $root->name, $style);
+
+      if ($root->is_sct_argument) {
+        $elements[] = $this->_newElement(
+          'Position: ' . $root->name, $this->_styles['bordered']);
+      } else {
+        $elements[] = $this->_newElement(
+          'Position: ' . $root->name, $style);
+      }
+
       $elements[] = $this->_newElement(
         'Justification: ', $style);
     } else {
