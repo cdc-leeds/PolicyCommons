@@ -70,12 +70,8 @@ class ReportWriter {
       $content_tree->root, 0, $content_tree);
 
     $title_page = array_shift($content_elements);
-    $toc_page = $this->_newElement('Contents', $this->_styles['h1']);
-    $exec_page = $this->_newElement('Executive Summary', $this->_styles['h1']);
 
     $this->_newSection(array($title_page));
-    $this->_newSection(array($toc_page));
-    $this->_newSection(array($exec_page));
     $this->_newSection($content_elements);
 
     $this->_writeSections();
