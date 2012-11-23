@@ -175,6 +175,22 @@ var AVT = AVT || {};
                 }
             };
             ARGVIZ.map.draw(config);
+
+            var download_href = req_url +
+                "?format=json&method=generatereport&nodeid=" +
+                debate_id;
+
+            var download_anchor = "<a href='" +
+                download_href +
+                "' target=\'_blank'>" +
+                "Click to download written consultation summary</a>";
+
+            var download_span = "<span class='download-link'>(" +
+                download_anchor + ")</span>";
+
+            jQuery(".title-cell").html(function(i, old_html) {
+                                          return old_html + " " + download_span;
+                                       });
         };
 
         var onClickIssue = function (issue) {

@@ -23,3 +23,12 @@
 .impact-avt .q9-20 {fill: rgb(197, 129, 32)}
 .impact-avt .q14-20 {fill: rgb(223, 176, 109)}
 .impact-avt .q19-20 {fill: rgb(232, 203, 161)}
+
+span.download-link {
+    font: normal 11px sans-serif;
+}
+
+span.download-link a {
+    color: blue;
+    text-decoration: underline;
+}
