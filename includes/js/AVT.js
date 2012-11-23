@@ -172,10 +172,13 @@ var AVT = AVT || {};
                 theme: {
                     css: "impact-avt",
                     range: 20
-                }
+                },
+                after: addDownloadLink
             };
             ARGVIZ.map.draw(config);
+        };
 
+        var addDownloadLink = function () {
             var download_href = req_url +
                 "?format=json&method=generatereport&nodeid=" +
                 debate_id;
@@ -188,8 +191,8 @@ var AVT = AVT || {};
             var download_span = "<span class='download-link'>(" +
                 download_anchor + ")</span>";
 
-            jQuery(".title-cell").html(function(i, old_html) {
-                                          return old_html + " " + download_span;
+            jQuery(".title-cell:not(:has(>span))").html(function(i, old_html) {
+                                           return old_html + " " + download_span;
                                        });
         };
 
