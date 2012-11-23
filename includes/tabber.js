@@ -712,21 +712,39 @@ function loadDebateMap(context,args) {
 
                         })
                         .style("cursor", "pointer");
-                    }
+                    };
 
                 var params = {
                     data: data,
                     container: container,
                     // Pass any function we want to execute on each node
                     node_fn: nodeSource
-                }
+                };
 
                 ARGVIZ.network.draw(params);
             });
         }
-    }
+    };
 
     jQuery.getScript(scriptUrl, load);
+
+    var addDownloadLink = function () {
+        var download_href = SERVICE_ROOT +
+            "&method=generatereport&nodeid=" +
+            args["nodeid"];
+
+        var download_anchor = "<a href='" +
+            download_href +
+            "' target=\'_blank'>" +
+            "Click to download written consultation summary</a>";
+
+        var download_span = "<span class='download-link'>(" +
+            download_anchor + ")</span>";
+
+        jQuery(".title-cell:not(:has(>span))").html(function(i, old_html) {
+																												return old_html + " " + download_span;
+																										});
+    };
 
     function load() {
         var reqUrl = SERVICE_ROOT + "&method=getdebatecontents&";
@@ -738,8 +756,9 @@ function loadDebateMap(context,args) {
                 container: map_container,
                 onclick_handlers: {
                     "Issue": onClickIssue
-                }
-            }
+                },
+                after: addDownloadLink
+            };
 
             ARGVIZ.map.draw(config);
         });
