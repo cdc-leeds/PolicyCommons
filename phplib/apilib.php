@@ -5543,7 +5543,7 @@ function generateReport($debate_id) {
   $writer = new ReportWriter($rtf_doc);
   $writer->prepareDocument($content_tree);
 
-  $filename = $debate_id . '_'. date('Y-m-d_Hi') . '.rtf';
+  $filename = 'Debate_' . $debate_id . '_'. date('Y-m-d_Hi') . '.rtf';
 
   if($writer->downloadDocument($filename)) {
     return new Result('generatereport', true);
