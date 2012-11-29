@@ -186,7 +186,7 @@ var AVT = AVT || {};
             var download_anchor = "<a href='" +
                 download_href +
                 "' target=\'_blank'>" +
-                "Click to download written consultation summary</a>";
+                "Click to download summary of responses</a>";
 
             var download_span = "<span class='download-link'>(" +
                 download_anchor + ")</span>";
