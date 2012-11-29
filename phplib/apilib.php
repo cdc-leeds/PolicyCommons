@@ -5539,11 +5539,12 @@ function generateReport($debate_id) {
   $rtf_doc = new PHPRtfLite();
   $contents = getDebateContents($debate_id);
   $content_tree = _buildContentTree($contents);
+  $debate_name = $content_tree->root->name;
 
   $writer = new ReportWriter($rtf_doc);
   $writer->prepareDocument($content_tree);
 
-  $filename = 'Debate_' . $debate_id . '_'. date('Y-m-d_Hi') . '.rtf';
+  $filename = 'Debate_' . $debate_name . '_'. date('Y-m-d_Hi') . '.rtf';
 
   if($writer->downloadDocument($filename)) {
     return new Result('generatereport', true);
