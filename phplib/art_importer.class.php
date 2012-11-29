@@ -67,6 +67,10 @@ class ArtImporter {
                '  issue_id TEXT,' .
                '  argument_id TEXT)');
 
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_Arguments_Contributors (' .
+               '  cohere_id VARCHAR(255) NOT NULL PRIMARY KEY,' .
+               '  contributor_name TEXT)');
+
   }
 
   public function __destruct() {
@@ -162,6 +166,7 @@ class ArtImporter {
 
     $this->storeIdMapping($argument->id, $argument_node->nodeid);
     $this->storeArtIssueArgumentRelation($issue->id, $argument->id);
+    $this->storeArgumentContributor($argument_node->nodeid, $statement->contributor);
 
     foreach ($argument->premises as $premise) {
       if (! empty($premise->statement->text)) {
@@ -401,6 +406,34 @@ class ArtImporter {
       $this->deleteIdMapping($statement_id, $cohere_id);
       $this->deleteArtArgumentStatementRelation($art_argument_id, $statement_id);
     }
+  }
+
+  /**
+   * Method to store ART contributor name related to a Cohere argument ID
+   *
+   * @access private
+   * @param string $cohere_id Cohere argument ID
+   * @param string $contributor_name Related contributor name
+   */
+  private function storeArgumentContributor($cohere_id, $contributor_name) {
+
+    $stmnt = $this->pdo->prepare('REPLACE INTO IMPACT_Arguments_Contributors' .
+                           '  (cohere_id, contributor_name)' .
+                           '  VALUES' .
+                           '  (:cohere_id, :contributor_name)');
+
+    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->bindParam(':contributor_name', $contributor_name, PDO::PARAM_STR);
+    $stmnt->execute();
+  }
+
+  public function getArgumentContributor($cohere_id) {
+    $stmnt = $this->pdo->prepare('SELECT contributor_name FROM IMPACT_Arguments_Contributors' .
+                                 '  WHERE cohere_id=:cohere_id');
+    $stmnt->bindParam(':cohere_id', $cohere_id, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    return ($row = $stmnt->fetch()) ? $row['contributor_name'] : null;
   }
 }
 
