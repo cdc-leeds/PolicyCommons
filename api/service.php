@@ -37,6 +37,8 @@ global $USER,$CFG;
 //send the header info
 set_service_header();
 
+header('Access-Control-Allow-Origin: *'); //XXX
+
 $method = optional_param("method","",PARAM_ALPHA);
 
 // optional params for ordering, max no and sorting sets of objects and filtering
