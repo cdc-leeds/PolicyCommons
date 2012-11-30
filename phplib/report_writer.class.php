@@ -19,6 +19,11 @@ class ReportWriter {
    */
   public function __construct(PHPRtfLite $document) {
     $this->_document = $document;
+    $this->_document->setMargins(
+      3.17,   // Left
+      2.54,   // Top
+      3.17,   // Right
+      2.54);  // Bottom
 
     $this->_styles['title']['font'] = new PHPRtfLite_Font(24, Arial);
     $this->_styles['title']['font']->setBold();
