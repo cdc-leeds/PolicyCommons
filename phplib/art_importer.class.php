@@ -170,7 +170,12 @@ class ArtImporter {
 
     foreach ($argument->premises as $premise) {
       if (! empty($premise->statement->text)) {
-        $connections[] = $this->importPremise($premise, $argument_node);
+
+        $new_connection = $this->importPremise($premise, $argument_node);
+        if ($new_connection) {
+          $connections[] = $new_connection;
+        }
+
         $this->storeArtArgumentStatementRelation($argument->id, $premise->statement->id);
       }
     }
@@ -199,7 +204,7 @@ class ArtImporter {
 
     $link_type = $this->getLinkTypeFromPremiseRole($premise_role);
 
-    return addConnection(
+    return (empty($link_type)) ? false : addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
       $link_type->linktypeid, $node->nodeid,
       $this->statement_node_type->roleid);
@@ -210,12 +215,12 @@ class ArtImporter {
    *
    * Method looks up hard-coded mapping (in assocative array) of premise-roles
    * such as 'circumstance' and 'consequence' and returns corresponding Cohere
-   * link-type object. If premise-role isn't mapped then it returns Premise
-   * link-type as a default.
+   * link-type object. If premise-role isn't mapped then it returns null
    *
    * @private
    * @param string $premise_role Name of the premise role e.g. 'circumstance'
-   * @return LinkType Cohere link-type for the given premise role label
+   * @return LinkType|null Cohere link-type for the given premise role label or
+   *     null
    */
   private function getLinkTypeFromPremiseRole($premise_role) {
     $premise_role = strtolower($premise_role);
@@ -230,7 +235,7 @@ class ArtImporter {
 
     return (isset($premise_role_to_link_type_id[$premise_role])) ?
       $premise_role_to_link_type_id[$premise_role] :
-      $this->premise_link_type;
+      null;
   }
 
 
