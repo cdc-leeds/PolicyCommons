@@ -5533,6 +5533,7 @@ function generateReport($debate_id) {
   require_once('report_writer.class.php');
   require_once('phprtflite' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'PHPRtfLite.php');
   require_once('sct_importer.class.php');
+  require_once('art_importer.class.php');
 
   PHPRtfLite::registerAutoloader();
 
@@ -5601,6 +5602,14 @@ function _buildContentTree($connectionset) {
         }
 
         if ($r_connection->linktype->label === 'addresses') {
+          $art_importer = new ArtImporter();
+          $contributor_name = $art_importer->getArgumentContributor(
+            $r_from_node->nodeid);
+
+          if (! empty($contributor_name)) {
+            $node_index[$r_from_node->nodeid]->users[0]->name = $contributor_name;
+          }
+
           list($r_from_node, $r_to_node) = array($r_to_node, $r_from_node);
         }
 
