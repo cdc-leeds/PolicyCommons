@@ -115,7 +115,7 @@ class ArtImporter {
       if ($response->argument->scheme === 'practical_reasoning_as' ||
           $response->argument->scheme === 'Practical Reasoning') {
         $connections = array_merge(
-          $connections, $this->importArgument($response->argument, $issue));
+          $connections, $this->_importArgument($response->argument, $issue));
         $num_imported += 1;
         $current_argument_ids[] = $response->argument->id;
       }
@@ -142,7 +142,15 @@ class ArtImporter {
     return $this->connectionset;
   }
 
-  private function importArgument($argument, $issue) {
+  /**
+   * Import a single argument (conclusion and premises)
+   *
+   * @access private
+   * @param object $argument The argument object to be imported
+   * @param object $issue The issue the argument is associated with
+   * @return array An array of Cohere connection objects
+   */
+  private function _importArgument($argument, $issue) {
     $conclusion = $argument->conclusion;
     $statement = $conclusion->statement;
     $connections = array();
@@ -171,7 +179,7 @@ class ArtImporter {
     foreach ($argument->premises as $premise) {
       if (! empty($premise->statement->text)) {
 
-        $new_connection = $this->importPremise($premise, $argument_node);
+        $new_connection = $this->_importPremise($premise, $argument_node);
         if ($new_connection) {
           $connections[] = $new_connection;
         }
@@ -183,8 +191,22 @@ class ArtImporter {
     return $connections;
   }
 
-  private function importPremise($premise, $argument_node) {
+  /**
+   * Import a single premise of an argument
+   *
+   * @access private
+   * @param object $premise The premise to be imported
+   * @param CNode $argument_node The Cohere CNode of the argument
+   * @return Connection|false If successful return new Connection object
+   */
+  private function _importPremise($premise, $argument_node) {
     $statement = $premise->statement;
+
+    // If we don't recognise the scheme-role of the premise then stop import
+    $link_type = $this->getLinkTypeFromPremiseRole($statement->scheme_role);
+    if (empty($link_type)) {
+      return false;
+    }
 
     // If we have already imported this argument then erase Cohere data and
     // reimport
@@ -200,11 +222,7 @@ class ArtImporter {
 
     $this->storeIdMapping($statement->id, $node->nodeid);
 
-    $premise_role = $statement->scheme_role;
-
-    $link_type = $this->getLinkTypeFromPremiseRole($premise_role);
-
-    return (empty($link_type)) ? false : addConnection(
+    return addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
       $link_type->linktypeid, $node->nodeid,
       $this->statement_node_type->roleid);
