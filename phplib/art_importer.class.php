@@ -172,6 +172,14 @@ class ArtImporter {
       $this->addresses_link_type->linktypeid, $issue->id,
       $this->issue_node_type->roleid);
 
+    // Use source URL attribute of conclusion-statement as the source URL of
+    // its associated argument
+    if (!empty($statement->source)) {
+      $url_obj = addURL(
+        $statement->source, "Response Document", "Response Document", "N");
+      $argument_node->addURL($url_obj->urlid);
+    }
+
     $this->storeIdMapping($argument->id, $argument_node->nodeid);
     $this->storeArtIssueArgumentRelation($issue->id, $argument->id);
     $this->storeArgumentContributor($argument_node->nodeid, $statement->contributor);
@@ -221,6 +229,14 @@ class ArtImporter {
       $this->statement_node_type->roleid);
 
     $this->storeIdMapping($statement->id, $node->nodeid);
+
+    // Use source URL attribute of a premise-statement as the source URL of
+    // its associated argument (if no source URL has already been added)
+    if (empty($argument_node->urls) && !(empty($statement->source))) {
+      $url_obj = addURL(
+        $statement->source, "Response Document", "Response Document", "N");
+      $argument_node->addURL($url_obj->urlid);
+    }
 
     return addConnection(
       $argument_node->nodeid, $this->argument_node_type->roleid,
