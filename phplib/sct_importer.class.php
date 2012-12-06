@@ -65,7 +65,7 @@ class SctImporter {
     $cohere_id = $this->_findCohereIdByArtId('practical_reasoning_as-'.$id);
 
     if (empty($cohere_id)) {
-      return new Result('sctimport', false);
+      return new Result('sctimport', new stdClass());
     }
 
     $result = new stdClass();
