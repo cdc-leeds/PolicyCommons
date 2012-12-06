@@ -52,17 +52,17 @@ class ArtImporter {
     $this->pdo = new PDO($dsn, $dbuser, $dbpass);
     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Mappings (' .
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_Mappings (' .
                '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  art_id TEXT,' .
                '  cohere_id TEXT)');
 
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Arguments_Statements (' .
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_Arguments_Statements (' .
                '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  argument_id TEXT,' .
                '  statement_id TEXT)');
 
-    $this->pdo->exec('CREATE TABLE IF NOT EXISTS Issues_Arguments (' .
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_Issues_Arguments (' .
                '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
                '  issue_id TEXT,' .
                '  argument_id TEXT)');
@@ -282,7 +282,7 @@ class ArtImporter {
    */
   private function storeIdMapping($art_id, $cohere_id) {
 
-    $stmnt = $this->pdo->prepare('INSERT INTO Mappings' .
+    $stmnt = $this->pdo->prepare('INSERT INTO IMPACT_Mappings' .
                            '  (art_id, cohere_id)' .
                            '  VALUES' .
                            '  (:art_id, :cohere_id)');
@@ -301,7 +301,7 @@ class ArtImporter {
    */
   private function deleteIdMapping($art_id, $cohere_id) {
 
-    $stmnt = $this->pdo->prepare('DELETE FROM Mappings' .
+    $stmnt = $this->pdo->prepare('DELETE FROM IMPACT_Mappings' .
                                  '  WHERE art_id=:art_id' .
                                  '  AND cohere_id=:cohere_id');
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
@@ -319,7 +319,7 @@ class ArtImporter {
   private function storeArtArgumentStatementRelation(
     $argument_id, $statement_id) {
 
-    $stmnt = $this->pdo->prepare('INSERT INTO Arguments_Statements' .
+    $stmnt = $this->pdo->prepare('INSERT INTO IMPACT_Arguments_Statements' .
                            '  (argument_id, statement_id)' .
                            '  VALUES' .
                            '  (:argument_id, :statement_id)');
@@ -339,7 +339,7 @@ class ArtImporter {
   private function deleteArtArgumentStatementRelation(
     $argument_id, $statement_id) {
 
-    $stmnt = $this->pdo->prepare('DELETE FROM Arguments_Statements' .
+    $stmnt = $this->pdo->prepare('DELETE FROM IMPACT_Arguments_Statements' .
                                  '  WHERE argument_id=:argument_id' .
                                  '  AND statement_id=:statement_id');
     $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
@@ -356,7 +356,7 @@ class ArtImporter {
    */
   private function storeArtIssueArgumentRelation($issue_id, $argument_id) {
 
-    $stmnt = $this->pdo->prepare('INSERT INTO Issues_Arguments' .
+    $stmnt = $this->pdo->prepare('INSERT INTO IMPACT_Issues_Arguments' .
                            '  (issue_id, argument_id)' .
                            '  VALUES' .
                            '  (:issue_id, :argument_id)');
@@ -376,7 +376,7 @@ class ArtImporter {
   private function deleteArtIssueArgumentRelation(
     $issue_id, $argument_id) {
 
-    $stmnt = $this->pdo->prepare('DELETE FROM Issues_Arguments' .
+    $stmnt = $this->pdo->prepare('DELETE FROM IMPACT_Issues_Arguments' .
                                  '  WHERE issue_id=:issue_id' .
                                  '  AND argument_id=:argument_id');
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
@@ -385,7 +385,7 @@ class ArtImporter {
   }
 
   private function findCohereIdByArtId($art_id) {
-    $stmnt = $this->pdo->prepare('SELECT DISTINCT cohere_id FROM Mappings' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT cohere_id FROM IMPACT_Mappings' .
                                  '  WHERE art_id=:art_id');
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->execute();
@@ -394,7 +394,7 @@ class ArtImporter {
   }
 
   private function findArtArgumentIdsByIssueId($issue_id) {
-    $stmnt = $this->pdo->prepare('SELECT DISTINCT argument_id FROM Issues_Arguments' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT argument_id FROM IMPACT_Issues_Arguments' .
                                  '  WHERE issue_id=:issue_id');
     $stmnt->bindParam(':issue_id', $issue_id, PDO::PARAM_STR);
     $stmnt->execute();
@@ -409,7 +409,7 @@ class ArtImporter {
   }
 
   private function findArtStatementIdsByArgumentId($argument_id) {
-    $stmnt = $this->pdo->prepare('SELECT DISTINCT statement_id FROM Arguments_Statements' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT statement_id FROM IMPACT_Arguments_Statements' .
                                  '  WHERE argument_id=:argument_id');
     $stmnt->bindParam(':argument_id', $argument_id, PDO::PARAM_STR);
     $stmnt->execute();

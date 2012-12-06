@@ -122,7 +122,7 @@ class SctImporter {
   }
 
   private function _findCohereIdByArtId($art_id) {
-    $stmnt = $this->pdo->prepare('SELECT DISTINCT cohere_id FROM Mappings' .
+    $stmnt = $this->pdo->prepare('SELECT DISTINCT cohere_id FROM IMPACT_Mappings' .
                                  '  WHERE art_id=:art_id');
     $stmnt->bindParam(':art_id', $art_id, PDO::PARAM_STR);
     $stmnt->execute();
