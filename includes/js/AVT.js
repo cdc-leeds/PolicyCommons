@@ -345,6 +345,8 @@ var AVT = AVT || {};
 						jQuery.get(sct_api, {}, postToCohere, "text");
 				}
 
+				jQuery('#'+div_id).html('Loading...Please wait');
+
         // XXX ART Import hard-coded with Bernd Groninger user
         // credentials.
         // @todo TODO Integrate with toolbox authentication
