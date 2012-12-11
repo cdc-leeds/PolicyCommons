@@ -71,6 +71,12 @@ class ArtImporter {
                '  cohere_id VARCHAR(255) NOT NULL PRIMARY KEY,' .
                '  contributor_name TEXT)');
 
+    // For when we need to do some debugging
+    $this->pdo->exec('CREATE TABLE IF NOT EXISTS IMPACT_Log (' .
+               '  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,' .
+               '  timestamp TEXT,' .
+               '  context TEXT)');
+
   }
 
   public function __destruct() {
@@ -98,7 +104,7 @@ class ArtImporter {
 
     if (! getNode($issue->id) instanceof CNode) {
       $this->connectionset = new ConnectionSet($connections);
-      $this->connectionset->num_imported = 0;
+      $this->connectionset->num_imported = -1;
       return $this->connectionset;
     }
 
@@ -112,8 +118,8 @@ class ArtImporter {
     $num_imported = 0;
 
     foreach ($responses as $response) {
-      if ($response->argument->scheme === 'practical_reasoning_as' ||
-          $response->argument->scheme === 'Practical Reasoning') {
+      if (($response->argument->scheme === 'practical_reasoning_as') &&
+          !empty($response->argument->conclusion->statement->text)) {
         $connections = array_merge(
           $connections, $this->_importArgument($response->argument, $issue));
         $num_imported += 1;
@@ -473,6 +479,21 @@ class ArtImporter {
     $stmnt->execute();
 
     return ($row = $stmnt->fetch()) ? $row['contributor_name'] : null;
+  }
+
+  /**
+   * Logging function if we need to do any debugging
+   */
+  private function _log($context) {
+
+    $stmnt = $this->pdo->prepare('INSERT INTO IMPACT_Log' .
+                           '  (timestamp, context)' .
+                           '  VALUES' .
+                           '  (:timestamp, :context)');
+
+    $stmnt->bindParam(':timestamp', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+    $stmnt->bindParam(':context', $context, PDO::PARAM_STR);
+    $stmnt->execute();
   }
 }
 
