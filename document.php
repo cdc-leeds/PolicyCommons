@@ -1,6 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
+ *  (c) Copyright 2011, 2012 University of Leeds, UK                            *
  *  (c) Copyright 2010 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *

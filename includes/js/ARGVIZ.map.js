@@ -1,7 +1,6 @@
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2011 University of Leeds, UK                                  *
- *  (c) Copyright 2010 The Open University UK                                   *
+ *  (c) Copyright 2012 University of Leeds, UK                                  *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
